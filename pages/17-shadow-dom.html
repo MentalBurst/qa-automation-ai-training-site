@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>17 Shadow DOM | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="17-shadow-dom.html" class="nav-link active">Shadow DOM</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">17 Shadow DOM</span></nav>
+    <div class="page-header-meta">
+      <span class="badge badge-expert">Expert</span>
+      <span class="badge badge-tag">Shadow DOM</span>
+      <span class="badge badge-tag">Web Components</span>
+      <span class="badge badge-tag">Custom Elements</span>
+    </div>
+    <h1>Shadow DOM</h1>
+    <p>Open shadow roots, Web Components with slots, custom events, and nested shadow DOM the ultimate locator challenge.</p>
+  </div>
+
+  <div class="demo-area" style="margin-bottom:var(--space-6);" data-testid="section-shadow">
+    <h3 style="margin-bottom:var(--space-4);">A. Custom Card Component (Open Shadow Root)</h3>
+    <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-6);">
+      The elements below are inside open Shadow DOM. In Playwright, use <code>locator(':shadow-root')</code> or piercing selectors.
+    </p>
+
+    <!-- Custom Elements registered below -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--space-4);">
+      <qa-card id="card-shadow-1" data-testid="qa-card-1" card-title="Login Component" card-desc="Shadow DOM login widget" card-status="active"></qa-card>
+      <qa-card id="card-shadow-2" data-testid="qa-card-2" card-title="Data Table Widget" card-desc="Encapsulated table inside shadow" card-status="inactive"></qa-card>
+      <qa-card id="card-shadow-3" data-testid="qa-card-3" card-title="Notification Bell" card-desc="Custom notification component" card-status="active"></qa-card>
+    </div>
+    <div id="card-event-log" data-testid="card-event-log" style="margin-top:var(--space-4);font-size:var(--font-size-sm);color:var(--color-text-muted);min-height:1.5em;" aria-live="polite"></div>
+  </div>
+
+  <div class="demo-area" style="margin-bottom:var(--space-6);" data-testid="section-shadow-form">
+    <h3 style="margin-bottom:var(--space-4);">B. Shadow DOM Login Form</h3>
+    <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">This login form is entirely inside a shadow root. All selectors must pierce the shadow boundary.</p>
+    <qa-login id="shadow-login" data-testid="shadow-login"></qa-login>
+    <div id="shadow-login-result" data-testid="shadow-login-result" style="display:none;margin-top:var(--space-4);" class="alert alert-success">
+      <span>🟢</span><p id="shadow-login-msg" data-testid="shadow-login-msg"></p>
+    </div>
+  </div>
+
+  <div class="demo-area" data-testid="section-nested-shadow">
+    <h3 style="margin-bottom:var(--space-4);">C. Nested Shadow DOM</h3>
+    <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">A shadow host containing another shadow host double piercing required.</p>
+    <qa-outer id="shadow-nested" data-testid="shadow-nested"></qa-outer>
+  </div>
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Playwright Pierce Shadow with Locator</h3>
+      <pre style="font-size:0.75rem;line-height:1.7;">// Method 1: direct pierce (Playwright auto-pierces open shadow)
+await page.locator('qa-login').locator('#shadow-email').fill('test@test.com');
+await page.locator('qa-login').locator('#shadow-password').fill('pass123');
+await page.locator('qa-login').locator('#shadow-btn-submit').click();
+
+// Method 2: getByTestId within shadow host
+const loginComponent = page.locator('[data-testid="shadow-login"]');
+await loginComponent.locator('[data-testid="shadow-input-email"]').fill('test@test.com');
+
+// Nested:
+const outer = page.locator('qa-outer');
+const inner = outer.locator('qa-inner');
+await inner.locator('#nested-input').fill('nested value');</pre>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario Shadow Card Click</h3>
+      <ol class="steps">
+        <li class="step-block">Locate <code>#card-shadow-1</code> (the host element)</li>
+        <li class="step-block">Pierce shadow to find the button inside it</li>
+        <li class="step-block">Click the "View Details" button</li>
+        <li class="step-block">Assert <code>card-event-log</code> in the outer page shows "Login Component clicked"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟡 Pitfalls</h3>
+      <ul>
+        <li>Playwright auto-pierces open shadow roots with standard <code>locator()</code>.</li>
+        <li>Cypress requires the <code>cypress-shadow-dom</code> plugin for shadow piercing.</li>
+        <li>Selenium can pierce shadow with JS: <code>element.shadowRoot.querySelector(...)</code>.</li>
+        <li>Closed shadow roots (<code>{ mode: 'closed' }</code>) cannot be accessed from outside.</li>
+      </ul>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 17 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+/* ── Custom Element: qa-card ─────────────────────────────── */
+class QACard extends HTMLElement {
+  connectedCallback() {
+    const shadow = this.attachShadow({ mode: 'open' });
+    const title  = this.getAttribute('card-title')  || 'Component';
+    const desc   = this.getAttribute('card-desc')   || '';
+    const status = this.getAttribute('card-status') || 'active';
+    const isActive = status === 'active';
+
+    shadow.innerHTML = `
+      <style>
+        :host { display: block; }
+        .card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+        .title { font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
+        .desc  { font-size: 0.8rem; color: #718096; margin-bottom: 12px; }
+        .status { display: inline-block; font-size: 0.7rem; font-weight: 600; padding: 2px 10px; border-radius: 9999px; margin-bottom: 12px; }
+        .status.active   { background: #dcfce7; color: #166534; }
+        .status.inactive { background: #fee2e2; color: #991b1b; }
+        button { padding: 6px 14px; background: #4361ee; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
+        button:hover { background: #3251d4; }
+      </style>
+      <div class="card" data-testid="shadow-card-inner">
+        <div class="title"  data-testid="shadow-card-title">${title}</div>
+        <div class="desc"   data-testid="shadow-card-desc">${desc}</div>
+        <span class="status ${status}" data-testid="shadow-card-status">${isActive ? 'Active' : 'Inactive'}</span>
+        <br/>
+        <button id="card-btn" data-testid="shadow-card-btn">View Details</button>
+      </div>
+    `;
+
+    shadow.getElementById('card-btn').addEventListener('click', () => {
+      this.dispatchEvent(new CustomEvent('qa-card-click', {
+        bubbles: true, composed: true,
+        detail: { title, status }
+      }));
+    });
+  }
+}
+customElements.define('qa-card', QACard);
+
+/* ── Custom Element: qa-login ────────────────────────────── */
+class QALogin extends HTMLElement {
+  connectedCallback() {
+    const shadow = this.attachShadow({ mode: 'open' });
+    shadow.innerHTML = `
+      <style>
+        :host { display: block; }
+        .wrap { background: white; border: 1.5px dashed #805ad5; border-radius: 12px; padding: 20px; max-width: 360px; }
+        label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; }
+        input  { display: block; width: 100%; padding: 8px 12px; border: 1.5px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem; box-sizing: border-box; margin-bottom: 12px; }
+        input:focus { outline: none; border-color: #805ad5; box-shadow: 0 0 0 3px rgba(128,90,213,.2); }
+        button { padding: 8px 20px; background: #805ad5; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.875rem; }
+        .header { font-size: 0.7rem; font-weight: 700; color: #805ad5; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 12px; }
+        .err { font-size: 0.75rem; color: #e53e3e; display: none; margin-top: -8px; margin-bottom: 8px; }
+        .err.show { display: block; }
+      </style>
+      <div class="wrap">
+        <div class="header">🔴 Shadow DOM Login</div>
+        <label for="shadow-email">Email</label>
+        <input type="email" id="shadow-email" data-testid="shadow-input-email" placeholder="you@example.com" />
+        <div class="err" id="shadow-email-err" data-testid="shadow-email-error"></div>
+        <label for="shadow-password">Password</label>
+        <input type="password" id="shadow-password" data-testid="shadow-input-password" placeholder="Password" />
+        <div class="err" id="shadow-pass-err" data-testid="shadow-password-error"></div>
+        <button id="shadow-btn-submit" data-testid="shadow-btn-submit">Sign In</button>
+      </div>
+    `;
+
+    shadow.getElementById('shadow-btn-submit').addEventListener('click', () => {
+      const email = shadow.getElementById('shadow-email').value.trim();
+      const pass  = shadow.getElementById('shadow-password').value;
+      let ok = true;
+      const eErr = shadow.getElementById('shadow-email-err');
+      const pErr = shadow.getElementById('shadow-pass-err');
+
+      if (!email) { eErr.textContent = 'Email required'; eErr.classList.add('show'); ok = false; } else eErr.classList.remove('show');
+      if (!pass)  { pErr.textContent = 'Password required'; pErr.classList.add('show'); ok = false; } else pErr.classList.remove('show');
+
+      if (!ok) return;
+
+      this.dispatchEvent(new CustomEvent('shadow-login', {
+        bubbles: true, composed: true,
+        detail: { email, pass }
+      }));
+    });
+  }
+}
+customElements.define('qa-login', QALogin);
+
+/* ── Custom Element: qa-outer (nested shadow) ────────────── */
+class QAOuter extends HTMLElement {
+  connectedCallback() {
+    const shadow = this.attachShadow({ mode: 'open' });
+    shadow.innerHTML = `
+      <style>
+        :host { display: block; }
+        .outer { background: #f0fff4; border: 2px dashed #38a169; border-radius: 12px; padding: 16px; }
+        .label { font-size: 0.7rem; font-weight: 700; color: #38a169; text-transform: uppercase; margin-bottom: 12px; }
+      </style>
+      <div class="outer">
+        <div class="label">🟢 Outer Shadow Host</div>
+        <qa-inner id="inner-component" data-testid="qa-inner"></qa-inner>
+      </div>
+    `;
+    // Register qa-inner if not yet
+    if (!customElements.get('qa-inner')) {
+      class QAInner extends HTMLElement {
+        connectedCallback() {
+          const s2 = this.attachShadow({ mode: 'open' });
+          s2.innerHTML = `
+            <style>
+              :host { display: block; }
+              .inner { background: #ebfaf0; border: 2px dashed #68d391; border-radius: 8px; padding: 12px; margin-top: 8px; }
+              .label { font-size: 0.7rem; font-weight: 700; color: #2f855a; text-transform: uppercase; margin-bottom: 8px; }
+              input  { display: block; width: 100%; padding: 6px 10px; border: 1px solid #c6f6d5; border-radius: 6px; font-size: 0.8rem; box-sizing: border-box; margin-bottom: 8px; }
+              button { padding: 6px 12px; background: #38a169; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; }
+            </style>
+            <div class="inner">
+              <div class="label">🟢 Inner Shadow Host (Level 2)</div>
+              <input type="text" id="nested-input" data-testid="nested-input" placeholder="Nested shadow input…" />
+              <button id="nested-btn" data-testid="nested-btn">Submit</button>
+              <div id="nested-result" data-testid="nested-result" style="font-size:0.75rem;margin-top:8px;min-height:1.2em;"></div>
+            </div>
+          `;
+          s2.getElementById('nested-btn').addEventListener('click', () => {
+            const val = s2.getElementById('nested-input').value.trim();
+            s2.getElementById('nested-result').textContent = val ? `Nested submitted: "${val}"` : '(empty)';
+            this.dispatchEvent(new CustomEvent('nested-submit', { bubbles: true, composed: true, detail: { value: val } }));
+          });
+        }
+      }
+      customElements.define('qa-inner', QAInner);
+    }
+  }
+}
+customElements.define('qa-outer', QAOuter);
+
+/* ── Event listeners ──────────────────────────────────────── */
+document.addEventListener('qa-card-click', (e) => {
+  const log = document.getElementById('card-event-log');
+  log.textContent = `"${e.detail.title}" clicked status: ${e.detail.status}`;
+  Toast.info('Custom event', `${e.detail.title}`);
+});
+
+document.addEventListener('shadow-login', (e) => {
+  const res = document.getElementById('shadow-login-result');
+  res.style.display = 'flex';
+  document.getElementById('shadow-login-msg').textContent = `Shadow login submitted with: ${e.detail.email}`;
+  Toast.success('Shadow login', e.detail.email);
+});
+
+document.getElementById('nav-toggle').addEventListener('click', function () {
+  document.getElementById('site-nav').classList.toggle('open');
+  this.setAttribute('aria-expanded', document.getElementById('site-nav').classList.contains('open') ? 'true' : 'false');
+});
+</script>
+</body>
+</html>
+

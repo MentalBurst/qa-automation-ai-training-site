@@ -1,0 +1,341 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>11 Multi Step Form | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="11-multi step-form.html" class="nav-link active">Multi Step Form</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">11 Multi Step Wizard</span></nav>
+    <div class="page-header-meta">
+      <span class="badge badge-advanced">Advanced</span>
+      <span class="badge badge-tag">Wizard</span>
+      <span class="badge badge-tag">State Management</span>
+      <span class="badge badge-tag">Step Validation</span>
+    </div>
+    <h1>Multi Step Wizard Form</h1>
+    <p>4-step checkout wizard with progress indicator, per-step validation, back/next navigation, review step, and final submit.</p>
+  </div>
+
+  <div class="demo-area" style="max-width:640px;margin:0 auto;">
+
+    <!-- Progress Indicator -->
+    <div style="margin-bottom:var(--space-8);" data-testid="wizard-progress">
+      <div class="progress-bar" style="height:6px;margin-bottom:var(--space-4);">
+        <div class="progress-fill" id="wizard-progress-fill" style="width:25%;transition:width .4s;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;">
+        <div class="wizard-step-label active" id="step-label-1" data-testid="step-label-1" style="text-align:center;flex:1;">
+          <div id="step-dot-1" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--color-accent);background:var(--color-accent);color:white;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;margin:0 auto var(--space-1);">1</div>
+          <span style="font-size:var(--font-size-xs);color:var(--color-accent);font-weight:600;">Account</span>
+        </div>
+        <div class="wizard-step-label" id="step-label-2" data-testid="step-label-2" style="text-align:center;flex:1;">
+          <div id="step-dot-2" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--color-border);background:var(--color-bg);color:var(--color-text-muted);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;margin:0 auto var(--space-1);">2</div>
+          <span style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Profile</span>
+        </div>
+        <div class="wizard-step-label" id="step-label-3" data-testid="step-label-3" style="text-align:center;flex:1;">
+          <div id="step-dot-3" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--color-border);background:var(--color-bg);color:var(--color-text-muted);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;margin:0 auto var(--space-1);">3</div>
+          <span style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Plan</span>
+        </div>
+        <div class="wizard-step-label" id="step-label-4" data-testid="step-label-4" style="text-align:center;flex:1;">
+          <div id="step-dot-4" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--color-border);background:var(--color-bg);color:var(--color-text-muted);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;margin:0 auto var(--space-1);">4</div>
+          <span style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Review</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step counter text -->
+    <div style="text-align:right;margin-bottom:var(--space-4);">
+      <span id="step-counter" data-testid="step-counter" style="font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);background:var(--color-bg);padding:2px 10px;border-radius:var(--radius-full);">Step 1 of 4</span>
+    </div>
+
+    <!-- ── Step 1: Account ── -->
+    <div id="step-1" data-testid="step-1" data-step="1">
+      <h3 style="margin-bottom:var(--space-6);">Step 1: Account Details</h3>
+      <div class="form-group">
+        <label class="form-label" for="w-email">Email <span class="required">*</span></label>
+        <input class="form-input" id="w-email" type="email" data-testid="input-w-email" placeholder="you@example.com" />
+        <div class="form-error" id="w-email-error" data-testid="error-w-email"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="w-password">Password <span class="required">*</span></label>
+        <input class="form-input" id="w-password" type="password" data-testid="input-w-password" placeholder="Min. 8 chars" />
+        <div class="form-error" id="w-password-error" data-testid="error-w-password"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="w-confirm">Confirm Password <span class="required">*</span></label>
+        <input class="form-input" id="w-confirm" type="password" data-testid="input-w-confirm" placeholder="Repeat password" />
+        <div class="form-error" id="w-confirm-error" data-testid="error-w-confirm"></div>
+      </div>
+    </div>
+
+    <!-- ── Step 2: Profile ── -->
+    <div id="step-2" data-testid="step-2" data-step="2" style="display:none;">
+      <h3 style="margin-bottom:var(--space-6);">Step 2: Your Profile</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);">
+        <div class="form-group">
+          <label class="form-label" for="w-first">First Name <span class="required">*</span></label>
+          <input class="form-input" id="w-first" type="text" data-testid="input-w-first" placeholder="Alice" />
+          <div class="form-error" id="w-first-error" data-testid="error-w-first"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="w-last">Last Name <span class="required">*</span></label>
+          <input class="form-input" id="w-last" type="text" data-testid="input-w-last" placeholder="Smith" />
+          <div class="form-error" id="w-last-error" data-testid="error-w-last"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="w-phone">Phone</label>
+        <input class="form-input" id="w-phone" type="tel" data-testid="input-w-phone" placeholder="+1 555 000 0000" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="w-country">Country <span class="required">*</span></label>
+        <select class="form-select" id="w-country" data-testid="select-w-country">
+          <option value="">  Select country  </option>
+          <option value="us">United States</option>
+          <option value="uk">United Kingdom</option>
+          <option value="ca">Canada</option>
+          <option value="pt">Portugal</option>
+          <option value="br">Brazil</option>
+        </select>
+        <div class="form-error" id="w-country-error" data-testid="error-w-country"></div>
+      </div>
+    </div>
+
+    <!-- ── Step 3: Plan ── -->
+    <div id="step-3" data-testid="step-3" data-step="3" style="display:none;">
+      <h3 style="margin-bottom:var(--space-6);">Step 3: Choose a Plan</h3>
+      <div style="display:flex;flex-direction:column;gap:var(--space-3);" role="radiogroup" aria-label="Plan selection" data-testid="plan-group">
+        <label style="border:2px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4);cursor:pointer;display:flex;align-items:center;gap:var(--space-4);transition:border-color .2s;" data-testid="plan-free-label" id="label-plan-free">
+          <input type="radio" class="form-check-input" name="w-plan" id="plan-free" value="free" data-testid="radio-plan-free" />
+          <div style="flex:1;">
+            <div style="font-weight:700;">Free</div>
+            <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">5 projects, 1 user, basic features</div>
+          </div>
+          <div style="font-weight:800;color:var(--color-success);">$0/mo</div>
+        </label>
+        <label style="border:2px solid var(--color-accent);border-radius:var(--radius-lg);padding:var(--space-4);cursor:pointer;display:flex;align-items:center;gap:var(--space-4);background:var(--color-accent-light);transition:border-color .2s;" data-testid="plan-pro-label" id="label-plan-pro">
+          <input type="radio" class="form-check-input" name="w-plan" id="plan-pro" value="pro" data-testid="radio-plan-pro" checked />
+          <div style="flex:1;">
+            <div style="font-weight:700;">Pro <span class="badge badge-tag" style="margin-left:4px;">Popular</span></div>
+            <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Unlimited projects, 10 users, all features</div>
+          </div>
+          <div style="font-weight:800;color:var(--color-accent);">$29/mo</div>
+        </label>
+        <label style="border:2px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4);cursor:pointer;display:flex;align-items:center;gap:var(--space-4);transition:border-color .2s;" data-testid="plan-enterprise-label" id="label-plan-enterprise">
+          <input type="radio" class="form-check-input" name="w-plan" id="plan-enterprise" value="enterprise" data-testid="radio-plan-enterprise" />
+          <div style="flex:1;">
+            <div style="font-weight:700;">Enterprise</div>
+            <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Unlimited everything, SSO, SLA, priority support</div>
+          </div>
+          <div style="font-weight:800;color:var(--color-text);">$99/mo</div>
+        </label>
+      </div>
+      <div class="form-error" id="w-plan-error" data-testid="error-w-plan"></div>
+    </div>
+
+    <!-- ── Step 4: Review ── -->
+    <div id="step-4" data-testid="step-4" data-step="4" style="display:none;">
+      <h3 style="margin-bottom:var(--space-6);">Step 4: Review &amp; Submit</h3>
+      <div id="review-summary" data-testid="review-summary" style="background:var(--color-bg);border-radius:var(--radius-lg);padding:var(--space-6);">
+        <!-- Filled by JS -->
+      </div>
+      <div class="alert alert-warning" style="margin-top:var(--space-4);">
+        <span>🟡</span><p>Please review all information before submitting. You can use the Back button to make changes.</p>
+      </div>
+    </div>
+
+    <!-- ── Success ── -->
+    <div id="wizard-success" data-testid="wizard-success" style="display:none;text-align:center;padding:var(--space-8) 0;">
+      <div style="font-size:3rem;margin-bottom:var(--space-3);">🟢</div>
+      <h2>Account Created!</h2>
+      <p id="wizard-success-msg" data-testid="wizard-success-msg"></p>
+      <button class="btn btn-secondary" onclick="location.reload()" style="margin-top:var(--space-4);" data-testid="btn-wizard-restart">Start Over</button>
+    </div>
+
+    <!-- Navigation buttons -->
+    <div id="wizard-nav" style="display:flex;gap:var(--space-3);justify-content:space-between;margin-top:var(--space-8);" data-testid="wizard-nav">
+      <button class="btn btn-secondary" id="btn-wizard-back" data-testid="btn-wizard-back" style="display:none;">← Back</button>
+      <button class="btn btn-primary" id="btn-wizard-next" data-testid="btn-wizard-next" style="margin-left:auto;">Next →</button>
+    </div>
+
+  </div>
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Complete Wizard Flow</h3>
+      <ol class="steps">
+        <li class="step-block">Assert <code>step-counter</code> text is "Step 1 of 4"</li>
+        <li class="step-block">Fill <code>input-w-email</code>, <code>input-w-password</code>, <code>input-w-confirm</code></li>
+        <li class="step-block">Click <code>btn-wizard-next</code></li>
+        <li class="step-block">Assert <code>step-2</code> is visible, <code>step-1</code> is hidden</li>
+        <li class="step-block">Assert <code>step-counter</code> is "Step 2 of 4"</li>
+        <li class="step-block">Fill name, phone, country → Click Next</li>
+        <li class="step-block">Select plan → Click Next</li>
+        <li class="step-block">Assert <code>review-summary</code> shows all entered data</li>
+        <li class="step-block">Click <code>btn-wizard-next</code> (Submit)</li>
+        <li class="step-block">Assert <code>wizard-success</code> is visible</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Back Navigation Test</h3>
+      <ol class="steps">
+        <li class="step-block">Complete step 1 and advance to step 2</li>
+        <li class="step-block">Click <code>btn-wizard-back</code></li>
+        <li class="step-block">Assert <code>step-1</code> is visible again</li>
+        <li class="step-block">Assert previously entered email is still in the field (state preserved)</li>
+      </ol>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 11 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+(function () {
+  let current = 1;
+  const STEPS = 4;
+  const state = {};
+
+  function err(id, msg) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.toggle('visible', !!msg);
+  }
+
+  function validateStep(n) {
+    let ok = true;
+    if (n === 1) {
+      const email = document.getElementById('w-email').value.trim();
+      const pwd   = document.getElementById('w-password').value;
+      const conf  = document.getElementById('w-confirm').value;
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err('w-email-error', 'Valid email required.'); ok = false; } else err('w-email-error','');
+      if (pwd.length < 8)  { err('w-password-error', 'Min. 8 characters.'); ok = false; } else err('w-password-error','');
+      if (pwd !== conf)    { err('w-confirm-error', 'Passwords do not match.'); ok = false; } else err('w-confirm-error','');
+    }
+    if (n === 2) {
+      const first = document.getElementById('w-first').value.trim();
+      const last  = document.getElementById('w-last').value.trim();
+      const country = document.getElementById('w-country').value;
+      if (!first) { err('w-first-error', 'First name required.'); ok = false; } else err('w-first-error','');
+      if (!last)  { err('w-last-error',  'Last name required.'); ok = false; } else err('w-last-error','');
+      if (!country) { err('w-country-error', 'Please select a country.'); ok = false; } else err('w-country-error','');
+    }
+    return ok;
+  }
+
+  function saveStep(n) {
+    if (n === 1) { state.email = document.getElementById('w-email').value; state.password = document.getElementById('w-password').value; }
+    if (n === 2) { state.first = document.getElementById('w-first').value; state.last = document.getElementById('w-last').value; state.phone = document.getElementById('w-phone').value; state.country = document.getElementById('w-country').value; }
+    if (n === 3) { const plan = document.querySelector('input[name="w-plan"]:checked'); state.plan = plan ? plan.value : 'pro'; }
+  }
+
+  function buildReview() {
+    const rows = [
+      ['Email', state.email],
+      ['Name', `${state.first} ${state.last}`],
+      ['Phone', state.phone || ' '],
+      ['Country', state.country],
+      ['Plan', state.plan],
+    ];
+    return rows.map(([k,v]) => `
+      <div style="display:flex;justify-content:space-between;padding:var(--space-3) 0;border-bottom:1px solid var(--color-border);">
+        <span style="font-size:var(--font-size-sm);font-weight:600;color:var(--color-text-muted);">${k}</span>
+        <span style="font-size:var(--font-size-sm);font-weight:700;" data-testid="review-${k.toLowerCase()}">${v}</span>
+      </div>
+    `).join('');
+  }
+
+  function updateProgress() {
+    const pct = (current / STEPS) * 100;
+    document.getElementById('wizard-progress-fill').style.width = pct + '%';
+    document.getElementById('step-counter').textContent = `Step ${current} of ${STEPS}`;
+    for (let i = 1; i <= STEPS; i++) {
+      const dot = document.getElementById(`step-dot-${i}`);
+      const label = document.getElementById(`step-label-${i}`);
+      if (i < current) {
+        dot.style.background = 'var(--color-success)';
+        dot.style.borderColor = 'var(--color-success)';
+        dot.textContent = '✓';
+        dot.style.color = 'white';
+      } else if (i === current) {
+        dot.style.background = 'var(--color-accent)';
+        dot.style.borderColor = 'var(--color-accent)';
+        dot.textContent = String(i);
+        dot.style.color = 'white';
+      } else {
+        dot.style.background = 'var(--color-bg)';
+        dot.style.borderColor = 'var(--color-border)';
+        dot.textContent = String(i);
+        dot.style.color = 'var(--color-text-muted)';
+      }
+    }
+  }
+
+  function goTo(n) {
+    document.getElementById(`step-${current}`).style.display = 'none';
+    current = n;
+    const stepEl = document.getElementById(`step-${current}`);
+    if (stepEl) stepEl.style.display = 'block';
+    document.getElementById('btn-wizard-back').style.display = current > 1 ? 'block' : 'none';
+    const nextBtn = document.getElementById('btn-wizard-next');
+    nextBtn.textContent = current === STEPS ? '🟢 Submit' : 'Next →';
+    if (current === STEPS) buildReviewPanel();
+    updateProgress();
+  }
+
+  function buildReviewPanel() {
+    document.getElementById('review-summary').innerHTML = buildReview();
+  }
+
+  document.getElementById('btn-wizard-next').addEventListener('click', () => {
+    if (!validateStep(current)) return;
+    saveStep(current);
+    if (current === STEPS) {
+      // Submit
+      document.getElementById('step-4').style.display = 'none';
+      document.getElementById('wizard-nav').style.display = 'none';
+      document.getElementById('wizard-success').style.display = 'block';
+      document.getElementById('wizard-success-msg').textContent = `Welcome ${state.first}! You're on the ${state.plan} plan.`;
+      Toast.success('Account created!', `${state.plan} plan activated.`);
+    } else {
+      goTo(current + 1);
+    }
+  });
+
+  document.getElementById('btn-wizard-back').addEventListener('click', () => {
+    if (current > 1) goTo(current - 1);
+  });
+
+  updateProgress();
+
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    document.getElementById('site-nav').classList.toggle('open');
+    this.setAttribute('aria-expanded', document.getElementById('site-nav').classList.contains('open') ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
+

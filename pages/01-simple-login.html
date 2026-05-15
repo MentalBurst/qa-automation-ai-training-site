@@ -1,0 +1,416 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>01 Simple Login Form | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-link" data-testid="nav-home">Home</a>
+      <a href="01-simple-login.html" class="nav-link active" data-testid="nav-current">Login Form</a>
+      <a href="02-registration-form.html" class="nav-link">Registration</a>
+      <a href="06-dynamic-table.html" class="nav-link">Tables</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="../index.html">Home</a>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span class="breadcrumb-current">01 Simple Login Form</span>
+    </nav>
+    <div class="page-header-meta">
+      <span class="badge badge-beginner">Beginner</span>
+      <span class="badge badge-tag">Forms</span>
+      <span class="badge badge-tag">Validation</span>
+      <span class="badge badge-tag">Authentication</span>
+    </div>
+    <h1>Simple Login Form</h1>
+    <p>Test username/password input, submit button, cancel, field validation, error messages, and success redirect.</p>
+  </div>
+
+  <div class="page-layout">
+
+    <!-- ══════════ DEMO AREA ══════════ -->
+    <div>
+      <div class="demo-area" id="demo-area">
+
+        <!-- Login Card -->
+        <div id="login-card" data-testid="login-card" style="max-width:400px;margin:0 auto;">
+          <h2 style="text-align:center;margin-bottom:var(--space-2);font-size:var(--font-size-2xl);">Welcome back</h2>
+          <p style="text-align:center;margin-bottom:var(--space-8);">Sign in to your account</p>
+
+          <!-- Alert area -->
+          <div id="login-alert" role="alert" aria-live="polite" data-testid="login-alert" style="display:none;" class="alert alert-danger">
+            <span>🟡</span>
+            <p id="login-alert-message"></p>
+          </div>
+
+          <form id="login-form" data-testid="login-form" novalidate>
+
+            <div class="form-group">
+              <label class="form-label" for="username">
+                Username <span class="required" aria-hidden="true">*</span>
+              </label>
+              <input
+                class="form-input"
+                id="username"
+                name="username"
+                type="text"
+                autocomplete="username"
+                placeholder="Enter your username"
+                data-testid="input-username"
+                aria-required="true"
+                aria-describedby="username-error"
+              />
+              <div class="form-error" id="username-error" role="alert" data-testid="error-username"></div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="password">
+                Password <span class="required" aria-hidden="true">*</span>
+              </label>
+              <div style="position:relative;">
+                <input
+                  class="form-input"
+                  id="password"
+                  name="password"
+                  type="password"
+                  autocomplete="current-password"
+                  placeholder="Enter your password"
+                  data-testid="input-password"
+                  aria-required="true"
+                  aria-describedby="password-error"
+                  style="padding-right:3rem;"
+                />
+                <button
+                  type="button"
+                  id="toggle-password"
+                  data-testid="toggle-password"
+                  aria-label="Show password"
+                  style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--color-text-muted);font-size:1.1rem;"
+                >🔵</button>
+              </div>
+              <div class="form-error" id="password-error" role="alert" data-testid="error-password"></div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:var(--space-3);">
+              <label class="form-check">
+                <input type="checkbox" class="form-check-input" id="remember-me" name="remember" data-testid="checkbox-remember" />
+                <span class="form-check-label">Remember me</span>
+              </label>
+            </div>
+
+            <div style="display:flex;gap:var(--space-3);margin-top:var(--space-6);">
+              <button type="submit" class="btn btn-primary btn-block" id="btn-login" data-testid="btn-submit">
+                Sign In
+              </button>
+              <button type="button" class="btn btn-secondary" id="btn-cancel" data-testid="btn-cancel" style="min-width:90px;">
+                Cancel
+              </button>
+            </div>
+
+          </form>
+
+          <p style="text-align:center;margin-top:var(--space-6);font-size:var(--font-size-sm);">
+            Don't have an account?
+            <a href="02-registration-form.html" data-testid="link-register">Register here</a>
+          </p>
+        </div>
+
+        <!-- Success State (hidden initially) -->
+        <div id="login-success" data-testid="login-success" style="display:none;text-align:center;max-width:400px;margin:0 auto;padding:var(--space-8) 0;">
+          <div style="font-size:3rem;margin-bottom:var(--space-4);">🟢</div>
+          <h2>Login Successful!</h2>
+          <p>Welcome, <strong id="success-username" data-testid="success-username"></strong>!</p>
+          <p style="font-size:var(--font-size-sm);">You are now logged in.</p>
+          <button class="btn btn-secondary" id="btn-logout" data-testid="btn-logout" style="margin-top:var(--space-4);">
+            Log Out
+          </button>
+        </div>
+
+      </div><!-- /demo-area -->
+
+      <!-- Credentials hint for testers -->
+      <div class="alert alert-info" style="margin-top:var(--space-4);" data-testid="credentials-hint">
+        <span>🟡</span>
+        <div>
+          <strong>Valid credentials for testing:</strong>
+          <ul style="margin-top:var(--space-2);padding-left:var(--space-4);">
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:4px;">Username: <code>admin</code> / Password: <code>admin123</code></li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:4px;">Username: <code>tester</code> / Password: <code>Test@2024</code></li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);">Username: <code>qa.engineer</code> / Password: <code>QA_pass!</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ SIDEBAR ══════════ -->
+    <aside class="sidebar" aria-label="Automation guide">
+
+      <!-- Test Objective -->
+      <div class="card">
+        <div class="card-header">
+          <h3 style="font-size:var(--font-size-base);margin:0;">🔵 Test Objective</h3>
+        </div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <ul style="padding-left:var(--space-4);">
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Verify successful login with valid credentials</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Verify error messages for empty/invalid fields</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Verify cancel button clears the form</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Verify password toggle visibility</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Automation Challenges -->
+      <div class="card">
+        <div class="card-header">
+          <h3 style="font-size:var(--font-size-base);margin:0;">🟡 Automation Challenges</h3>
+        </div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <ul style="padding-left:var(--space-4);">
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Password field type toggling (<code>type</code> attribute change)</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Inline vs alert-level error messages</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Success state replaces form DOM</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Key Selectors -->
+      <div class="card">
+        <div class="card-header">
+          <h3 style="font-size:var(--font-size-base);margin:0;">🔵 Key Selectors</h3>
+        </div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <pre style="font-size:0.7rem;margin:0;"><!-- Playwright -->
+page.getByTestId('input-username')
+page.getByTestId('input-password')
+page.getByTestId('btn-submit')
+page.getByTestId('btn-cancel')
+page.getByTestId('login-alert')
+page.getByTestId('login-success')
+page.getByTestId('btn-logout')</pre>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+
+  <!-- ══════════ ATOMIC STEPS ══════════ -->
+  <div class="info-panel" data-testid="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+
+    <div class="info-section">
+      <h3>🟢 Scenario A Successful Login</h3>
+      <ol class="steps">
+        <li class="step-block">Navigate to <code>pages/01-simple-login.html</code></li>
+        <li class="step-block">Assert page title is "Simple Login Form"</li>
+        <li class="step-block">Assert the login form is visible (<code>data-testid="login-form"</code>)</li>
+        <li class="step-block">Type <code>admin</code> into the username field</li>
+        <li class="step-block">Type <code>admin123</code> into the password field</li>
+        <li class="step-block">Click the <strong>Sign In</strong> button</li>
+        <li class="step-block">Assert <code>#login-card</code> is hidden</li>
+        <li class="step-block">Assert <code>#login-success</code> is visible</li>
+        <li class="step-block">Assert <code>#success-username</code> contains text "admin"</li>
+      </ol>
+    </div>
+
+    <div class="info-section">
+      <h3>🔴 Scenario B Empty Form Submission</h3>
+      <ol class="steps">
+        <li class="step-block">Navigate to <code>pages/01-simple-login.html</code></li>
+        <li class="step-block">Leave username and password fields empty</li>
+        <li class="step-block">Click the <strong>Sign In</strong> button</li>
+        <li class="step-block">Assert <code>#username-error</code> is visible and contains "required"</li>
+        <li class="step-block">Assert <code>#password-error</code> is visible and contains "required"</li>
+        <li class="step-block">Assert the form is still visible (no navigation)</li>
+      </ol>
+    </div>
+
+    <div class="info-section">
+      <h3>🔴 Scenario C Wrong Credentials</h3>
+      <ol class="steps">
+        <li class="step-block">Type <code>admin</code> in username</li>
+        <li class="step-block">Type <code>wrongpassword</code> in password</li>
+        <li class="step-block">Click <strong>Sign In</strong></li>
+        <li class="step-block">Assert <code>#login-alert</code> is visible</li>
+        <li class="step-block">Assert alert text contains "Invalid credentials"</li>
+      </ol>
+    </div>
+
+    <div class="info-section">
+      <h3>🔵 Scenario D Password Toggle</h3>
+      <ol class="steps">
+        <li class="step-block">Type any text into <code>#password</code></li>
+        <li class="step-block">Assert <code>type</code> attribute of password input is <code>"password"</code></li>
+        <li class="step-block">Click <code>#toggle-password</code></li>
+        <li class="step-block">Assert <code>type</code> attribute of password input is now <code>"text"</code></li>
+        <li class="step-block">Click <code>#toggle-password</code> again</li>
+        <li class="step-block">Assert <code>type</code> is back to <code>"password"</code></li>
+      </ol>
+    </div>
+
+    <div class="info-section">
+      <h3>🟡 Pitfalls &amp; Edge Cases</h3>
+      <ul>
+        <li>Do NOT assert success by URL change this is a SPA-style swap with no navigation.</li>
+        <li>The alert is hidden via <code>display:none</code> use <code>toBeVisible()</code> not <code>toBeInViewport()</code>.</li>
+        <li>Password field <code>type</code> attribute changes dynamically query fresh each time.</li>
+        <li>Cancel button clears the form but does NOT submit assert empty fields after click.</li>
+      </ul>
+    </div>
+  </div>
+
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab E2E Automation Training Platform · Scenario 01 of 20</p></footer>
+
+<script src="../js/utils.js"></script>
+<script>
+/* ── Login logic ──────────────────────────────────────────── */
+(function () {
+  const VALID_USERS = {
+    'admin':       'admin123',
+    'tester':      'Test@2024',
+    'qa.engineer': 'QA_pass!',
+  };
+
+  const form        = document.getElementById('login-form');
+  const usernameEl  = document.getElementById('username');
+  const passwordEl  = document.getElementById('password');
+  const btnCancel   = document.getElementById('btn-cancel');
+  const btnLogout   = document.getElementById('btn-logout');
+  const togglePwd   = document.getElementById('toggle-password');
+  const alertBox    = document.getElementById('login-alert');
+  const alertMsg    = document.getElementById('login-alert-message');
+  const loginCard   = document.getElementById('login-card');
+  const successBox  = document.getElementById('login-success');
+  const successName = document.getElementById('success-username');
+
+  function showAlert(msg) {
+    alertMsg.textContent = msg;
+    alertBox.style.display = 'flex';
+    alertBox.focus();
+  }
+
+  function hideAlert() {
+    alertBox.style.display = 'none';
+  }
+
+  function validateField(el, errorId, rules) {
+    const errorEl = document.getElementById(errorId);
+    for (const rule of rules) {
+      if (!rule.test(el.value)) {
+        errorEl.textContent = rule.message;
+        errorEl.classList.add('visible');
+        el.classList.add('is-invalid');
+        el.classList.remove('is-valid');
+        return false;
+      }
+    }
+    errorEl.classList.remove('visible');
+    el.classList.remove('is-invalid');
+    el.classList.add('is-valid');
+    return true;
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    hideAlert();
+
+    const uValid = validateField(usernameEl, 'username-error', [
+      { test: v => v.trim() !== '',   message: 'Username is required.' },
+      { test: v => v.trim().length >= 2, message: 'Username must be at least 2 characters.' },
+    ]);
+    const pValid = validateField(passwordEl, 'password-error', [
+      { test: v => v.trim() !== '',   message: 'Password is required.' },
+      { test: v => v.length >= 6,    message: 'Password must be at least 6 characters.' },
+    ]);
+
+    if (!uValid || !pValid) return;
+
+    const username = usernameEl.value.trim();
+    const password = passwordEl.value;
+
+    if (VALID_USERS[username] === password) {
+      loginCard.style.display = 'none';
+      successBox.style.display = 'block';
+      successName.textContent = username;
+      Toast.success('Login successful', `Welcome back, ${username}!`);
+    } else {
+      showAlert('Invalid credentials. Please check your username and password.');
+      passwordEl.value = '';
+      passwordEl.classList.remove('is-valid', 'is-invalid');
+    }
+  });
+
+  btnCancel.addEventListener('click', () => {
+    form.reset();
+    hideAlert();
+    ['username', 'password'].forEach(id => {
+      const el = document.getElementById(id);
+      el.classList.remove('is-valid', 'is-invalid');
+    });
+    document.getElementById('username-error').classList.remove('visible');
+    document.getElementById('password-error').classList.remove('visible');
+    Toast.info('Cancelled', 'Form has been reset.');
+  });
+
+  btnLogout.addEventListener('click', () => {
+    successBox.style.display = 'none';
+    loginCard.style.display = 'block';
+    form.reset();
+    ['username', 'password'].forEach(id => {
+      const el = document.getElementById(id);
+      el.classList.remove('is-valid', 'is-invalid');
+    });
+    Toast.info('Logged out', 'You have been signed out.');
+  });
+
+  togglePwd.addEventListener('click', () => {
+    const isPass = passwordEl.type === 'password';
+    passwordEl.type = isPass ? 'text' : 'password';
+    togglePwd.setAttribute('aria-label', isPass ? 'Hide password' : 'Show password');
+    togglePwd.textContent = isPass ? '🔴' : '🔵';
+  });
+
+  // Clear error on input
+  usernameEl.addEventListener('input', () => {
+    document.getElementById('username-error').classList.remove('visible');
+    usernameEl.classList.remove('is-invalid');
+    hideAlert();
+  });
+  passwordEl.addEventListener('input', () => {
+    document.getElementById('password-error').classList.remove('visible');
+    passwordEl.classList.remove('is-invalid');
+    hideAlert();
+  });
+
+  // Mobile nav
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    const nav = document.getElementById('site-nav');
+    nav.classList.toggle('open');
+    this.setAttribute('aria-expanded', nav.classList.contains('open') ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
+

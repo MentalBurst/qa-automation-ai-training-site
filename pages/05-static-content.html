@@ -1,0 +1,282 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>05 Static Content Verification | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="05-static-content.html" class="nav-link active">Static Content</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="../index.html">Home</a><span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">05 Static Content Verification</span>
+    </nav>
+    <div class="page-header-meta">
+      <span class="badge badge-beginner">Beginner</span>
+      <span class="badge badge-tag">Assertions</span>
+      <span class="badge badge-tag">Navigation</span>
+      <span class="badge badge-tag">Text Content</span>
+    </div>
+    <h1 id="main-heading" data-testid="main-heading">Static Content Verification</h1>
+    <p data-testid="page-description">Practice asserting text content, visibility, attributes, images, links, and structured data the most fundamental automation skill.</p>
+  </div>
+
+  <div class="demo-area" style="margin-bottom:var(--space-8);">
+
+    <!-- Hero stat block -->
+    <section aria-labelledby="stats-heading" data-testid="stats-section" style="margin-bottom:var(--space-8);">
+      <h2 id="stats-heading" style="margin-bottom:var(--space-6);">Key Statistics</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:var(--space-4);">
+        <div style="background:var(--color-bg);border-radius:var(--radius-lg);padding:var(--space-6);text-align:center;" data-testid="stat-card-tests">
+          <div style="font-size:2rem;font-weight:800;color:var(--color-accent);" id="stat-tests" data-testid="stat-tests-value">1,248</div>
+          <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.05em;margin-top:4px;">Total Tests</div>
+        </div>
+        <div style="background:var(--color-bg);border-radius:var(--radius-lg);padding:var(--space-6);text-align:center;" data-testid="stat-card-passed">
+          <div style="font-size:2rem;font-weight:800;color:var(--color-success);" id="stat-passed" data-testid="stat-passed-value">1,199</div>
+          <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.05em;margin-top:4px;">Passed</div>
+        </div>
+        <div style="background:var(--color-bg);border-radius:var(--radius-lg);padding:var(--space-6);text-align:center;" data-testid="stat-card-failed">
+          <div style="font-size:2rem;font-weight:800;color:var(--color-danger);" id="stat-failed" data-testid="stat-failed-value">49</div>
+          <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.05em;margin-top:4px;">Failed</div>
+        </div>
+        <div style="background:var(--color-bg);border-radius:var(--radius-lg);padding:var(--space-6);text-align:center;" data-testid="stat-card-coverage">
+          <div style="font-size:2rem;font-weight:800;color:var(--color-warning);" id="stat-coverage" data-testid="stat-coverage-value">94.2%</div>
+          <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.05em;margin-top:4px;">Coverage</div>
+        </div>
+      </div>
+    </section>
+
+    <hr />
+
+    <!-- Text content section -->
+    <section aria-labelledby="text-heading" data-testid="text-section" style="margin-bottom:var(--space-8);">
+      <h2 id="text-heading" style="margin-bottom:var(--space-4);">About the Platform</h2>
+      <p id="para-intro" data-testid="para-intro">
+        QA Lab is an open source, dependency-free automation training platform. It provides
+        <strong>20 progressive scenarios</strong> ranging from simple form interactions
+        to complex Shadow DOM and canvas-based challenges.
+      </p>
+      <p id="para-audience" data-testid="para-audience">
+        Designed for QA engineers at all levels from onboarding juniors to senior architects
+        preparing technical demonstrations.
+      </p>
+      <blockquote id="quote-1" data-testid="blockquote-1" style="border-left:4px solid var(--color-accent);padding-left:var(--space-4);margin:var(--space-6) 0;font-style:italic;color:var(--color-text-muted);">
+        "Good tests are the most reliable form of documentation."
+        <cite data-testid="quote-author" style="display:block;margin-top:var(--space-2);font-style:normal;font-size:var(--font-size-sm);font-weight:600;">  QA Lab Team</cite>
+      </blockquote>
+    </section>
+
+    <hr />
+
+    <!-- Links section -->
+    <section aria-labelledby="links-heading" data-testid="links-section" style="margin-bottom:var(--space-8);">
+      <h2 id="links-heading" style="margin-bottom:var(--space-4);">Navigation Links</h2>
+      <nav aria-label="Test links" data-testid="test-links">
+        <ul style="display:flex;flex-direction:column;gap:var(--space-3);padding:0;">
+          <li>
+            <a href="01-simple-login.html" id="link-to-login" data-testid="link-to-login"
+               aria-label="Go to Simple Login Form scenario">
+              → Scenario 01: Simple Login Form
+            </a>
+          </li>
+          <li>
+            <a href="06-dynamic-table.html" id="link-to-table" data-testid="link-to-table"
+               aria-label="Go to Dynamic Table scenario">
+              → Scenario 06: Dynamic Table
+            </a>
+          </li>
+          <li>
+            <a href="https://playwright.dev" id="link-external" data-testid="link-external"
+               target="_blank" rel="noopener noreferrer"
+               aria-label="Visit Playwright documentation (opens in new tab)">
+              → Playwright Documentation ↗
+            </a>
+          </li>
+          <li>
+            <a href="#disabled-link" id="link-disabled" data-testid="link-disabled"
+               aria-disabled="true" style="opacity:0.4;cursor:not-allowed;pointer-events:none;"
+               tabindex="-1">
+              → Disabled Link (not clickable)
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </section>
+
+    <hr />
+
+    <!-- Image section -->
+    <section aria-labelledby="images-heading" data-testid="images-section" style="margin-bottom:var(--space-8);">
+      <h2 id="images-heading" style="margin-bottom:var(--space-4);">Images</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--space-4);">
+        <!-- SVG placeholder image -->
+        <figure data-testid="figure-logo" style="margin:0;">
+          <img
+            id="img-logo"
+            data-testid="img-logo"
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='80' viewBox='0 0 120 80'%3E%3Crect width='120' height='80' fill='%234361ee' rx='8'/%3E%3Ctext x='60' y='48' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif' font-weight='bold'%3E🟣 QA Lab%3C/text%3E%3C/svg%3E"
+            alt="QA Lab logo"
+            width="120"
+            height="80"
+            style="border-radius:var(--radius-md);"
+          />
+          <figcaption data-testid="img-logo-caption" style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-top:4px;text-align:center;">QA Lab Logo</figcaption>
+        </figure>
+
+        <!-- Broken image (intentional) -->
+        <figure data-testid="figure-broken" style="margin:0;">
+          <img
+            id="img-broken"
+            data-testid="img-broken"
+            src="assets/does-not-exist.png"
+            alt="Intentionally broken image for testing"
+            width="120"
+            height="80"
+            style="border:2px dashed var(--color-danger);border-radius:var(--radius-md);background:var(--color-danger-bg);"
+          />
+          <figcaption data-testid="img-broken-caption" style="font-size:var(--font-size-xs);color:var(--color-danger);margin-top:4px;text-align:center;">Broken Image (intentional)</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <hr />
+
+    <!-- Data table -->
+    <section aria-labelledby="table-heading" data-testid="data-table-section">
+      <h2 id="table-heading" style="margin-bottom:var(--space-4);">Data Table</h2>
+      <div class="table-wrapper">
+        <table class="table" id="static-table" data-testid="static-table" aria-label="Automation frameworks comparison">
+          <thead>
+            <tr>
+              <th scope="col" data-testid="th-name">Framework</th>
+              <th scope="col" data-testid="th-language">Language</th>
+              <th scope="col" data-testid="th-type">Type</th>
+              <th scope="col" data-testid="th-stars">GitHub Stars</th>
+              <th scope="col" data-testid="th-status">Status</th>
+            </tr>
+          </thead>
+          <tbody id="static-table-body" data-testid="static-table-body">
+            <tr data-testid="row-playwright">
+              <td data-testid="cell-playwright-name"><strong>Playwright</strong></td>
+              <td data-testid="cell-playwright-lang">TypeScript / Python / Java / C#</td>
+              <td data-testid="cell-playwright-type">E2E</td>
+              <td data-testid="cell-playwright-stars">67k+</td>
+              <td><span class="badge badge-beginner" data-testid="cell-playwright-status">Active</span></td>
+            </tr>
+            <tr data-testid="row-selenium">
+              <td data-testid="cell-selenium-name"><strong>Selenium</strong></td>
+              <td>Python / Java / C# / Ruby</td>
+              <td>E2E</td>
+              <td>30k+</td>
+              <td><span class="badge badge-beginner">Active</span></td>
+            </tr>
+            <tr data-testid="row-cypress">
+              <td><strong>Cypress</strong></td>
+              <td>JavaScript / TypeScript</td>
+              <td>E2E / Component</td>
+              <td>47k+</td>
+              <td><span class="badge badge-beginner">Active</span></td>
+            </tr>
+            <tr data-testid="row-robot">
+              <td><strong>Robot Framework</strong></td>
+              <td>Python / Java</td>
+              <td>BDD / Keyword</td>
+              <td>9k+</td>
+              <td><span class="badge badge-beginner">Active</span></td>
+            </tr>
+            <tr data-testid="row-webdriverio">
+              <td><strong>WebdriverIO</strong></td>
+              <td>JavaScript / TypeScript</td>
+              <td>E2E / Mobile</td>
+              <td>9k+</td>
+              <td><span class="badge badge-beginner">Active</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div><!-- /demo-area -->
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Heading &amp; Text Assertions</h3>
+      <ol class="steps">
+        <li class="step-block">Navigate to <code>pages/05-static-content.html</code></li>
+        <li class="step-block">Assert page title is "05 Static Content Verification | QA Lab"</li>
+        <li class="step-block">Assert <code>main-heading</code> text is "Static Content Verification"</li>
+        <li class="step-block">Assert <code>para-intro</code> contains "20 progressive scenarios"</li>
+        <li class="step-block">Assert <code>blockquote-1</code> is visible</li>
+        <li class="step-block">Assert <code>quote-author</code> text contains "QA Lab Team"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario B Stat Card Assertions</h3>
+      <ol class="steps">
+        <li class="step-block">Assert <code>stat-tests-value</code> text is "1,248"</li>
+        <li class="step-block">Assert <code>stat-passed-value</code> text is "1,199"</li>
+        <li class="step-block">Assert <code>stat-failed-value</code> text is "49"</li>
+        <li class="step-block">Assert <code>stat-coverage-value</code> text is "94.2%"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario C Link Attribute Assertions</h3>
+      <ol class="steps">
+        <li class="step-block">Assert <code>link-external</code> has attribute <code>target="_blank"</code></li>
+        <li class="step-block">Assert <code>link-external</code> has attribute <code>rel</code> containing "noopener"</li>
+        <li class="step-block">Assert <code>link-disabled</code> has <code>aria-disabled="true"</code></li>
+        <li class="step-block">Assert <code>link-to-login</code> href ends with "01-simple-login.html"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario D Table Content Assertions</h3>
+      <ol class="steps">
+        <li class="step-block">Assert <code>static-table-body</code> has 5 rows</li>
+        <li class="step-block">Assert first row (<code>row-playwright</code>) cell <code>cell-playwright-name</code> text is "Playwright"</li>
+        <li class="step-block">Assert <code>cell-playwright-status</code> has class "badge-beginner"</li>
+        <li class="step-block">Assert <code>cell-playwright-lang</code> contains "TypeScript"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟡 Pitfalls</h3>
+      <ul>
+        <li>The broken image renders a broken icon the DOM element still exists and is visible.</li>
+        <li>Stat numbers contain commas ("1,248") use <code>toContainText</code> or exact match carefully.</li>
+        <li>Don't rely on pixel position for static content always use text matchers.</li>
+      </ul>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 05 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    const nav = document.getElementById('site-nav');
+    nav.classList.toggle('open');
+    this.setAttribute('aria-expanded', nav.classList.contains('open') ? 'true' : 'false');
+  });
+</script>
+</body>
+</html>
+

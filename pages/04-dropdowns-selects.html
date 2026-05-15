@@ -1,0 +1,417 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>04 Dropdowns & Selects | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <style>
+    /* Custom dropdown widget */
+    .custom-dropdown { position: relative; user-select: none; }
+    .custom-dropdown-trigger {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-4); padding: 0.6rem 0.875rem;
+      background: var(--color-surface); border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md); cursor: pointer; font-size: var(--font-size-base);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .custom-dropdown-trigger:focus { outline: none; border-color: var(--color-accent); box-shadow: var(--shadow-focus); }
+    .custom-dropdown-trigger[aria-expanded="true"] { border-color: var(--color-accent); box-shadow: var(--shadow-focus); }
+    .custom-dropdown-trigger[aria-expanded="true"] .dd-arrow { transform: rotate(180deg); }
+    .dd-arrow { transition: transform var(--transition-normal); font-style: normal; }
+    .custom-dropdown-list {
+      position: absolute; z-index: 100; top: calc(100% + 4px); left: 0; right: 0;
+      background: var(--color-surface); border: 1.5px solid var(--color-accent);
+      border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+      max-height: 240px; overflow-y: auto;
+      display: none;
+    }
+    .custom-dropdown-list.open { display: block; animation: fadeIn 0.15s both; }
+    .custom-dropdown-option {
+      padding: var(--space-3) var(--space-4); cursor: pointer; font-size: var(--font-size-sm);
+      transition: background var(--transition-fast);
+      display: flex; align-items: center; gap: var(--space-3);
+    }
+    .custom-dropdown-option:hover  { background: var(--color-accent-light); }
+    .custom-dropdown-option.selected { background: var(--color-accent-light); color: var(--color-accent); font-weight: 600; }
+    .custom-dropdown-option:focus { background: var(--color-accent-light); outline: none; }
+    .custom-dropdown-option .dd-check { opacity: 0; }
+    .custom-dropdown-option.selected .dd-check { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="04-dropdowns-selects.html" class="nav-link active">Dropdowns</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="../index.html">Home</a><span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">04 Dropdowns &amp; Selects</span>
+    </nav>
+    <div class="page-header-meta">
+      <span class="badge badge-beginner">Beginner</span>
+      <span class="badge badge-tag">Select</span>
+      <span class="badge badge-tag">Multi-Select</span>
+      <span class="badge badge-tag">Custom Dropdown</span>
+    </div>
+    <h1>Dropdowns &amp; Selects</h1>
+    <p>Native HTML selects, multi-select, grouped &lt;optgroup&gt;, and a fully keyboard-accessible custom dropdown widget.</p>
+  </div>
+
+  <div class="page-layout">
+    <div>
+      <div class="demo-area">
+
+        <!-- A: Native Select -->
+        <section style="margin-bottom:var(--space-8);">
+          <h3 style="margin-bottom:var(--space-4);">A. Native &lt;select&gt;</h3>
+          <div class="form-group">
+            <label class="form-label" for="select-country">Country</label>
+            <select class="form-select" id="select-country" name="country" data-testid="select-country">
+              <option value="">  Choose a country  </option>
+              <option value="us">United States</option>
+              <option value="uk">United Kingdom</option>
+              <option value="ca">Canada</option>
+              <option value="de">Germany</option>
+              <option value="pt">Portugal</option>
+              <option value="br">Brazil</option>
+              <option value="au">Australia</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="select-priority">Priority Level</label>
+            <select class="form-select" id="select-priority" name="priority" data-testid="select-priority">
+              <option value="low" selected>Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="select-disabled">Disabled Select</label>
+            <select class="form-select" id="select-disabled" name="disabled" disabled data-testid="select-disabled">
+              <option value="locked">Locked option</option>
+            </select>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btn-read-selects" data-testid="btn-read-selects">Read Values</button>
+          <div id="select-output" data-testid="select-output" style="display:none;margin-top:var(--space-3);" class="alert alert-info"></div>
+        </section>
+
+        <hr />
+
+        <!-- B: Grouped Options -->
+        <section style="margin-bottom:var(--space-8);">
+          <h3 style="margin-bottom:var(--space-4);">B. Grouped Options (&lt;optgroup&gt;)</h3>
+          <div class="form-group">
+            <label class="form-label" for="select-framework">Automation Framework</label>
+            <select class="form-select" id="select-framework" name="framework" data-testid="select-framework">
+              <option value="">  Select framework  </option>
+              <optgroup label="Web Automation">
+                <option value="playwright">Playwright</option>
+                <option value="selenium">Selenium WebDriver</option>
+                <option value="cypress">Cypress</option>
+                <option value="webdriverio">WebdriverIO</option>
+              </optgroup>
+              <optgroup label="Mobile Automation">
+                <option value="appium">Appium</option>
+                <option value="xctest">XCTest</option>
+                <option value="espresso">Espresso</option>
+              </optgroup>
+              <optgroup label="BDD / Others">
+                <option value="robot">Robot Framework</option>
+                <option value="cucumber">Cucumber</option>
+                <option value="behave">Behave (Python)</option>
+              </optgroup>
+            </select>
+          </div>
+          <div id="framework-desc" data-testid="framework-desc" style="font-size:var(--font-size-sm);color:var(--color-text-muted);min-height:1.5em;"></div>
+        </section>
+
+        <hr />
+
+        <!-- C: Multi-Select -->
+        <section style="margin-bottom:var(--space-8);">
+          <h3 style="margin-bottom:var(--space-4);">C. Multi-Select</h3>
+          <div class="alert alert-info" style="margin-bottom:var(--space-4);">
+            <span>🟡</span><p>Hold <code>Ctrl</code> (or <code>Cmd</code> on Mac) to select multiple options.</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="select-skills">Technical Skills</label>
+            <select class="form-select" id="select-skills" name="skills" multiple data-testid="select-skills"
+              style="height:160px;background-image:none;padding-right:0.875rem;">
+              <option value="html">HTML5</option>
+              <option value="css">CSS3</option>
+              <option value="js">JavaScript</option>
+              <option value="ts">TypeScript</option>
+              <option value="python">Python</option>
+              <option value="java">Java</option>
+              <option value="csharp">C#</option>
+              <option value="api">REST API</option>
+            </select>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btn-read-multi" data-testid="btn-read-multi">Read Selected</button>
+          <div id="multi-output" data-testid="multi-output" style="display:none;margin-top:var(--space-3);" class="alert alert-success"></div>
+        </section>
+
+        <hr />
+
+        <!-- D: Custom Dropdown -->
+        <section>
+          <h3 style="margin-bottom:var(--space-4);">D. Custom Dropdown Widget</h3>
+          <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">A fully accessible ARIA combobox-style dropdown built without any framework.</p>
+
+          <div class="form-group">
+            <label class="form-label" id="custom-dd-label">Programming Language</label>
+            <div class="custom-dropdown" data-testid="custom-dropdown" id="custom-dropdown">
+              <button
+                type="button"
+                class="custom-dropdown-trigger"
+                id="custom-dd-trigger"
+                data-testid="custom-dropdown-trigger"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-labelledby="custom-dd-label"
+                aria-describedby="custom-dd-selection"
+              >
+                <span id="custom-dd-value" data-testid="custom-dropdown-value">  Select a language  </span>
+                <span class="dd-arrow" aria-hidden="true">▾</span>
+              </button>
+              <ul
+                class="custom-dropdown-list"
+                id="custom-dd-list"
+                role="listbox"
+                aria-label="Programming languages"
+                data-testid="custom-dropdown-list"
+              >
+                <li class="custom-dropdown-option" role="option" tabindex="-1" data-value="python" data-testid="dd-option-python">
+                  <span class="dd-check" aria-hidden="true">✓</span> Python
+                </li>
+                <li class="custom-dropdown-option" role="option" tabindex="-1" data-value="javascript" data-testid="dd-option-javascript">
+                  <span class="dd-check" aria-hidden="true">✓</span> JavaScript
+                </li>
+                <li class="custom-dropdown-option" role="option" tabindex="-1" data-value="typescript" data-testid="dd-option-typescript">
+                  <span class="dd-check" aria-hidden="true">✓</span> TypeScript
+                </li>
+                <li class="custom-dropdown-option" role="option" tabindex="-1" data-value="java" data-testid="dd-option-java">
+                  <span class="dd-check" aria-hidden="true">✓</span> Java
+                </li>
+                <li class="custom-dropdown-option" role="option" tabindex="-1" data-value="csharp" data-testid="dd-option-csharp">
+                  <span class="dd-check" aria-hidden="true">✓</span> C#
+                </li>
+                <li class="custom-dropdown-option" role="option" tabindex="-1" data-value="go" data-testid="dd-option-go">
+                  <span class="dd-check" aria-hidden="true">✓</span> Go
+                </li>
+                <li class="custom-dropdown-option" role="option" tabindex="-1" data-value="rust" data-testid="dd-option-rust">
+                  <span class="dd-check" aria-hidden="true">✓</span> Rust
+                </li>
+              </ul>
+              <input type="hidden" id="custom-dd-hidden" name="language" data-testid="custom-dropdown-hidden" value="" />
+            </div>
+            <div id="custom-dd-selection" data-testid="custom-dropdown-selection" style="margin-top:var(--space-2);font-size:var(--font-size-sm);color:var(--color-text-muted);">
+              No language selected.
+            </div>
+          </div>
+
+        </section>
+
+      </div><!-- /demo-area -->
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🔵 Test Objective</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <ul style="padding-left:var(--space-4);">
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Select option from native &lt;select&gt;</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Select multiple from multi-select</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Open custom dropdown, click option</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Assert hidden input value after selection</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🔵 Key Selectors</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <pre style="font-size:0.7rem;margin:0;">// Native selects:
+page.selectOption('#select-country', 'pt')
+page.selectOption('#select-skills', ['js','ts'])
+
+// Custom dropdown:
+getByTestId('custom-dropdown-trigger')
+getByTestId('dd-option-python')
+getByTestId('custom-dropdown-hidden')
+  // .inputValue() → 'python'</pre>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🟡 Challenges</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <ul style="padding-left:var(--space-4);">
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Custom dropdown is a <code>&lt;ul&gt;</code> list NOT a native select</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Assert value from hidden input, not visible label</li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Native Select</h3>
+      <ol class="steps">
+        <li class="step-block">Navigate to <code>pages/04-dropdowns-selects.html</code></li>
+        <li class="step-block">Assert <code>#select-country</code> has a default empty option selected</li>
+        <li class="step-block">Select "Portugal" from <code>select-country</code></li>
+        <li class="step-block">Assert selected value is "pt"</li>
+        <li class="step-block">Click <code>btn-read-selects</code></li>
+        <li class="step-block">Assert <code>select-output</code> contains "pt"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario B Custom Dropdown</h3>
+      <ol class="steps">
+        <li class="step-block">Assert <code>custom-dropdown-list</code> is not visible</li>
+        <li class="step-block">Click <code>custom-dropdown-trigger</code></li>
+        <li class="step-block">Assert <code>custom-dropdown-list</code> is now visible</li>
+        <li class="step-block">Assert trigger has <code>aria-expanded="true"</code></li>
+        <li class="step-block">Click <code>dd-option-python</code></li>
+        <li class="step-block">Assert list is closed</li>
+        <li class="step-block">Assert <code>custom-dropdown-value</code> text is "Python"</li>
+        <li class="step-block">Assert hidden input value is "python"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟡 Pitfalls</h3>
+      <ul>
+        <li>Do NOT use <code>selectOption()</code> on the custom dropdown it's not a native select.</li>
+        <li>The custom dropdown closes on outside click test keyboard navigation separately.</li>
+        <li>Multi-select requires Ctrl+click in real interaction, but <code>selectOption()</code> in Playwright accepts arrays.</li>
+      </ul>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 04 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+(function () {
+  const FW_DESC = {
+    playwright: 'Microsoft Playwright async, cross browser, TypeScript-first.',
+    selenium:   'Selenium WebDriver the OG web automation standard.',
+    cypress:    'Cypress fast, developer-friendly E2E for web.',
+    webdriverio:'WebdriverIO extensible, Node.js-based automation.',
+    appium:     'Appium mobile automation for iOS & Android.',
+    xctest:     'XCTest Apple native testing for iOS/macOS.',
+    espresso:   'Espresso Google native Android UI tests.',
+    robot:      'Robot Framework keyword driven, highly readable.',
+    cucumber:   'Cucumber BDD with Gherkin scenarios.',
+    behave:     'Behave BDD framework for Python.',
+  };
+
+  /* ── Native select read ── */
+  document.getElementById('btn-read-selects').addEventListener('click', () => {
+    const country  = document.getElementById('select-country').value;
+    const priority = document.getElementById('select-priority').value;
+    const out = document.getElementById('select-output');
+    out.style.display = 'flex';
+    out.textContent = `Country: "${country || 'none'}" | Priority: "${priority}"`;
+  });
+
+  /* ── Framework description ── */
+  document.getElementById('select-framework').addEventListener('change', (e) => {
+    const desc = document.getElementById('framework-desc');
+    desc.textContent = FW_DESC[e.target.value] || '';
+  });
+
+  /* ── Multi-select read ── */
+  document.getElementById('btn-read-multi').addEventListener('click', () => {
+    const selected = Array.from(document.getElementById('select-skills').selectedOptions).map(o => o.value);
+    const out = document.getElementById('multi-output');
+    out.style.display = 'flex';
+    out.innerHTML = selected.length
+      ? `<span>🟢</span><p>Selected: <strong>${selected.join(', ')}</strong> (${selected.length} item${selected.length > 1 ? 's' : ''})</p>`
+      : `<span>🔵</span><p>No options selected.</p>`;
+  });
+
+  /* ── Custom dropdown ── */
+  const trigger  = document.getElementById('custom-dd-trigger');
+  const list     = document.getElementById('custom-dd-list');
+  const valueEl  = document.getElementById('custom-dd-value');
+  const hiddenEl = document.getElementById('custom-dd-hidden');
+  const selLabel = document.getElementById('custom-dd-selection');
+  const options  = list.querySelectorAll('.custom-dropdown-option');
+  let   currentIdx = -1;
+
+  function openDropdown() {
+    list.classList.add('open');
+    trigger.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeDropdown() {
+    list.classList.remove('open');
+    trigger.setAttribute('aria-expanded', 'false');
+    currentIdx = -1;
+  }
+
+  function selectOption(option) {
+    const val   = option.dataset.value;
+    const label = option.textContent.trim().replace(/^✓\s*/, '');
+    options.forEach(o => o.classList.remove('selected'));
+    option.classList.add('selected');
+    valueEl.textContent   = label;
+    hiddenEl.value        = val;
+    selLabel.textContent  = `Selected: "${label}" (value: "${val}")`;
+    closeDropdown();
+    trigger.focus();
+    Toast.success('Selected', label);
+  }
+
+  trigger.addEventListener('click', () => {
+    list.classList.contains('open') ? closeDropdown() : openDropdown();
+  });
+
+  options.forEach((opt, idx) => {
+    opt.addEventListener('click', () => selectOption(opt));
+    opt.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectOption(opt); }
+      if (e.key === 'ArrowDown') { e.preventDefault(); options[(idx + 1) % options.length].focus(); }
+      if (e.key === 'ArrowUp')   { e.preventDefault(); options[(idx - 1 + options.length) % options.length].focus(); }
+      if (e.key === 'Escape')    { closeDropdown(); trigger.focus(); }
+    });
+  });
+
+  trigger.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); openDropdown(); options[0].focus(); }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!document.getElementById('custom-dropdown').contains(e.target)) closeDropdown();
+  });
+
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    const nav = document.getElementById('site-nav');
+    nav.classList.toggle('open');
+    this.setAttribute('aria-expanded', nav.classList.contains('open') ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
+

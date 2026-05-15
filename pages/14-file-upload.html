@@ -1,0 +1,357 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>14 File Upload | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <style>
+    .dropzone {
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-12) var(--space-8);
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      background: var(--color-bg);
+    }
+    .dropzone:hover, .dropzone.drag-over {
+      border-color: var(--color-accent);
+      background: var(--color-accent-light);
+    }
+    .dropzone.has-files { border-style: solid; border-color: var(--color-success); }
+    .file-list-item {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-2);
+    }
+    .file-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .file-info { flex: 1; min-width: 0; }
+    .file-name { font-size: var(--font-size-sm); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .file-size { font-size: var(--font-size-xs); color: var(--color-text-muted); }
+    .upload-progress { height: 4px; border-radius: var(--radius-full); background: var(--color-border); margin-top: 4px; overflow: hidden; }
+    .upload-progress-fill { height: 100%; background: var(--color-accent); border-radius: var(--radius-full); width: 0%; transition: width 0.05s; }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="14-file-upload.html" class="nav-link active">File Upload</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">14 File Upload</span></nav>
+    <div class="page-header-meta">
+      <span class="badge badge-advanced">Advanced</span>
+      <span class="badge badge-tag">File Input</span>
+      <span class="badge badge-tag">Dropzone</span>
+      <span class="badge badge-tag">Validation</span>
+      <span class="badge badge-tag">Progress</span>
+    </div>
+    <h1>File Upload</h1>
+    <p>Drag-and-drop dropzone, multi-file input, type/size validation, simulated upload progress, preview and remove files.</p>
+  </div>
+
+  <div class="page-layout">
+    <div>
+
+      <!-- A: Dropzone -->
+      <div class="demo-area" style="margin-bottom:var(--space-6);" data-testid="section-dropzone">
+        <h3 style="margin-bottom:var(--space-4);">A. Drag &amp; Drop Dropzone</h3>
+
+        <div class="dropzone" id="upload-dropzone" data-testid="upload-dropzone" tabindex="0" role="button"
+          aria-label="Drop files here or click to select" aria-describedby="dropzone-desc">
+          <div style="font-size:2.5rem;margin-bottom:var(--space-3);">🟡</div>
+          <p style="font-weight:600;margin-bottom:var(--space-1);">Drop files here or click to select</p>
+          <p id="dropzone-desc" style="font-size:var(--font-size-xs);">Accepted: JPG, PNG, PDF, TXT Max 5MB each Up to 5 files</p>
+        </div>
+
+        <input type="file" id="file-input" data-testid="file-input" multiple accept=".jpg,.jpeg,.png,.pdf,.txt"
+          style="position:absolute;opacity:0;width:1px;height:1px;overflow:hidden;" aria-label="File input" />
+
+        <!-- File list -->
+        <div id="file-list" data-testid="file-list" style="margin-top:var(--space-4);"></div>
+
+        <!-- Upload button -->
+        <div id="upload-actions" style="display:none;margin-top:var(--space-4);display:flex;gap:var(--space-3);">
+          <button class="btn btn-primary" id="btn-upload" data-testid="btn-upload">
+            🔵 Upload All
+          </button>
+          <button class="btn btn-secondary" id="btn-clear-files" data-testid="btn-clear-files">
+            🔴 Clear All
+          </button>
+        </div>
+
+        <!-- Upload success -->
+        <div id="upload-success" data-testid="upload-success" style="display:none;margin-top:var(--space-4);" class="alert alert-success">
+          <span>🟢</span><p data-testid="upload-success-message">All files uploaded successfully!</p>
+        </div>
+
+        <!-- Validation errors -->
+        <div id="file-errors" data-testid="file-errors" style="display:none;margin-top:var(--space-3);"></div>
+      </div>
+
+      <!-- B: Simple file input -->
+      <div class="demo-area" data-testid="section-simple-upload">
+        <h3 style="margin-bottom:var(--space-4);">B. Simple File Input (single file)</h3>
+        <div class="form-group">
+          <label class="form-label" for="single-file-input">Profile Picture</label>
+          <input type="file" class="form-input" id="single-file-input" data-testid="single-file-input"
+            accept="image/*" aria-describedby="single-file-hint" style="padding:0.4rem;" />
+          <div class="form-hint" id="single-file-hint">Images only (JPG, PNG, GIF, WebP). Max 2MB.</div>
+        </div>
+        <div id="single-file-preview" data-testid="single-file-preview" style="display:none;margin-top:var(--space-4);">
+          <img id="preview-img" data-testid="preview-img" style="max-width:200px;max-height:200px;border-radius:var(--radius-md);border:2px solid var(--color-border);" alt="Preview" />
+          <div id="preview-info" data-testid="preview-info" style="margin-top:var(--space-2);font-size:var(--font-size-sm);color:var(--color-text-muted);"></div>
+        </div>
+        <div id="single-file-error" data-testid="single-file-error" style="display:none;margin-top:var(--space-3);" class="alert alert-danger"></div>
+      </div>
+
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🔵 Test Objective</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <ul style="padding-left:var(--space-4);">
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Upload valid file → appears in list</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Upload wrong type → error shown</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Upload oversized → error shown</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Click Upload → progress animates → success</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Remove file → disappears from list</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🔵 Playwright Code</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <pre style="font-size:0.7rem;margin:0;">// Set file on hidden input:
+await page.setInputFiles(
+  '#file-input',
+  'path/to/test-file.pdf'
+);
+
+// Assert file in list:
+await page.getByTestId(
+  'file-item-test-file.pdf'
+).toBeVisible();
+
+// Click upload:
+await page.getByTestId('btn-upload').click();
+
+// Wait for success:
+await page.getByTestId(
+  'upload-success'
+).toBeVisible();</pre>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Valid File Upload</h3>
+      <ol class="steps">
+        <li class="step-block">Use <code>setInputFiles('#file-input', 'sample.pdf')</code></li>
+        <li class="step-block">Assert a file entry with name "sample.pdf" appears in <code>file-list</code></li>
+        <li class="step-block">Assert <code>upload-actions</code> is visible</li>
+        <li class="step-block">Click <code>btn-upload</code></li>
+        <li class="step-block">Assert progress bars animate (check CSS width &gt; 0)</li>
+        <li class="step-block">Wait for <code>upload-success</code> to be visible (simulated 2s)</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🔴 Scenario B Invalid File Type</h3>
+      <ol class="steps">
+        <li class="step-block">Use <code>setInputFiles('#file-input', 'malware.exe')</code> via JS injection</li>
+        <li class="step-block">Assert <code>file-errors</code> is visible</li>
+        <li class="step-block">Assert error contains "not allowed"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟡 Pitfalls</h3>
+      <ul>
+        <li>The hidden file input accepts the <code>setInputFiles</code> call even though it is visually hidden.</li>
+        <li>Upload progress is simulated don't wait for real network; wait for the success element.</li>
+        <li>Image preview uses <code>FileReader</code> only works in browser context, not in Node.js.</li>
+      </ul>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 14 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+(function () {
+  const ALLOWED_TYPES  = ['image/jpeg', 'image/png', 'application/pdf', 'text/plain'];
+  const ALLOWED_EXTS   = ['.jpg', '.jpeg', '.png', '.pdf', '.txt'];
+  const MAX_SIZE_MB    = 5;
+  const MAX_FILES      = 5;
+  let stagedFiles = [];
+
+  const dropzone   = document.getElementById('upload-dropzone');
+  const fileInput  = document.getElementById('file-input');
+  const fileList   = document.getElementById('file-list');
+  const actions    = document.getElementById('upload-actions');
+  const errorsEl   = document.getElementById('file-errors');
+
+  function fileIcon(type) {
+    if (type.startsWith('image/')) return '🟡';
+    if (type === 'application/pdf') return '🔵';
+    return '🟣';
+  }
+
+  function formatSize(bytes) {
+    if (bytes < 1024)     return bytes + ' B';
+    if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
+    return (bytes/1024/1024).toFixed(1) + ' MB';
+  }
+
+  function renderFiles() {
+    fileList.innerHTML = '';
+    errorsEl.style.display = 'none';
+    actions.style.display = stagedFiles.length ? 'flex' : 'none';
+    dropzone.classList.toggle('has-files', stagedFiles.length > 0);
+    if (!stagedFiles.length) {
+      document.getElementById('upload-success').style.display = 'none';
+      return;
+    }
+    stagedFiles.forEach((f, i) => {
+      const div = document.createElement('div');
+      div.className = 'file-list-item';
+      div.setAttribute('data-testid', `file-item-${f.name}`);
+      div.setAttribute('data-file-name', f.name);
+      div.setAttribute('data-file-size', f.size);
+      div.innerHTML = `
+        <span class="file-icon">${fileIcon(f.type)}</span>
+        <div class="file-info">
+          <div class="file-name" data-testid="file-name-${i}">${f.name}</div>
+          <div class="file-size" data-testid="file-size-${i}">${formatSize(f.size)}</div>
+          <div class="upload-progress"><div class="upload-progress-fill" id="progress-${i}" data-testid="progress-bar-${i}"></div></div>
+        </div>
+        <span id="file-status-${i}" data-testid="file-status-${i}" style="font-size:var(--font-size-xs);padding:0 8px;"></span>
+        <button class="btn btn-ghost btn-sm" data-remove="${i}" data-testid="btn-remove-${i}" aria-label="Remove ${f.name}"
+          style="padding:4px 8px;color:var(--color-danger);">✕</button>
+      `;
+      fileList.appendChild(div);
+    });
+  }
+
+  function processFiles(files) {
+    const errors = [];
+    const newFiles = [];
+    files.forEach(f => {
+      if (stagedFiles.length + newFiles.length >= MAX_FILES) { errors.push(`Max ${MAX_FILES} files allowed.`); return; }
+      const ext = '.' + f.name.split('.').pop().toLowerCase();
+      if (!ALLOWED_EXTS.includes(ext)) { errors.push(`"${f.name}" type not allowed.`); return; }
+      if (f.size > MAX_SIZE_MB * 1024 * 1024) { errors.push(`"${f.name}" exceeds ${MAX_SIZE_MB}MB limit.`); return; }
+      if (stagedFiles.find(sf => sf.name === f.name)) { errors.push(`"${f.name}" already added.`); return; }
+      newFiles.push(f);
+    });
+    if (errors.length) {
+      errorsEl.style.display = 'block';
+      errorsEl.innerHTML = errors.map(e => `<div class="alert alert-danger" style="padding:8px 12px;margin-bottom:4px;font-size:var(--font-size-xs);">${e}</div>`).join('');
+    }
+    stagedFiles.push(...newFiles);
+    renderFiles();
+  }
+
+  dropzone.addEventListener('click', () => fileInput.click());
+  dropzone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('drag-over'); });
+  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('drag-over');
+    processFiles([...e.dataTransfer.files]);
+  });
+  fileInput.addEventListener('change', (e) => { processFiles([...e.target.files]); fileInput.value = ''; });
+
+  fileList.addEventListener('click', (e) => {
+    const idx = e.target.dataset.remove;
+    if (idx !== undefined) {
+      stagedFiles.splice(parseInt(idx), 1);
+      renderFiles();
+      Toast.info('File removed', '');
+    }
+  });
+
+  document.getElementById('btn-clear-files').addEventListener('click', () => {
+    stagedFiles = [];
+    renderFiles();
+    Toast.info('Cleared', 'All files removed.');
+  });
+
+  document.getElementById('btn-upload').addEventListener('click', async () => {
+    document.getElementById('btn-upload').disabled = true;
+    document.getElementById('btn-clear-files').disabled = true;
+    for (let i = 0; i < stagedFiles.length; i++) {
+      const fill = document.getElementById(`progress-${i}`);
+      const status = document.getElementById(`file-status-${i}`);
+      status.textContent = '🔵';
+      for (let p = 0; p <= 100; p += 5) {
+        fill.style.width = p + '%';
+        await delay(30);
+      }
+      fill.style.background = 'var(--color-success)';
+      status.textContent = '🟢';
+    }
+    document.getElementById('upload-success').style.display = 'flex';
+    document.getElementById('btn-upload').disabled = false;
+    Toast.success('Upload complete', `${stagedFiles.length} file(s) uploaded.`);
+  });
+
+  /* B: Single file preview */
+  document.getElementById('single-file-input').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    const errDiv = document.getElementById('single-file-error');
+    const preview = document.getElementById('single-file-preview');
+    errDiv.style.display = 'none';
+    preview.style.display = 'none';
+
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      errDiv.style.display = 'flex';
+      errDiv.innerHTML = '<span>🔴</span><p>Only image files are allowed.</p>';
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      errDiv.style.display = 'flex';
+      errDiv.innerHTML = '<span>🔴</span><p>File exceeds 2MB limit.</p>';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      document.getElementById('preview-img').src = ev.target.result;
+      document.getElementById('preview-info').textContent = `${file.name} ${formatSize(file.size)}`;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    document.getElementById('site-nav').classList.toggle('open');
+    this.setAttribute('aria-expanded', document.getElementById('site-nav').classList.contains('open') ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
+

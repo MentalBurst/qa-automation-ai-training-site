@@ -1,0 +1,305 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>09 Advanced Form Validation | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="09-form-validation.html" class="nav-link active">Form Validation</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">09 Advanced Form Validation</span></nav>
+    <div class="page-header-meta">
+      <span class="badge badge-intermediate">Intermediate</span>
+      <span class="badge badge-tag">Validation</span>
+      <span class="badge badge-tag">Real-time</span>
+      <span class="badge badge-tag">Conditional Fields</span>
+      <span class="badge badge-tag">Debounce</span>
+    </div>
+    <h1>Advanced Form Validation</h1>
+    <p>Real-time regex validation, password strength meter, conditional field reveal, debounced username availability check, and cross-field validation.</p>
+  </div>
+
+  <div class="page-layout">
+    <div>
+      <div class="demo-area">
+        <form id="validation-form" data-testid="validation-form" novalidate>
+
+          <!-- Username with async check -->
+          <div class="form-group">
+            <label class="form-label" for="v-username">Username <span class="required">*</span></label>
+            <div style="position:relative;">
+              <input class="form-input" id="v-username" type="text" data-testid="input-username"
+                placeholder="Choose a username" aria-describedby="v-username-hint v-username-error" />
+              <span id="username-check-icon" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:1rem;" data-testid="username-check-icon"></span>
+            </div>
+            <div class="form-hint" id="v-username-hint">3–16 chars. Letters, numbers, underscores. Async availability check after typing stops.</div>
+            <div class="form-error" id="v-username-error" data-testid="error-username"></div>
+            <div id="username-checking" data-testid="username-checking" style="display:none;font-size:var(--font-size-xs);color:var(--color-text-muted);margin-top:4px;">
+              🟡 Checking availability…
+            </div>
+            <div id="username-available" data-testid="username-available" style="display:none;font-size:var(--font-size-xs);color:var(--color-success);margin-top:4px;">🟢 Username is available!</div>
+            <div id="username-taken" data-testid="username-taken" style="display:none;font-size:var(--font-size-xs);color:var(--color-danger);margin-top:4px;">🔴 Username is already taken.</div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label" for="v-email">Email <span class="required">*</span></label>
+            <input class="form-input" id="v-email" type="email" data-testid="input-email"
+              placeholder="you@example.com" aria-describedby="v-email-error" />
+            <div class="form-error" id="v-email-error" data-testid="error-email"></div>
+          </div>
+
+          <!-- Password with strength -->
+          <div class="form-group">
+            <label class="form-label" for="v-password">Password <span class="required">*</span></label>
+            <input class="form-input" id="v-password" type="password" data-testid="input-password"
+              placeholder="Create a strong password" aria-describedby="v-password-error pwd-rules" />
+            <div style="margin-top:var(--space-2);">
+              <div class="progress-bar"><div id="v-pwd-fill" class="progress-fill" style="width:0%;transition:width .3s,background .3s;"></div></div>
+              <div style="display:flex;justify-content:space-between;margin-top:4px;">
+                <span id="v-pwd-label" data-testid="password-strength-label" style="font-size:var(--font-size-xs);color:var(--color-text-muted);">No password</span>
+              </div>
+            </div>
+            <!-- Rules checklist -->
+            <ul id="pwd-rules" style="margin-top:var(--space-3);padding:0;display:flex;flex-direction:column;gap:4px;" data-testid="password-rules">
+              <li id="rule-length"  data-testid="rule-length"  style="font-size:var(--font-size-xs);display:flex;align-items:center;gap:6px;"><span class="rule-icon">○</span> At least 8 characters</li>
+              <li id="rule-upper"   data-testid="rule-upper"   style="font-size:var(--font-size-xs);display:flex;align-items:center;gap:6px;"><span class="rule-icon">○</span> At least one uppercase letter</li>
+              <li id="rule-number"  data-testid="rule-number"  style="font-size:var(--font-size-xs);display:flex;align-items:center;gap:6px;"><span class="rule-icon">○</span> At least one number</li>
+              <li id="rule-special" data-testid="rule-special" style="font-size:var(--font-size-xs);display:flex;align-items:center;gap:6px;"><span class="rule-icon">○</span> At least one special character</li>
+            </ul>
+            <div class="form-error" id="v-password-error" data-testid="error-password"></div>
+          </div>
+
+          <!-- Confirm password -->
+          <div class="form-group">
+            <label class="form-label" for="v-confirm">Confirm Password <span class="required">*</span></label>
+            <input class="form-input" id="v-confirm" type="password" data-testid="input-confirm"
+              placeholder="Repeat password" aria-describedby="v-confirm-error" />
+            <div id="match-indicator" data-testid="match-indicator" style="display:none;font-size:var(--font-size-xs);margin-top:4px;"></div>
+            <div class="form-error" id="v-confirm-error" data-testid="error-confirm"></div>
+          </div>
+
+          <!-- Account type (conditional field) -->
+          <div class="form-group">
+            <label class="form-label" for="v-account-type">Account Type <span class="required">*</span></label>
+            <select class="form-select" id="v-account-type" data-testid="select-account-type">
+              <option value="">  Select type  </option>
+              <option value="personal">Personal</option>
+              <option value="business">Business</option>
+              <option value="enterprise">Enterprise</option>
+            </select>
+          </div>
+
+          <!-- Conditional: Business fields -->
+          <div id="business-fields" data-testid="business-fields" style="display:none;border:1.5px solid var(--color-accent-light);border-radius:var(--radius-md);padding:var(--space-4);background:var(--color-accent-light);margin-bottom:var(--space-6);">
+            <p style="font-size:var(--font-size-sm);font-weight:600;margin-bottom:var(--space-4);">Business Information (required for Business/Enterprise)</p>
+            <div class="form-group">
+              <label class="form-label" for="v-company">Company Name <span class="required">*</span></label>
+              <input class="form-input" id="v-company" type="text" data-testid="input-company"
+                placeholder="Acme Corp" aria-describedby="v-company-error" />
+              <div class="form-error" id="v-company-error" data-testid="error-company"></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" for="v-vat">VAT Number</label>
+              <input class="form-input" id="v-vat" type="text" data-testid="input-vat"
+                placeholder="PT123456789" aria-describedby="v-vat-hint" />
+              <div class="form-hint" id="v-vat-hint">Format: 2-letter country code + 9 digits</div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" id="btn-validate-submit" data-testid="btn-submit">
+            Create Account
+          </button>
+        </form>
+
+        <div id="v-success" data-testid="v-success" style="display:none;text-align:center;padding:var(--space-8) 0;">
+          <div style="font-size:2.5rem;margin-bottom:var(--space-3);">🟢</div>
+          <h3>Account Created!</h3>
+          <p data-testid="v-success-message"></p>
+        </div>
+
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🔵 Test Objective</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <ul style="padding-left:var(--space-4);">
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Type valid password → all rules turn green</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Select "Business" → assert extra fields appear</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Type taken username → wait debounce → assert error</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Confirm mismatch → real time error on blur</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🟣 Taken Usernames</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <p style="font-size:var(--font-size-sm);">These simulate "already taken":</p>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:var(--space-2);">
+            <code>admin</code><code>tester</code><code>root</code><code>alice</code><code>john</code>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Debounced Username Check</h3>
+      <ol class="steps">
+        <li class="step-block">Type "adm" in <code>input-username</code></li>
+        <li class="step-block">Assert <code>username-checking</code> is NOT yet visible (debounce pending)</li>
+        <li class="step-block">Type "in" (completing "admin") and wait 700ms</li>
+        <li class="step-block">Assert <code>username-checking</code> becomes visible</li>
+        <li class="step-block">Wait for check to complete (simulated 1.2s)</li>
+        <li class="step-block">Assert <code>username-taken</code> is visible</li>
+        <li class="step-block">Clear field, type "uniqueuser99" and wait 1.5s</li>
+        <li class="step-block">Assert <code>username-available</code> is visible</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario B Conditional Fields</h3>
+      <ol class="steps">
+        <li class="step-block">Assert <code>business-fields</code> is not visible</li>
+        <li class="step-block">Select "Business" from <code>select-account-type</code></li>
+        <li class="step-block">Assert <code>business-fields</code> is now visible</li>
+        <li class="step-block">Assert <code>input-company</code> is required</li>
+        <li class="step-block">Select "Personal" from <code>select-account-type</code></li>
+        <li class="step-block">Assert <code>business-fields</code> is hidden again</li>
+      </ol>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 09 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+(function () {
+  const TAKEN_NAMES = ['admin','tester','root','alice','john'];
+  const STRENGTH = ['','Very Weak','Weak','Fair','Strong','Very Strong'];
+  const STRENGTH_COLORS = ['','#e53e3e','#d69e2e','#d69e2e','#38a169','#2f855a'];
+
+  /* Password rules */
+  function updateRules(pwd) {
+    const rules = [
+      { id: 'rule-length',  test: pwd.length >= 8 },
+      { id: 'rule-upper',   test: /[A-Z]/.test(pwd) },
+      { id: 'rule-number',  test: /[0-9]/.test(pwd) },
+      { id: 'rule-special', test: /[^A-Za-z0-9]/.test(pwd) },
+    ];
+    rules.forEach(r => {
+      const li = document.getElementById(r.id);
+      const icon = li.querySelector('.rule-icon');
+      icon.textContent = r.test ? '🟢' : '○';
+      li.style.color = r.test ? 'var(--color-success)' : 'var(--color-text-muted)';
+    });
+    const score = Math.min(rules.filter(r => r.test).length + (pwd.length >= 12 ? 1 : 0), 5);
+    document.getElementById('v-pwd-fill').style.width = (score / 5 * 100) + '%';
+    document.getElementById('v-pwd-fill').style.background = STRENGTH_COLORS[score];
+    document.getElementById('v-pwd-label').textContent = pwd ? STRENGTH[Math.max(score, 1)] : 'No password';
+  }
+
+  document.getElementById('v-password').addEventListener('input', (e) => updateRules(e.target.value));
+
+  /* Confirm match */
+  document.getElementById('v-confirm').addEventListener('input', () => {
+    const pwd = document.getElementById('v-password').value;
+    const conf = document.getElementById('v-confirm').value;
+    const ind = document.getElementById('match-indicator');
+    if (!conf) { ind.style.display = 'none'; return; }
+    ind.style.display = 'block';
+    ind.textContent = pwd === conf ? '🟢 Passwords match' : '🔴 Passwords do not match';
+    ind.style.color = pwd === conf ? 'var(--color-success)' : 'var(--color-danger)';
+  });
+
+  /* Username debounce */
+  let usernameTimer;
+  document.getElementById('v-username').addEventListener('input', (e) => {
+    const val = e.target.value.trim();
+    document.getElementById('username-checking').style.display = 'none';
+    document.getElementById('username-available').style.display = 'none';
+    document.getElementById('username-taken').style.display = 'none';
+    document.getElementById('username-check-icon').textContent = '';
+    clearTimeout(usernameTimer);
+    if (val.length < 3) return;
+    usernameTimer = setTimeout(() => {
+      document.getElementById('username-checking').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('username-checking').style.display = 'none';
+        const taken = TAKEN_NAMES.includes(val.toLowerCase());
+        document.getElementById(taken ? 'username-taken' : 'username-available').style.display = 'block';
+        document.getElementById('username-check-icon').textContent = taken ? '🔴' : '🟢';
+      }, 1200);
+    }, 600);
+  });
+
+  /* Conditional fields */
+  document.getElementById('v-account-type').addEventListener('change', (e) => {
+    const show = e.target.value === 'business' || e.target.value === 'enterprise';
+    document.getElementById('business-fields').style.display = show ? 'block' : 'none';
+    document.getElementById('v-company').required = show;
+  });
+
+  /* Submit */
+  document.getElementById('validation-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    let ok = true;
+
+    const setErr = (id, msg) => {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.classList.toggle('visible', !!msg);
+    };
+
+    const username = document.getElementById('v-username').value.trim();
+    const email    = document.getElementById('v-email').value.trim();
+    const password = document.getElementById('v-password').value;
+    const confirm  = document.getElementById('v-confirm').value;
+    const type     = document.getElementById('v-account-type').value;
+    const company  = document.getElementById('v-company').value.trim();
+
+    if (!username || !/^[a-zA-Z0-9_]{3,16}$/.test(username)) { setErr('v-username-error', 'Invalid username format.'); ok = false; } else setErr('v-username-error', '');
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setErr('v-email-error', 'Invalid email.'); ok = false; } else setErr('v-email-error', '');
+    if (password.length < 8) { setErr('v-password-error', 'Password too short.'); ok = false; } else setErr('v-password-error', '');
+    if (password !== confirm) { setErr('v-confirm-error', 'Passwords do not match.'); ok = false; } else setErr('v-confirm-error', '');
+    if (!type) { ok = false; }
+    if ((type === 'business' || type === 'enterprise') && !company) { setErr('v-company-error', 'Company name required for Business accounts.'); ok = false; } else setErr('v-company-error', '');
+
+    if (!ok) return;
+    document.getElementById('validation-form').style.display = 'none';
+    const s = document.getElementById('v-success');
+    s.style.display = 'block';
+    s.querySelector('[data-testid="v-success-message"]').textContent = `Account "${username}" created as ${type}.`;
+    Toast.success('Account created!', username);
+  });
+
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    document.getElementById('site-nav').classList.toggle('open');
+    this.setAttribute('aria-expanded', document.getElementById('site-nav').classList.contains('open') ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
+

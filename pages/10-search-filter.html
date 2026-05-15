@@ -1,0 +1,275 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>10 Search & Filter | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="10-search-filter.html" class="nav-link active">Search &amp; Filter</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">10 Search &amp; Filter</span></nav>
+    <div class="page-header-meta">
+      <span class="badge badge-intermediate">Intermediate</span>
+      <span class="badge badge-tag">Search</span>
+      <span class="badge badge-tag">Filter</span>
+      <span class="badge badge-tag">Debounce</span>
+      <span class="badge badge-tag">Empty State</span>
+    </div>
+    <h1>Search &amp; Filter</h1>
+    <p>Live search with debounce, multi-criteria filter panel, result count badge, empty state, and filter reset.</p>
+  </div>
+
+  <div class="demo-area">
+    <!-- Search + filter bar -->
+    <div style="display:flex;align-items:flex-start;flex-wrap:wrap;gap:var(--space-4);margin-bottom:var(--space-6);">
+      <div style="flex:1;min-width:240px;">
+        <div style="position:relative;">
+          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--color-text-muted);">🔵</span>
+          <input
+            type="search"
+            class="form-input"
+            id="search-input"
+            data-testid="search-input"
+            placeholder="Search books by title or author…"
+            aria-label="Search books"
+            aria-controls="results-grid"
+            aria-autocomplete="list"
+            style="padding-left:2.5rem;"
+          />
+        </div>
+        <div id="search-debounce-indicator" data-testid="search-debounce-indicator"
+          style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-top:4px;display:none;">
+          🟡 Searching…
+        </div>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:var(--space-3);align-items:center;">
+        <select class="form-select" id="filter-genre" data-testid="filter-genre" style="width:auto;" aria-label="Filter by genre">
+          <option value="">All Genres</option>
+          <option value="sci-fi">Sci-Fi</option>
+          <option value="mystery">Mystery</option>
+          <option value="fantasy">Fantasy</option>
+          <option value="tech">Technology</option>
+          <option value="biography">Biography</option>
+        </select>
+
+        <select class="form-select" id="filter-rating" data-testid="filter-rating" style="width:auto;" aria-label="Minimum rating">
+          <option value="0">Any Rating</option>
+          <option value="3">3+ Stars</option>
+          <option value="4">4+ Stars</option>
+          <option value="5">5 Stars Only</option>
+        </select>
+
+        <label class="form-check" style="white-space:nowrap;">
+          <input type="checkbox" class="form-check-input" id="filter-available" data-testid="filter-available" />
+          <span class="form-check-label" style="font-size:var(--font-size-sm);">In Stock Only</span>
+        </label>
+
+        <button class="btn btn-secondary btn-sm" id="btn-clear-filters" data-testid="btn-clear-filters">
+          Clear All
+        </button>
+      </div>
+    </div>
+
+    <!-- Result count -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-4);">
+      <div>
+        <span id="result-count" data-testid="result-count"
+          style="font-size:var(--font-size-sm);font-weight:600;color:var(--color-text);"
+          aria-live="polite" aria-atomic="true">20 books found</span>
+      </div>
+      <div style="display:flex;gap:var(--space-2);">
+        <button class="btn btn-secondary btn-sm" id="view-grid" data-testid="view-grid" aria-pressed="true" title="Grid view">⊞</button>
+        <button class="btn btn-ghost   btn-sm" id="view-list" data-testid="view-list" aria-pressed="false" title="List view">≡</button>
+      </div>
+    </div>
+
+    <!-- Results grid -->
+    <div id="results-grid" data-testid="results-grid" role="list" aria-label="Book results"
+      style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--space-4);">
+      <!-- Cards rendered by JS -->
+    </div>
+
+    <!-- Empty state -->
+    <div id="empty-state" data-testid="empty-state" style="display:none;text-align:center;padding:var(--space-12) 0;">
+      <div style="font-size:3rem;margin-bottom:var(--space-3);">🔵</div>
+      <h3 style="margin-bottom:var(--space-2);">No books found</h3>
+      <p>Try a different search term or clear the filters.</p>
+      <button class="btn btn-secondary btn-sm" id="btn-empty-clear" data-testid="btn-empty-clear" style="margin-top:var(--space-4);">
+        Clear Filters
+      </button>
+    </div>
+  </div>
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Live Search with Debounce</h3>
+      <ol class="steps">
+        <li class="step-block">Assert <code>result-count</code> shows "20 books found"</li>
+        <li class="step-block">Type "ga" into <code>search-input</code></li>
+        <li class="step-block">Assert <code>search-debounce-indicator</code> appears briefly</li>
+        <li class="step-block">Wait 400ms for debounce to complete</li>
+        <li class="step-block">Assert results are filtered (fewer than 20 cards visible)</li>
+        <li class="step-block">Assert all visible cards contain "ga" in title or author</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario B Empty State</h3>
+      <ol class="steps">
+        <li class="step-block">Type "zzzzzzzzz" into <code>search-input</code></li>
+        <li class="step-block">Assert <code>results-grid</code> has no visible children</li>
+        <li class="step-block">Assert <code>empty-state</code> is visible</li>
+        <li class="step-block">Assert <code>result-count</code> shows "0 books found"</li>
+        <li class="step-block">Click <code>btn-empty-clear</code></li>
+        <li class="step-block">Assert search input is cleared</li>
+        <li class="step-block">Assert <code>result-count</code> shows "20 books found"</li>
+      </ol>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 10 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+(function () {
+  const BOOKS = [
+    { id:1,  title:'The Pragmatic Programmer',      author:'Hunt & Thomas',    genre:'tech',      rating:5, available:true  },
+    { id:2,  title:'Clean Code',                    author:'Robert C. Martin', genre:'tech',      rating:5, available:true  },
+    { id:3,  title:'Dune',                          author:'Frank Herbert',    genre:'sci-fi',    rating:5, available:true  },
+    { id:4,  title:'Foundation',                    author:'Isaac Asimov',     genre:'sci-fi',    rating:5, available:false },
+    { id:5,  title:'The Name of the Wind',          author:'Patrick Rothfuss', genre:'fantasy',   rating:5, available:true  },
+    { id:6,  title:'A Fire Upon the Deep',          author:'Vernor Vinge',     genre:'sci-fi',    rating:4, available:true  },
+    { id:7,  title:'The Girl with Dragon Tattoo',   author:'Stieg Larsson',    genre:'mystery',   rating:4, available:false },
+    { id:8,  title:'Gone Girl',                     author:'Gillian Flynn',    genre:'mystery',   rating:4, available:true  },
+    { id:9,  title:'Designing Data-Intensive Apps', author:'Martin Kleppmann', genre:'tech',      rating:5, available:true  },
+    { id:10, title:'Clean Architecture',            author:'Robert C. Martin', genre:'tech',      rating:4, available:true  },
+    { id:11, title:'The Hobbit',                    author:'J.R.R. Tolkien',   genre:'fantasy',   rating:5, available:true  },
+    { id:12, title:'Neuromancer',                   author:'William Gibson',   genre:'sci-fi',    rating:4, available:false },
+    { id:13, title:'Sherlock Holmes',               author:'Conan Doyle',      genre:'mystery',   rating:5, available:true  },
+    { id:14, title:'Elon Musk',                     author:'Walter Isaacson',  genre:'biography', rating:4, available:true  },
+    { id:15, title:'Steve Jobs',                    author:'Walter Isaacson',  genre:'biography', rating:4, available:true  },
+    { id:16, title:'The Silmarillion',              author:'J.R.R. Tolkien',   genre:'fantasy',   rating:4, available:false },
+    { id:17, title:'You Look Like a Thing',         author:'Janelle Shane',    genre:'tech',      rating:4, available:true  },
+    { id:18, title:'The Big Sleep',                 author:'Raymond Chandler', genre:'mystery',   rating:3, available:true  },
+    { id:19, title:'Ender\'s Game',                 author:'Orson Scott Card',  genre:'sci-fi',    rating:5, available:true  },
+    { id:20, title:'A Brief History of Time',       author:'Stephen Hawking',  genre:'tech',      rating:4, available:false },
+  ];
+
+  function getFiltered() {
+    const q    = document.getElementById('search-input').value.trim().toLowerCase();
+    const genre= document.getElementById('filter-genre').value;
+    const rat  = parseInt(document.getElementById('filter-rating').value);
+    const avail= document.getElementById('filter-available').checked;
+    return BOOKS.filter(b => {
+      if (q && !b.title.toLowerCase().includes(q) && !b.author.toLowerCase().includes(q)) return false;
+      if (genre && b.genre !== genre) return false;
+      if (rat > 0 && b.rating < rat) return false;
+      if (avail && !b.available) return false;
+      return true;
+    });
+  }
+
+  function render() {
+    const filtered = getFiltered();
+    const grid = document.getElementById('results-grid');
+    const empty = document.getElementById('empty-state');
+    const count = document.getElementById('result-count');
+
+    count.textContent = `${filtered.length} book${filtered.length !== 1 ? 's' : ''} found`;
+    grid.innerHTML = '';
+
+    if (filtered.length === 0) {
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    filtered.forEach(b => {
+      const stars = '🟢'.repeat(b.rating) + '🟡'.repeat(5 - b.rating);
+      const card = document.createElement('div');
+      card.style.cssText = 'background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4);';
+      card.setAttribute('role', 'listitem');
+      card.setAttribute('data-testid', `book-card-${b.id}`);
+      card.setAttribute('data-genre', b.genre);
+      card.setAttribute('data-rating', b.rating);
+      card.setAttribute('data-available', b.available);
+      card.innerHTML = `
+        <div style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--color-text-muted);margin-bottom:4px;" data-testid="book-genre-${b.id}">${b.genre}</div>
+        <div style="font-weight:700;font-size:var(--font-size-sm);margin-bottom:4px;line-height:1.3;" data-testid="book-title-${b.id}">${b.title}</div>
+        <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-bottom:6px;" data-testid="book-author-${b.id}">${b.author}</div>
+        <div style="font-size:0.8rem;color:#d69e2e;margin-bottom:6px;" data-testid="book-rating-${b.id}" aria-label="${b.rating} out of 5 stars">${stars}</div>
+        <span style="font-size:var(--font-size-xs);font-weight:600;color:${b.available ? 'var(--color-success)' : 'var(--color-danger)'};" data-testid="book-stock-${b.id}">${b.available ? '✓ In Stock' : '✗ Out of Stock'}</span>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function clearAll() {
+    document.getElementById('search-input').value = '';
+    document.getElementById('filter-genre').value = '';
+    document.getElementById('filter-rating').value = '0';
+    document.getElementById('filter-available').checked = false;
+    render();
+  }
+
+  let debounceTimer;
+  document.getElementById('search-input').addEventListener('input', () => {
+    const ind = document.getElementById('search-debounce-indicator');
+    ind.style.display = 'block';
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => { ind.style.display = 'none'; render(); }, 350);
+  });
+
+  ['filter-genre','filter-rating','filter-available'].forEach(id => {
+    document.getElementById(id).addEventListener('change', render);
+  });
+
+  document.getElementById('btn-clear-filters').addEventListener('click', clearAll);
+  document.getElementById('btn-empty-clear').addEventListener('click', clearAll);
+
+  // View toggle
+  document.getElementById('view-grid').addEventListener('click', () => {
+    document.getElementById('results-grid').style.gridTemplateColumns = 'repeat(auto-fill,minmax(200px,1fr))';
+    document.getElementById('view-grid').classList.replace('btn-ghost','btn-secondary');
+    document.getElementById('view-list').classList.replace('btn-secondary','btn-ghost');
+    document.getElementById('view-grid').setAttribute('aria-pressed','true');
+    document.getElementById('view-list').setAttribute('aria-pressed','false');
+  });
+  document.getElementById('view-list').addEventListener('click', () => {
+    document.getElementById('results-grid').style.gridTemplateColumns = '1fr';
+    document.getElementById('view-list').classList.replace('btn-ghost','btn-secondary');
+    document.getElementById('view-grid').classList.replace('btn-secondary','btn-ghost');
+    document.getElementById('view-list').setAttribute('aria-pressed','true');
+    document.getElementById('view-grid').setAttribute('aria-pressed','false');
+  });
+
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    document.getElementById('site-nav').classList.toggle('open');
+    this.setAttribute('aria-expanded', document.getElementById('site-nav').classList.contains('open') ? 'true' : 'false');
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
+

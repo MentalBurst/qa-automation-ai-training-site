@@ -1,0 +1,359 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>03 Checkboxes & Radios | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="03-checkboxes-radios.html" class="nav-link active">Checkboxes &amp; Radios</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="../index.html">Home</a><span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">03 Checkboxes &amp; Radios</span>
+    </nav>
+    <div class="page-header-meta">
+      <span class="badge badge-beginner">Beginner</span>
+      <span class="badge badge-tag">Checkboxes</span>
+      <span class="badge badge-tag">Radios</span>
+      <span class="badge badge-tag">Toggle Switches</span>
+    </div>
+    <h1>Checkboxes &amp; Radio Buttons</h1>
+    <p>Single checkboxes, grouped checkboxes with select-all, radio button groups, toggle switches, and indeterminate state.</p>
+  </div>
+
+  <div class="page-layout">
+    <div>
+      <div class="demo-area">
+
+        <!-- Section A: Single Checkboxes -->
+        <section aria-labelledby="section-single-cb" style="margin-bottom:var(--space-8);">
+          <h3 id="section-single-cb" style="margin-bottom:var(--space-4);">A. Single Checkboxes</h3>
+          <div style="display:flex;flex-direction:column;gap:var(--space-3);">
+            <label class="form-check" data-testid="check-terms">
+              <input type="checkbox" class="form-check-input" id="cb-terms" data-testid="cb-terms" />
+              <span class="form-check-label">I accept the Terms and Conditions</span>
+            </label>
+            <label class="form-check" data-testid="check-newsletter">
+              <input type="checkbox" class="form-check-input" id="cb-newsletter" data-testid="cb-newsletter" checked />
+              <span class="form-check-label">Subscribe to newsletter (pre checked)</span>
+            </label>
+            <label class="form-check" data-testid="check-disabled">
+              <input type="checkbox" class="form-check-input" id="cb-disabled" data-testid="cb-disabled" disabled />
+              <span class="form-check-label" style="opacity:0.5;">Disabled checkbox</span>
+            </label>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btn-read-checkboxes" data-testid="btn-read-checkboxes" style="margin-top:var(--space-4);">
+            Read State
+          </button>
+          <div id="single-cb-output" data-testid="single-cb-output" class="alert alert-info" style="display:none;margin-top:var(--space-3);"></div>
+        </section>
+
+        <hr />
+
+        <!-- Section B: Select-All Group -->
+        <section aria-labelledby="section-group-cb" style="margin-bottom:var(--space-8);">
+          <h3 id="section-group-cb" style="margin-bottom:var(--space-4);">B. Grouped with Select All</h3>
+          <div style="border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;">
+            <!-- Select-all header -->
+            <div style="padding:var(--space-3) var(--space-4);background:var(--color-bg);border-bottom:1px solid var(--color-border);display:flex;align-items:center;gap:var(--space-3);">
+              <input type="checkbox" class="form-check-input" id="cb-select-all" data-testid="cb-select-all"
+                aria-label="Select all items" style="cursor:pointer;" />
+              <label for="cb-select-all" style="font-weight:600;font-size:var(--font-size-sm);cursor:pointer;">
+                Select All
+              </label>
+              <span id="selection-count" data-testid="selection-count" style="margin-left:auto;font-size:var(--font-size-xs);color:var(--color-text-muted);">0 of 5 selected</span>
+            </div>
+            <!-- Items -->
+            <div id="checkbox-group" data-testid="checkbox-group">
+              <label class="form-check" style="padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--color-border);">
+                <input type="checkbox" class="form-check-input group-item" data-testid="cb-item-1" id="cb-item-1" value="playwright" />
+                <span class="form-check-label">Playwright</span>
+              </label>
+              <label class="form-check" style="padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--color-border);">
+                <input type="checkbox" class="form-check-input group-item" data-testid="cb-item-2" id="cb-item-2" value="selenium" />
+                <span class="form-check-label">Selenium</span>
+              </label>
+              <label class="form-check" style="padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--color-border);">
+                <input type="checkbox" class="form-check-input group-item" data-testid="cb-item-3" id="cb-item-3" value="cypress" />
+                <span class="form-check-label">Cypress</span>
+              </label>
+              <label class="form-check" style="padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--color-border);">
+                <input type="checkbox" class="form-check-input group-item" data-testid="cb-item-4" id="cb-item-4" value="webdriverio" />
+                <span class="form-check-label">WebdriverIO</span>
+              </label>
+              <label class="form-check" style="padding:var(--space-3) var(--space-4);">
+                <input type="checkbox" class="form-check-input group-item" data-testid="cb-item-5" id="cb-item-5" value="robot-framework" />
+                <span class="form-check-label">Robot Framework</span>
+              </label>
+            </div>
+          </div>
+          <div id="selected-values" data-testid="selected-values" style="margin-top:var(--space-3);font-size:var(--font-size-sm);color:var(--color-text-muted);">
+            Selected: <span id="selected-list" data-testid="selected-list">none</span>
+          </div>
+        </section>
+
+        <hr />
+
+        <!-- Section C: Radio Buttons -->
+        <section aria-labelledby="section-radios" style="margin-bottom:var(--space-8);">
+          <h3 id="section-radios" style="margin-bottom:var(--space-4);">C. Radio Button Groups</h3>
+
+          <div style="margin-bottom:var(--space-6);">
+            <p style="font-weight:600;font-size:var(--font-size-sm);margin-bottom:var(--space-3);">Experience Level</p>
+            <div style="display:flex;flex-direction:column;gap:var(--space-2);" role="group" aria-labelledby="section-radios" data-testid="radio-group-level">
+              <label class="form-check">
+                <input type="radio" class="form-check-input" name="level" id="radio-junior" value="junior" data-testid="radio-junior" />
+                <span class="form-check-label">Junior (0–2 years)</span>
+              </label>
+              <label class="form-check">
+                <input type="radio" class="form-check-input" name="level" id="radio-mid" value="mid" data-testid="radio-mid" checked />
+                <span class="form-check-label">Mid (2–5 years) pre selected</span>
+              </label>
+              <label class="form-check">
+                <input type="radio" class="form-check-input" name="level" id="radio-senior" value="senior" data-testid="radio-senior" />
+                <span class="form-check-label">Senior (5+ years)</span>
+              </label>
+              <label class="form-check">
+                <input type="radio" class="form-check-input" name="level" id="radio-disabled-option" value="principal" data-testid="radio-disabled" disabled />
+                <span class="form-check-label" style="opacity:0.5;">Principal (disabled)</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <p style="font-weight:600;font-size:var(--font-size-sm);margin-bottom:var(--space-3);">Preferred Framework</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-2);" role="radiogroup" aria-label="Preferred Framework" data-testid="radio-group-framework">
+              <label class="form-check" style="border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);" id="label-pw">
+                <input type="radio" class="form-check-input" name="framework" id="radio-pw" value="playwright" data-testid="radio-framework-playwright" />
+                <span class="form-check-label">Playwright</span>
+              </label>
+              <label class="form-check" style="border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);">
+                <input type="radio" class="form-check-input" name="framework" id="radio-selenium" value="selenium" data-testid="radio-framework-selenium" />
+                <span class="form-check-label">Selenium</span>
+              </label>
+              <label class="form-check" style="border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);">
+                <input type="radio" class="form-check-input" name="framework" id="radio-cypress" value="cypress" data-testid="radio-framework-cypress" />
+                <span class="form-check-label">Cypress</span>
+              </label>
+              <label class="form-check" style="border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);">
+                <input type="radio" class="form-check-input" name="framework" id="radio-webdriverio" value="webdriverio" data-testid="radio-framework-webdriverio" />
+                <span class="form-check-label">WebdriverIO</span>
+              </label>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-sm" id="btn-submit-radios" data-testid="btn-submit-radios" style="margin-top:var(--space-6);">
+            Submit Selection
+          </button>
+          <div id="radio-result" data-testid="radio-result" class="alert alert-success" style="display:none;margin-top:var(--space-3);"></div>
+        </section>
+
+        <hr />
+
+        <!-- Section D: Toggle Switches -->
+        <section aria-labelledby="section-toggles">
+          <h3 id="section-toggles" style="margin-bottom:var(--space-4);">D. Toggle Switches</h3>
+          <div style="display:flex;flex-direction:column;gap:var(--space-4);">
+
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) 0;">
+              <div>
+                <div style="font-weight:600;font-size:var(--font-size-sm);">Dark Mode</div>
+                <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Switch appearance theme</div>
+              </div>
+              <label class="toggle-switch" data-testid="toggle-dark-mode">
+                <input type="checkbox" class="toggle-input" id="toggle-dark" data-testid="toggle-dark-input" role="switch" aria-checked="false" aria-label="Dark mode" />
+                <div class="toggle-track"><div class="toggle-thumb"></div></div>
+              </label>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) 0;border-top:1px solid var(--color-border);">
+              <div>
+                <div style="font-weight:600;font-size:var(--font-size-sm);">Notifications</div>
+                <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Enable push notifications</div>
+              </div>
+              <label class="toggle-switch" data-testid="toggle-notifications">
+                <input type="checkbox" class="toggle-input" id="toggle-notif" data-testid="toggle-notif-input" role="switch" aria-checked="true" checked aria-label="Notifications" />
+                <div class="toggle-track"><div class="toggle-thumb"></div></div>
+              </label>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) 0;border-top:1px solid var(--color-border);">
+              <div>
+                <div style="font-weight:600;font-size:var(--font-size-sm);">2FA Authentication</div>
+                <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Two-factor security (disabled)</div>
+              </div>
+              <label class="toggle-switch" data-testid="toggle-2fa">
+                <input type="checkbox" class="toggle-input" id="toggle-2fa" data-testid="toggle-2fa-input" role="switch" aria-checked="false" disabled aria-label="Two-factor authentication" />
+                <div class="toggle-track" style="opacity:0.5;"><div class="toggle-thumb"></div></div>
+              </label>
+            </div>
+
+          </div>
+          <div id="toggle-output" data-testid="toggle-output" style="margin-top:var(--space-4);font-size:var(--font-size-sm);color:var(--color-text-muted);" aria-live="polite">
+            Toggle a switch to see state change.
+          </div>
+        </section>
+
+      </div><!-- /demo-area -->
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🔵 Test Objective</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <ul style="padding-left:var(--space-4);">
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Check/uncheck individual checkboxes</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Verify select-all sets indeterminate state</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Select radio options; verify mutual exclusion</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Toggle switches; verify aria-checked attribute</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🔵 Key Selectors</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <pre style="font-size:0.7rem;margin:0;">getByTestId('cb-select-all')
+getByTestId('cb-item-1') // value="playwright"
+getByTestId('radio-junior')
+getByTestId('radio-framework-playwright')
+getByTestId('toggle-dark-input')
+getByTestId('selection-count')
+getByTestId('selected-list')</pre>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🟡 Challenges</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <ul style="padding-left:var(--space-4);">
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Indeterminate state: not a standard HTML attribute must use JS property</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Toggle switches use CSS + JS assert <code>aria-checked</code></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Select All then Deselect One</h3>
+      <ol class="steps">
+        <li class="step-block">Navigate to <code>pages/03-checkboxes-radios.html</code></li>
+        <li class="step-block">Assert <code>selection-count</code> text is "0 of 5 selected"</li>
+        <li class="step-block">Click <code>cb-select-all</code></li>
+        <li class="step-block">Assert <code>selection-count</code> text is "5 of 5 selected"</li>
+        <li class="step-block">Assert all group items are checked</li>
+        <li class="step-block">Click <code>cb-item-2</code> to deselect it</li>
+        <li class="step-block">Assert <code>cb-select-all</code> has indeterminate state (JS property)</li>
+        <li class="step-block">Assert <code>selection-count</code> text is "4 of 5 selected"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario B Radio Mutual Exclusion</h3>
+      <ol class="steps">
+        <li class="step-block">Assert <code>radio-mid</code> is checked by default</li>
+        <li class="step-block">Click <code>radio-junior</code></li>
+        <li class="step-block">Assert <code>radio-junior</code> is checked</li>
+        <li class="step-block">Assert <code>radio-mid</code> is NOT checked</li>
+        <li class="step-block">Assert <code>radio-senior</code> is NOT checked</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟡 Pitfalls</h3>
+      <ul>
+        <li>The indeterminate state is a JavaScript property, not an HTML attribute use <code>evaluate(el => el.indeterminate)</code> in Playwright.</li>
+        <li>Disabled inputs cannot be interacted with assert they are disabled before clicking.</li>
+        <li>Pre-checked <code>#cb-newsletter</code> ensure your test doesn't assume unchecked state.</li>
+      </ul>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 03 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+(function () {
+  /* ── Single checkboxes read ── */
+  document.getElementById('btn-read-checkboxes').addEventListener('click', () => {
+    const terms      = document.getElementById('cb-terms').checked;
+    const newsletter = document.getElementById('cb-newsletter').checked;
+    const out        = document.getElementById('single-cb-output');
+    out.style.display = 'flex';
+    out.querySelector('p') && (out.innerHTML = '');
+    out.textContent = `Terms: ${terms ? 'checked' : 'unchecked'} | Newsletter: ${newsletter ? 'checked' : 'unchecked'}`;
+  });
+
+  /* ── Select-all logic ── */
+  const selectAll = document.getElementById('cb-select-all');
+  const items     = document.querySelectorAll('.group-item');
+  const countEl   = document.getElementById('selection-count');
+  const listEl    = document.getElementById('selected-list');
+
+  function updateGroupState() {
+    const total   = items.length;
+    const checked = Array.from(items).filter(i => i.checked).length;
+    countEl.textContent = `${checked} of ${total} selected`;
+    selectAll.checked       = checked === total;
+    selectAll.indeterminate = checked > 0 && checked < total;
+    const vals = Array.from(items).filter(i => i.checked).map(i => i.value);
+    listEl.textContent = vals.length ? vals.join(', ') : 'none';
+  }
+
+  selectAll.addEventListener('change', () => {
+    items.forEach(i => { i.checked = selectAll.checked; });
+    updateGroupState();
+  });
+
+  items.forEach(i => i.addEventListener('change', updateGroupState));
+
+  /* ── Radio submit ── */
+  document.getElementById('btn-submit-radios').addEventListener('click', () => {
+    const level = document.querySelector('input[name="level"]:checked');
+    const fw    = document.querySelector('input[name="framework"]:checked');
+    const result = document.getElementById('radio-result');
+    result.style.display = 'flex';
+    result.innerHTML = `<span>🟢</span><p>Level: <strong>${level ? level.value : 'none'}</strong> | Framework: <strong>${fw ? fw.value : 'none selected'}</strong></p>`;
+    Toast.success('Selection recorded', `${level ? level.value : ' '} / ${fw ? fw.value : ' '}`);
+  });
+
+  /* ── Toggle outputs ── */
+  const output = document.getElementById('toggle-output');
+  document.querySelectorAll('.toggle-input').forEach(toggle => {
+    toggle.addEventListener('change', () => {
+      toggle.setAttribute('aria-checked', toggle.checked ? 'true' : 'false');
+      output.textContent = `${toggle.getAttribute('aria-label')}: ${toggle.checked ? 'ON' : 'OFF'}`;
+      Toast.info('Toggle changed', `${toggle.getAttribute('aria-label')} is now ${toggle.checked ? 'ON 🟢' : 'OFF 🔴'}`);
+    });
+  });
+
+  /* mobile nav */
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    const nav = document.getElementById('site-nav');
+    nav.classList.toggle('open');
+    this.setAttribute('aria-expanded', nav.classList.contains('open') ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
+

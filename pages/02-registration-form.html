@@ -1,0 +1,360 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>02 Registration Form | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-link" data-testid="nav-home">Home</a>
+      <a href="01-simple-login.html" class="nav-link">Login</a>
+      <a href="02-registration-form.html" class="nav-link active">Registration</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="../index.html">Home</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">02 Registration Form</span>
+    </nav>
+    <div class="page-header-meta">
+      <span class="badge badge-beginner">Beginner</span>
+      <span class="badge badge-tag">Forms</span>
+      <span class="badge badge-tag">Regex Validation</span>
+      <span class="badge badge-tag">Password Confirm</span>
+    </div>
+    <h1>Registration Form</h1>
+    <p>Multi-field signup with real time validation: email, phone, password strength, confirmation match, and terms acceptance.</p>
+  </div>
+
+  <div class="page-layout">
+    <div>
+      <div class="demo-area">
+
+        <div id="reg-form-wrap" style="max-width:560px;margin:0 auto;">
+          <h2 style="text-align:center;margin-bottom:var(--space-8);">Create your account</h2>
+
+          <!-- Success state -->
+          <div id="reg-success" data-testid="reg-success" style="display:none;text-align:center;padding:var(--space-8) 0;">
+            <div style="font-size:3rem;margin-bottom:var(--space-4);">🟢</div>
+            <h2>Registration Complete!</h2>
+            <p>Welcome, <strong id="reg-success-name" data-testid="reg-success-name"></strong>! Your account has been created.</p>
+            <a href="01-simple-login.html" class="btn btn-primary" style="margin-top:var(--space-4);" data-testid="btn-go-login">Go to Login</a>
+          </div>
+
+          <form id="reg-form" data-testid="reg-form" novalidate style="display:block;">
+            <!-- Row: First + Last Name -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);">
+              <div class="form-group">
+                <label class="form-label" for="first-name">First Name <span class="required">*</span></label>
+                <input class="form-input" id="first-name" name="firstName" type="text"
+                  placeholder="Alice" data-testid="input-first-name"
+                  aria-required="true" aria-describedby="first-name-error" />
+                <div class="form-error" id="first-name-error" data-testid="error-first-name"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="last-name">Last Name <span class="required">*</span></label>
+                <input class="form-input" id="last-name" name="lastName" type="text"
+                  placeholder="Smith" data-testid="input-last-name"
+                  aria-required="true" aria-describedby="last-name-error" />
+                <div class="form-error" id="last-name-error" data-testid="error-last-name"></div>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label class="form-label" for="email">Email Address <span class="required">*</span></label>
+              <input class="form-input" id="email" name="email" type="email"
+                placeholder="alice@example.com" data-testid="input-email"
+                aria-required="true" aria-describedby="email-error" autocomplete="email" />
+              <div class="form-error" id="email-error" data-testid="error-email"></div>
+            </div>
+
+            <!-- Phone -->
+            <div class="form-group">
+              <label class="form-label" for="phone">Phone Number</label>
+              <input class="form-input" id="phone" name="phone" type="tel"
+                placeholder="+1 555 000 0000" data-testid="input-phone"
+                aria-describedby="phone-hint phone-error" />
+              <div class="form-hint" id="phone-hint">Format: +1 555 000 0000 (optional)</div>
+              <div class="form-error" id="phone-error" data-testid="error-phone"></div>
+            </div>
+
+            <!-- Username -->
+            <div class="form-group">
+              <label class="form-label" for="reg-username">Username <span class="required">*</span></label>
+              <input class="form-input" id="reg-username" name="username" type="text"
+                placeholder="alice_smith" data-testid="input-username"
+                aria-required="true" aria-describedby="reg-username-hint reg-username-error"
+                autocomplete="username" />
+              <div class="form-hint" id="reg-username-hint">3–20 chars; letters, numbers, underscores only.</div>
+              <div class="form-error" id="reg-username-error" data-testid="error-username"></div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+              <label class="form-label" for="reg-password">Password <span class="required">*</span></label>
+              <input class="form-input" id="reg-password" name="password" type="password"
+                placeholder="Min. 8 chars" data-testid="input-password"
+                aria-required="true" aria-describedby="pwd-strength-label reg-password-error"
+                autocomplete="new-password" />
+              <!-- Strength meter -->
+              <div style="margin-top:var(--space-2);">
+                <div class="progress-bar" data-testid="password-strength-bar">
+                  <div class="progress-fill" id="pwd-strength-fill" style="width:0%;background:var(--color-danger);transition:width .3s,background .3s;"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:4px;">
+                  <span id="pwd-strength-label" style="font-size:var(--font-size-xs);color:var(--color-text-muted);" data-testid="password-strength-label">Strength</span>
+                </div>
+              </div>
+              <div class="form-error" id="reg-password-error" data-testid="error-password"></div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group">
+              <label class="form-label" for="confirm-password">Confirm Password <span class="required">*</span></label>
+              <input class="form-input" id="confirm-password" name="confirmPassword" type="password"
+                placeholder="Repeat password" data-testid="input-confirm-password"
+                aria-required="true" aria-describedby="confirm-password-error"
+                autocomplete="new-password" />
+              <div class="form-error" id="confirm-password-error" data-testid="error-confirm-password"></div>
+            </div>
+
+            <!-- Country -->
+            <div class="form-group">
+              <label class="form-label" for="country">Country <span class="required">*</span></label>
+              <select class="form-select" id="country" name="country" data-testid="select-country"
+                aria-required="true" aria-describedby="country-error">
+                <option value="">  Select your country  </option>
+                <option value="us">United States</option>
+                <option value="uk">United Kingdom</option>
+                <option value="ca">Canada</option>
+                <option value="au">Australia</option>
+                <option value="de">Germany</option>
+                <option value="fr">France</option>
+                <option value="pt">Portugal</option>
+                <option value="br">Brazil</option>
+                <option value="in">India</option>
+                <option value="other">Other</option>
+              </select>
+              <div class="form-error" id="country-error" data-testid="error-country"></div>
+            </div>
+
+            <!-- Terms -->
+            <div class="form-group">
+              <label class="form-check">
+                <input type="checkbox" class="form-check-input" id="terms" name="terms" data-testid="checkbox-terms" aria-required="true" aria-describedby="terms-error" />
+                <span class="form-check-label">
+                  I agree to the <a href="#" data-testid="link-terms">Terms of Service</a> and <a href="#" data-testid="link-privacy">Privacy Policy</a>
+                </span>
+              </label>
+              <div class="form-error" id="terms-error" data-testid="error-terms"></div>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="form-group" style="margin-bottom:var(--space-6);">
+              <label class="form-check">
+                <input type="checkbox" class="form-check-input" id="newsletter" name="newsletter" data-testid="checkbox-newsletter" />
+                <span class="form-check-label">Subscribe to newsletter</span>
+              </label>
+            </div>
+
+            <div style="display:flex;gap:var(--space-3);">
+              <button type="submit" class="btn btn-primary btn-block" id="btn-register" data-testid="btn-submit">
+                Create Account
+              </button>
+              <button type="reset" class="btn btn-secondary" id="btn-reset" data-testid="btn-reset" style="min-width:90px;">
+                Reset
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </div><!-- /demo-area -->
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🔵 Test Objective</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <ul style="padding-left:var(--space-4);">
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">All fields filled + valid → success</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Required field empty → inline error</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Passwords don't match → error on confirm field</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Invalid email format → error</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Terms unchecked → block submit</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🔵 Key Selectors</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <pre style="font-size:0.7rem;margin:0;">getByTestId('input-email')
+getByTestId('input-password')
+getByTestId('input-confirm-password')
+getByTestId('select-country')
+getByTestId('checkbox-terms')
+getByTestId('btn-submit')
+getByTestId('error-email')
+getByTestId('password-strength-label')</pre>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Atomic Steps -->
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Successful Registration</h3>
+      <ol class="steps">
+        <li class="step-block">Navigate to <code>pages/02-registration-form.html</code></li>
+        <li class="step-block">Fill <code>input-first-name</code> with "Alice"</li>
+        <li class="step-block">Fill <code>input-last-name</code> with "Smith"</li>
+        <li class="step-block">Fill <code>input-email</code> with "alice@example.com"</li>
+        <li class="step-block">Fill <code>input-username</code> with "alice_smith"</li>
+        <li class="step-block">Fill <code>input-password</code> with "Secure@123"</li>
+        <li class="step-block">Assert password strength label shows "Strong" or "Very Strong"</li>
+        <li class="step-block">Fill <code>input-confirm-password</code> with "Secure@123"</li>
+        <li class="step-block">Select "Portugal" from <code>select-country</code></li>
+        <li class="step-block">Check <code>checkbox-terms</code></li>
+        <li class="step-block">Click <code>btn-submit</code></li>
+        <li class="step-block">Assert <code>reg-success</code> is visible</li>
+        <li class="step-block">Assert <code>reg-success-name</code> contains "alice_smith"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🔴 Scenario B Password Mismatch</h3>
+      <ol class="steps">
+        <li class="step-block">Fill required fields with valid data</li>
+        <li class="step-block">Fill <code>input-password</code> with "Password1!"</li>
+        <li class="step-block">Fill <code>input-confirm-password</code> with "Different1!"</li>
+        <li class="step-block">Click <code>btn-submit</code></li>
+        <li class="step-block">Assert <code>error-confirm-password</code> is visible</li>
+        <li class="step-block">Assert error text contains "match"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟡 Pitfalls</h3>
+      <ul>
+        <li>Password strength meter updates on every keystroke test after full word typed.</li>
+        <li>Phone field is optional empty value must NOT trigger error.</li>
+        <li>Reset button clears form but does NOT navigate away.</li>
+      </ul>
+    </div>
+  </div>
+
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 02 of 20</p></footer>
+
+<script src="../js/utils.js"></script>
+<script>
+(function () {
+  const STRENGTH_LABELS = ['', 'Very Weak', 'Weak', 'Fair', 'Strong', 'Very Strong'];
+  const STRENGTH_COLORS = ['', '#e53e3e', '#d69e2e', '#d69e2e', '#38a169', '#2f855a'];
+
+  function calcStrength(pwd) {
+    let score = 0;
+    if (pwd.length >= 8)  score++;
+    if (pwd.length >= 12) score++;
+    if (/[A-Z]/.test(pwd)) score++;
+    if (/[0-9]/.test(pwd)) score++;
+    if (/[^A-Za-z0-9]/.test(pwd)) score++;
+    return Math.min(score, 5);
+  }
+
+  const pwdEl     = document.getElementById('reg-password');
+  const fillEl    = document.getElementById('pwd-strength-fill');
+  const labelEl   = document.getElementById('pwd-strength-label');
+
+  pwdEl.addEventListener('input', () => {
+    const s = calcStrength(pwdEl.value);
+    fillEl.style.width    = (s / 5 * 100) + '%';
+    fillEl.style.background = STRENGTH_COLORS[s];
+    labelEl.textContent   = s === 0 ? 'Enter a password' : STRENGTH_LABELS[s];
+  });
+
+  function err(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.classList.toggle('visible', !!msg);
+  }
+
+  function clearErr(id) { err(id, ''); }
+
+  document.getElementById('reg-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    let ok = true;
+
+    const fv = {
+      firstName:       document.getElementById('first-name').value.trim(),
+      lastName:        document.getElementById('last-name').value.trim(),
+      email:           document.getElementById('email').value.trim(),
+      phone:           document.getElementById('phone').value.trim(),
+      username:        document.getElementById('reg-username').value.trim(),
+      password:        document.getElementById('reg-password').value,
+      confirmPassword: document.getElementById('confirm-password').value,
+      country:         document.getElementById('country').value,
+      terms:           document.getElementById('terms').checked,
+    };
+
+    if (!fv.firstName) { err('first-name-error', 'First name is required.'); ok = false; } else clearErr('first-name-error');
+    if (!fv.lastName)  { err('last-name-error',  'Last name is required.'); ok = false;  } else clearErr('last-name-error');
+    if (!fv.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fv.email)) {
+      err('email-error', 'Please enter a valid email address.'); ok = false;
+    } else clearErr('email-error');
+    if (fv.phone && !/^\+?[\d\s\-()]{7,}$/.test(fv.phone)) {
+      err('phone-error', 'Phone number format is invalid.'); ok = false;
+    } else clearErr('phone-error');
+    if (!fv.username || !/^[a-zA-Z0-9_]{3,20}$/.test(fv.username)) {
+      err('reg-username-error', 'Username: 3–20 chars, letters/numbers/underscores only.'); ok = false;
+    } else clearErr('reg-username-error');
+    if (!fv.password || fv.password.length < 8) {
+      err('reg-password-error', 'Password must be at least 8 characters.'); ok = false;
+    } else clearErr('reg-password-error');
+    if (fv.password !== fv.confirmPassword) {
+      err('confirm-password-error', 'Passwords do not match.'); ok = false;
+    } else clearErr('confirm-password-error');
+    if (!fv.country) {
+      err('country-error', 'Please select your country.'); ok = false;
+    } else clearErr('country-error');
+    if (!fv.terms) {
+      err('terms-error', 'You must accept the Terms of Service.'); ok = false;
+    } else clearErr('terms-error');
+
+    if (!ok) return;
+
+    document.getElementById('reg-form').style.display = 'none';
+    const successDiv = document.getElementById('reg-success');
+    successDiv.style.display = 'block';
+    document.getElementById('reg-success-name').textContent = fv.username;
+    Toast.success('Account created!', `Welcome ${fv.username}!`);
+  });
+
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    const nav = document.getElementById('site-nav');
+    nav.classList.toggle('open');
+    this.setAttribute('aria-expanded', nav.classList.contains('open') ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
+

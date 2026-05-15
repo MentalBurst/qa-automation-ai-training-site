@@ -1,0 +1,266 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>08 Tabs & Accordions | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="08-tabs-accordions.html" class="nav-link active">Tabs &amp; Accordions</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">08 Tabs &amp; Accordions</span></nav>
+    <div class="page-header-meta">
+      <span class="badge badge-intermediate">Intermediate</span>
+      <span class="badge badge-tag">Tabs</span>
+      <span class="badge badge-tag">Accordion</span>
+      <span class="badge badge-tag">ARIA</span>
+      <span class="badge badge-tag">Keyboard Navigation</span>
+    </div>
+    <h1>Tabs &amp; Accordions</h1>
+    <p>Keyboard-accessible tabbed interfaces and exclusive/multi-open accordion panels, with full ARIA support.</p>
+  </div>
+
+  <div class="page-layout">
+    <div>
+
+      <!-- ── Tabs ── -->
+      <div class="demo-area" style="margin-bottom:var(--space-6);">
+        <h3 style="margin-bottom:var(--space-6);">A. Tabbed Interface</h3>
+
+        <div data-tabs id="tabset-1" data-testid="tabset-1">
+          <div class="tabs-nav" role="tablist" aria-label="Framework comparison tabs" data-testid="tabs-nav-1">
+            <button class="tab-btn active" role="tab" aria-selected="true"  id="tab-1-playwright" aria-controls="tabpanel-1-playwright" data-tab="tabpanel-1-playwright" data-testid="tab-playwright">Playwright</button>
+            <button class="tab-btn"        role="tab" aria-selected="false" id="tab-1-selenium"   aria-controls="tabpanel-1-selenium"   data-tab="tabpanel-1-selenium"   data-testid="tab-selenium">Selenium</button>
+            <button class="tab-btn"        role="tab" aria-selected="false" id="tab-1-cypress"    aria-controls="tabpanel-1-cypress"    data-tab="tabpanel-1-cypress"    data-testid="tab-cypress">Cypress</button>
+            <button class="tab-btn"        role="tab" aria-selected="false" id="tab-1-robot"      aria-controls="tabpanel-1-robot"      data-tab="tabpanel-1-robot"      data-testid="tab-robot">Robot</button>
+          </div>
+
+          <div id="tabpanel-1-playwright" class="tab-panel active" role="tabpanel" tabindex="0" aria-labelledby="tab-1-playwright" data-testid="tabpanel-playwright">
+            <h4 style="margin-bottom:var(--space-3);">Playwright</h4>
+            <p>Microsoft's end-to-end testing framework. Supports Chromium, Firefox, and WebKit. Available in TypeScript, Python, Java, and C#.</p>
+            <ul style="padding-left:var(--space-4);margin-top:var(--space-3);">
+              <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:4px;color:var(--color-text-muted);">Auto-wait built-in</li>
+              <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:4px;color:var(--color-text-muted);">Network interception</li>
+              <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Parallel execution</li>
+            </ul>
+            <a href="https://playwright.dev" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" style="margin-top:var(--space-4);" data-testid="link-playwright-docs">Documentation ↗</a>
+          </div>
+
+          <div id="tabpanel-1-selenium" class="tab-panel" role="tabpanel" tabindex="0" hidden aria-labelledby="tab-1-selenium" data-testid="tabpanel-selenium">
+            <h4 style="margin-bottom:var(--space-3);">Selenium WebDriver</h4>
+            <p>The pioneer of web automation. Language-agnostic, supports all major browsers via WebDriver protocol.</p>
+            <ul style="padding-left:var(--space-4);margin-top:var(--space-3);">
+              <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:4px;color:var(--color-text-muted);">Multi-language support</li>
+              <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:4px;color:var(--color-text-muted);">Selenium Grid for parallel</li>
+              <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Large community</li>
+            </ul>
+          </div>
+
+          <div id="tabpanel-1-cypress" class="tab-panel" role="tabpanel" tabindex="0" hidden aria-labelledby="tab-1-cypress" data-testid="tabpanel-cypress">
+            <h4 style="margin-bottom:var(--space-3);">Cypress</h4>
+            <p>Developer-friendly E2E and component testing. Runs directly in the browser with time travel debugging.</p>
+            <ul style="padding-left:var(--space-4);margin-top:var(--space-3);">
+              <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:4px;color:var(--color-text-muted);">Time-travel debugging</li>
+              <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:4px;color:var(--color-text-muted);">Real-time reloading</li>
+              <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Excellent DX</li>
+            </ul>
+          </div>
+
+          <div id="tabpanel-1-robot" class="tab-panel" role="tabpanel" tabindex="0" hidden aria-labelledby="tab-1-robot" data-testid="tabpanel-robot">
+            <h4 style="margin-bottom:var(--space-3);">Robot Framework</h4>
+            <p>Keyword-driven acceptance testing framework. Highly readable, great for BDD and ATDD.</p>
+            <ul style="padding-left:var(--space-4);margin-top:var(--space-3);">
+              <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:4px;color:var(--color-text-muted);">Keyword-driven</li>
+              <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:4px;color:var(--color-text-muted);">Rich library ecosystem</li>
+              <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Non technical friendly</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Accordion: Exclusive ── -->
+      <div class="demo-area" style="margin-bottom:var(--space-6);">
+        <h3 style="margin-bottom:var(--space-6);">B. Exclusive Accordion (one open at a time)</h3>
+        <div data-accordion-exclusive data-testid="accordion-exclusive">
+
+          <div class="accordion-item" id="acc-1" data-testid="accordion-item-1">
+            <button class="accordion-header" aria-expanded="false" aria-controls="acc-body-1" data-testid="accordion-header-1">
+              What is test-driven development?
+              <span class="accordion-icon" aria-hidden="true">▾</span>
+            </button>
+            <div class="accordion-body" id="acc-body-1" role="region" aria-labelledby="acc-header-1" data-testid="accordion-body-1">
+              Test-Driven Development (TDD) is a software development process where you write tests before writing the actual code. The cycle is: Red → Green → Refactor.
+            </div>
+          </div>
+
+          <div class="accordion-item" id="acc-2" data-testid="accordion-item-2">
+            <button class="accordion-header" aria-expanded="false" aria-controls="acc-body-2" data-testid="accordion-header-2">
+              What is Behaviour-Driven Development?
+              <span class="accordion-icon" aria-hidden="true">▾</span>
+            </button>
+            <div class="accordion-body" id="acc-body-2" role="region" data-testid="accordion-body-2">
+              BDD extends TDD using natural language descriptions (Gherkin: Given/When/Then) to describe behaviour. It improves communication between developers, testers, and stakeholders.
+            </div>
+          </div>
+
+          <div class="accordion-item" id="acc-3" data-testid="accordion-item-3">
+            <button class="accordion-header" aria-expanded="false" aria-controls="acc-body-3" data-testid="accordion-header-3">
+              What is the Test Pyramid?
+              <span class="accordion-icon" aria-hidden="true">▾</span>
+            </button>
+            <div class="accordion-body" id="acc-body-3" role="region" data-testid="accordion-body-3">
+              The Test Pyramid describes the ideal ratio of tests: many unit tests at the base, fewer integration tests in the middle, and a small number of E2E tests at the top.
+            </div>
+          </div>
+
+          <div class="accordion-item" id="acc-4" data-testid="accordion-item-4">
+            <button class="accordion-header" aria-expanded="false" aria-controls="acc-body-4" data-testid="accordion-header-4">
+              What is flakiness in automation?
+              <span class="accordion-icon" aria-hidden="true">▾</span>
+            </button>
+            <div class="accordion-body" id="acc-body-4" role="region" data-testid="accordion-body-4">
+              A flaky test is one that produces inconsistent results (passes and fails) without any code changes. Common causes: timing issues, network latency, dynamic IDs, race conditions.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Accordion: Multi-open ── -->
+      <div class="demo-area">
+        <h3 style="margin-bottom:var(--space-6);">C. Multi-Open Accordion</h3>
+        <div data-testid="accordion-multi">
+
+          <div class="accordion-item open" id="acc-m-1" data-testid="accordion-m-item-1">
+            <button class="accordion-header" aria-expanded="true" data-testid="accordion-m-header-1">
+              Section 1 Pre-opened
+              <span class="accordion-icon" aria-hidden="true">▾</span>
+            </button>
+            <div class="accordion-body" style="max-height:200px;padding:var(--space-4) var(--space-6);border-top:1px solid var(--color-border);" data-testid="accordion-m-body-1">
+              This section is pre opened by default. Click the header to collapse it. Multiple sections can be open simultaneously in this accordion type.
+            </div>
+          </div>
+
+          <div class="accordion-item" id="acc-m-2" data-testid="accordion-m-item-2">
+            <button class="accordion-header" aria-expanded="false" data-testid="accordion-m-header-2">
+              Section 2 Click to open
+              <span class="accordion-icon" aria-hidden="true">▾</span>
+            </button>
+            <div class="accordion-body" data-testid="accordion-m-body-2">
+              This section is collapsed. Notice that opening this section does NOT close Section 1.
+            </div>
+          </div>
+
+          <div class="accordion-item" id="acc-m-3" data-testid="accordion-m-item-3">
+            <button class="accordion-header" aria-expanded="false" data-testid="accordion-m-header-3">
+              Section 3 Click to open
+              <span class="accordion-icon" aria-hidden="true">▾</span>
+            </button>
+            <div class="accordion-body" data-testid="accordion-m-body-3">
+              All accordion sections can be open at the same time. This is intentionally different from the exclusive accordion above.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🔵 Test Objective</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <ul style="padding-left:var(--space-4);">
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Click tab → assert correct panel is visible</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Arrow key → cycles tabs</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Accordion: one closes when another opens</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Assert aria-expanded attribute</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🔵 Key Selectors</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <pre style="font-size:0.7rem;margin:0;">getByTestId('tab-playwright')
+getByTestId('tabpanel-playwright')
+// Playwright: hidden panels have [hidden]
+// Assert: not toBeVisible()
+
+getByTestId('accordion-header-1')
+getByTestId('accordion-body-1')
+// After click: check aria-expanded="true"
+</pre>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Tab Navigation</h3>
+      <ol class="steps">
+        <li class="step-block">Assert <code>tab-playwright</code> has class "active" and <code>aria-selected="true"</code></li>
+        <li class="step-block">Assert <code>tabpanel-playwright</code> is visible</li>
+        <li class="step-block">Assert <code>tabpanel-selenium</code> is hidden</li>
+        <li class="step-block">Click <code>tab-selenium</code></li>
+        <li class="step-block">Assert <code>tab-selenium</code> has <code>aria-selected="true"</code></li>
+        <li class="step-block">Assert <code>tabpanel-selenium</code> is now visible</li>
+        <li class="step-block">Assert <code>tabpanel-playwright</code> is now hidden</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario B Exclusive Accordion</h3>
+      <ol class="steps">
+        <li class="step-block">Assert all accordions are collapsed (no "open" class)</li>
+        <li class="step-block">Click <code>accordion-header-1</code></li>
+        <li class="step-block">Assert <code>accordion-item-1</code> has class "open"</li>
+        <li class="step-block">Assert <code>accordion-header-1</code> has <code>aria-expanded="true"</code></li>
+        <li class="step-block">Click <code>accordion-header-2</code></li>
+        <li class="step-block">Assert <code>accordion-item-2</code> has class "open"</li>
+        <li class="step-block">Assert <code>accordion-item-1</code> does NOT have class "open"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟡 Pitfalls</h3>
+      <ul>
+        <li>Tab panels use the HTML <code>hidden</code> attribute use <code>toBeHidden()</code> not CSS check.</li>
+        <li>Accordion body height is CSS-animated assert text visibility not height transition.</li>
+        <li>Arrow key navigation only works when tab button has focus use <code>focus()</code> first.</li>
+      </ul>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 08 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+  document.querySelectorAll('[data-tabs]').forEach(initTabs);
+  initAccordions();
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    const nav = document.getElementById('site-nav');
+    nav.classList.toggle('open');
+    this.setAttribute('aria-expanded', nav.classList.contains('open') ? 'true' : 'false');
+  });
+</script>
+</body>
+</html>
+

@@ -1,0 +1,299 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>18 Race Conditions & Flakiness | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="18-race-conditions.html" class="nav-link active">Race Conditions</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">18 Race Conditions &amp; Flakiness</span></nav>
+    <div class="page-header-meta">
+      <span class="badge badge-expert">Expert</span>
+      <span class="badge badge-tag">Timing</span>
+      <span class="badge badge-tag">Flakiness</span>
+      <span class="badge badge-tag">Race Conditions</span>
+      <span class="badge badge-tag">Retry</span>
+    </div>
+    <h1>Race Conditions &amp; Flakiness Simulation</h1>
+    <p>Intentionally tricky timing scenarios: elements that appear/disappear, content that changes, and stale references.</p>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:var(--space-6);">
+
+    <!-- A: Disappearing button -->
+    <div class="demo-area" data-testid="section-disappear">
+      <h3 style="margin-bottom:var(--space-4);">A. Disappearing Button</h3>
+      <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">The button appears for only 2 seconds after clicking "Start". Your test must click it before it disappears.</p>
+      <button class="btn btn-secondary" id="btn-start-disappear" data-testid="btn-start-disappear">Start (2s window)</button>
+      <div id="countdown-display" data-testid="countdown-display" style="margin-top:var(--space-3);font-size:var(--font-size-sm);color:var(--color-text-muted);min-height:1.4em;"></div>
+      <div id="fleeting-btn-container" data-testid="fleeting-btn-container" style="margin-top:var(--space-3);">
+        <button id="btn-fleeting" data-testid="btn-fleeting" class="btn btn-danger" style="display:none;">
+          🟡 Click me now! (I'll disappear!)
+        </button>
+      </div>
+      <div id="disappear-result" data-testid="disappear-result" style="display:none;margin-top:var(--space-3);" class="alert"></div>
+    </div>
+
+    <!-- B: Random delay -->
+    <div class="demo-area" data-testid="section-random-delay">
+      <h3 style="margin-bottom:var(--space-4);">B. Randomized Delay (1–5 seconds)</h3>
+      <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">Each click adds a random delay before showing the result. Your test must use <code>waitFor</code>, not fixed sleep.</p>
+      <button class="btn btn-primary" id="btn-random-delay" data-testid="btn-random-delay">Fetch Random Data</button>
+      <div id="random-delay-spinner" data-testid="random-delay-spinner" style="display:none;margin-top:var(--space-4);display:none;align-items:center;gap:var(--space-3);">
+        <div class="spinner spinner-sm"></div>
+        <span id="random-delay-label" data-testid="random-delay-label" style="font-size:var(--font-size-sm);color:var(--color-text-muted);">Loading… (random delay)</span>
+      </div>
+      <div id="random-delay-result" data-testid="random-delay-result" style="display:none;margin-top:var(--space-4);" class="alert alert-success">
+        <span>🟢</span><p id="random-delay-message" data-testid="random-delay-message"></p>
+      </div>
+    </div>
+
+    <!-- C: Stale element simulation -->
+    <div class="demo-area" data-testid="section-stale">
+      <h3 style="margin-bottom:var(--space-4);">C. Stale Element Simulation</h3>
+      <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">The DOM is re-rendered every 3 seconds. Any cached locator becomes stale. Tests must re-query after the re-render.</p>
+      <div id="stale-table-container" data-testid="stale-table-container">
+        <div class="table-wrapper">
+          <table class="table" id="stale-table" data-testid="stale-table">
+            <thead><tr>
+              <th>ID</th><th>Name</th><th>Score</th><th>Updated</th>
+            </tr></thead>
+            <tbody id="stale-tbody" data-testid="stale-tbody"></tbody>
+          </table>
+        </div>
+        <div style="margin-top:var(--space-2);font-size:var(--font-size-xs);color:var(--color-text-muted);">
+          Next re-render in: <span id="stale-countdown" data-testid="stale-countdown">3</span>s
+        </div>
+      </div>
+      <button class="btn btn-secondary btn-sm" id="btn-stale-toggle" data-testid="btn-stale-toggle" style="margin-top:var(--space-3);">Pause Auto-Render</button>
+    </div>
+
+    <!-- D: Dynamic ID (anti-pattern) -->
+    <div class="demo-area" data-testid="section-dynamic-ids">
+      <h3 style="margin-bottom:var(--space-4);">D. Dynamic IDs (Anti-Pattern)</h3>
+      <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">These elements have random/dynamic IDs generated on each render you CANNOT rely on them. Use <code>data-testid</code> instead.</p>
+      <button class="btn btn-secondary btn-sm" id="btn-regenerate-ids" data-testid="btn-regenerate-ids">Regenerate Elements</button>
+      <div id="dynamic-ids-container" data-testid="dynamic-ids-container" style="margin-top:var(--space-4);display:flex;flex-direction:column;gap:var(--space-2);">
+        <!-- Generated by JS -->
+      </div>
+      <div class="alert alert-warning" style="margin-top:var(--space-4);">
+        <span>🟡</span><p>Notice: dynamic IDs change every time. But <code>data-testid</code> attributes remain stable. Always use stable selectors!</p>
+      </div>
+    </div>
+
+    <!-- E: Hidden then visible -->
+    <div class="demo-area" data-testid="section-hidden-visible">
+      <h3 style="margin-bottom:var(--space-4);">E. Hidden Then Visible Pattern</h3>
+      <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">Element starts hidden via CSS class, not <code>display:none</code>. Common pitfall: <code>isVisible()</code> vs <code>isHidden()</code>.</p>
+      <button class="btn btn-secondary btn-sm" id="btn-toggle-visibility" data-testid="btn-toggle-visibility">Toggle Element</button>
+      <div id="css-hidden-el" data-testid="css-hidden-el" class="alert alert-info invisible" style="margin-top:var(--space-4);" aria-hidden="true">
+        <span>🟡</span><p id="css-hidden-text" data-testid="css-hidden-text">I am visually hidden via CSS opacity:0 + pointer-events:none but I am still in the DOM!</p>
+      </div>
+      <div id="display-none-el" data-testid="display-none-el" class="alert alert-success" style="display:none;margin-top:var(--space-3);">
+        <span>🟢</span><p>I use display:none I am completely absent from the layout.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Catch the Fleeting Button</h3>
+      <ol class="steps">
+        <li class="step-block">Click <code>btn-start-disappear</code></li>
+        <li class="step-block">Wait for <code>btn-fleeting</code> to be visible (use waitFor with timeout 3000)</li>
+        <li class="step-block">Click <code>btn-fleeting</code> before the 2-second window closes</li>
+        <li class="step-block">Assert <code>disappear-result</code> contains "success"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario D Dynamic ID Anti-Pattern</h3>
+      <ol class="steps">
+        <li class="step-block">Locate elements by <code>data-testid="dynamic-item-A"</code> (stable)</li>
+        <li class="step-block">Click <code>btn-regenerate-ids</code></li>
+        <li class="step-block">Assert elements still findable by <code>data-testid</code></li>
+        <li class="step-block">Note: <code>id</code> attribute changed prove IDs are unreliable</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟡 Key Concepts</h3>
+      <ul>
+        <li><strong>Stale reference</strong>: element cached before DOM rebuild always re-query.</li>
+        <li><strong>CSS-hidden vs display:none</strong>: <code>opacity:0</code> element IS in layout; <code>display:none</code> is NOT.</li>
+        <li><strong>Random delays</strong>: never use <code>page.waitForTimeout()</code> always wait for the actual element.</li>
+      </ul>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 18 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+(function () {
+  /* A: Disappearing button */
+  const WINDOW_MS = 2000;
+  let disappearTimer = null;
+
+  document.getElementById('btn-start-disappear').addEventListener('click', () => {
+    clearTimeout(disappearTimer);
+    const btn = document.getElementById('btn-fleeting');
+    const res = document.getElementById('disappear-result');
+    const cnt = document.getElementById('countdown-display');
+    btn.style.display = 'block';
+    res.style.display = 'none';
+    btn.dataset.clicked = 'false';
+
+    let remaining = WINDOW_MS / 1000;
+    cnt.textContent = `Button visible for ${remaining.toFixed(1)}s…`;
+    const tick = setInterval(() => {
+      remaining -= 0.1;
+      cnt.textContent = `Button visible for ${Math.max(0, remaining).toFixed(1)}s…`;
+      if (remaining <= 0) clearInterval(tick);
+    }, 100);
+
+    disappearTimer = setTimeout(() => {
+      clearInterval(tick);
+      btn.style.display = 'none';
+      cnt.textContent = '';
+      if (btn.dataset.clicked !== 'true') {
+        res.className = 'alert alert-danger';
+        res.style.display = 'flex';
+        res.innerHTML = '<span>🔴</span><p data-testid="disappear-result-text">Too slow! Button disappeared before you clicked it.</p>';
+      }
+    }, WINDOW_MS);
+  });
+
+  document.getElementById('btn-fleeting').addEventListener('click', () => {
+    clearTimeout(disappearTimer);
+    const btn = document.getElementById('btn-fleeting');
+    btn.dataset.clicked = 'true';
+    btn.style.display = 'none';
+    document.getElementById('countdown-display').textContent = '';
+    const res = document.getElementById('disappear-result');
+    res.className = 'alert alert-success';
+    res.style.display = 'flex';
+    res.innerHTML = '<span>🟢</span><p data-testid="disappear-result-text">Success! You clicked within the 2-second window!</p>';
+    Toast.success('Fast click!', 'You beat the timer!');
+  });
+
+  /* B: Random delay */
+  let loadingRandom = false;
+  document.getElementById('btn-random-delay').addEventListener('click', async () => {
+    if (loadingRandom) return;
+    loadingRandom = true;
+    const delayMs = randomBetween(1000, 5000);
+    const spinner = document.getElementById('random-delay-spinner');
+    const result  = document.getElementById('random-delay-result');
+    const label   = document.getElementById('random-delay-label');
+    spinner.style.display = 'flex';
+    result.style.display  = 'none';
+    label.textContent     = `Loading… (will take ~${(delayMs/1000).toFixed(1)}s)`;
+    document.getElementById('btn-random-delay').disabled = true;
+    await delay(delayMs);
+    spinner.style.display = 'none';
+    result.style.display  = 'flex';
+    document.getElementById('random-delay-message').textContent =
+      `Data loaded after ${(delayMs/1000).toFixed(2)}s. Random value: ${randomBetween(100, 999)}`;
+    document.getElementById('btn-random-delay').disabled = false;
+    loadingRandom = false;
+    Toast.success('Loaded!', `Took ${(delayMs/1000).toFixed(1)}s`);
+  });
+
+  /* C: Stale table */
+  const STALE_DATA = ['Alice','Bob','Carol','David','Eva','Frank'];
+  let staleRunning = true;
+  let staleCount = 3;
+
+  function renderStaleTable() {
+    const tbody = document.getElementById('stale-tbody');
+    tbody.innerHTML = STALE_DATA.map((name, i) => {
+      const score = randomBetween(50, 100);
+      return `<tr data-testid="stale-row-${i}">
+        <td>${i+1}</td>
+        <td data-testid="stale-name-${i}">${name}</td>
+        <td data-testid="stale-score-${i}">${score}</td>
+        <td style="font-size:0.7rem;color:var(--color-text-muted);">${new Date().toLocaleTimeString()}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  renderStaleTable();
+  const staleInterval = setInterval(() => {
+    if (!staleRunning) return;
+    staleCount--;
+    document.getElementById('stale-countdown').textContent = String(staleCount);
+    if (staleCount <= 0) {
+      renderStaleTable();
+      staleCount = 3;
+    }
+  }, 1000);
+
+  document.getElementById('btn-stale-toggle').addEventListener('click', () => {
+    staleRunning = !staleRunning;
+    document.getElementById('btn-stale-toggle').textContent = staleRunning ? 'Pause Auto-Render' : 'Resume Auto-Render';
+    Toast.info(staleRunning ? 'Resumed' : 'Paused', 'Auto-render ' + (staleRunning ? 'enabled' : 'disabled'));
+  });
+
+  /* D: Dynamic IDs */
+  function renderDynamicIds() {
+    const ITEMS = ['A','B','C','D'];
+    const container = document.getElementById('dynamic-ids-container');
+    container.innerHTML = ITEMS.map(letter => {
+      const dynamicId = 'el-' + Math.random().toString(36).slice(2, 10);
+      return `
+        <div style="display:flex;align-items:center;gap:var(--space-4);font-size:var(--font-size-sm);">
+          <span style="color:var(--color-text-muted);">id="${dynamicId}"</span>
+          <button class="btn btn-secondary btn-sm" id="${dynamicId}" data-testid="dynamic-item-${letter}">
+            Item ${letter}
+          </button>
+          <span style="color:var(--color-success);font-size:var(--font-size-xs);">data-testid="dynamic-item-${letter}" (stable 🟢)</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  document.getElementById('btn-regenerate-ids').addEventListener('click', renderDynamicIds);
+  renderDynamicIds();
+
+  /* E: CSS hidden */
+  let cssVisible = false;
+  document.getElementById('btn-toggle-visibility').addEventListener('click', () => {
+    cssVisible = !cssVisible;
+    const el = document.getElementById('css-hidden-el');
+    const dn = document.getElementById('display-none-el');
+    el.classList.toggle('invisible', !cssVisible);
+    el.classList.toggle('opacity-100', cssVisible);
+    el.setAttribute('aria-hidden', cssVisible ? 'false' : 'true');
+    dn.style.display = cssVisible ? 'flex' : 'none';
+    Toast.info('Toggle', cssVisible ? 'Element now visible' : 'Element now CSS-hidden');
+  });
+
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    document.getElementById('site-nav').classList.toggle('open');
+    this.setAttribute('aria-expanded', document.getElementById('site-nav').classList.contains('open') ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
+

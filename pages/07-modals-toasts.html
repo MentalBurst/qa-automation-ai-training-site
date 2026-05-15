@@ -1,0 +1,346 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>07 Modals & Toasts | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="07-modals-toasts.html" class="nav-link active">Modals &amp; Toasts</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">07 Modals &amp; Toasts</span></nav>
+    <div class="page-header-meta">
+      <span class="badge badge-intermediate">Intermediate</span>
+      <span class="badge badge-tag">Modals</span>
+      <span class="badge badge-tag">Dialogs</span>
+      <span class="badge badge-tag">Toasts</span>
+      <span class="badge badge-tag">Focus Trap</span>
+    </div>
+    <h1>Modals &amp; Toast Notifications</h1>
+    <p>Dialog open/close, confirmation with result, form-inside-modal, nested modals, and multi-type auto dismiss toast notifications.</p>
+  </div>
+
+  <div class="page-layout">
+    <div>
+
+      <!-- ── Section A: Toasts ── -->
+      <div class="demo-area" style="margin-bottom:var(--space-6);" id="toast-section" data-testid="toast-section">
+        <h3 style="margin-bottom:var(--space-6);">A. Toast Notifications</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--space-3);">
+          <button class="btn btn-success" id="btn-toast-success" data-testid="btn-toast-success">
+            🟢 Success Toast
+          </button>
+          <button class="btn btn-danger" id="btn-toast-error" data-testid="btn-toast-error">
+            🔴 Error Toast
+          </button>
+          <button class="btn btn-secondary" id="btn-toast-warning" data-testid="btn-toast-warning" style="color:var(--color-warning);border-color:var(--color-warning);">
+            🟡 Warning Toast
+          </button>
+          <button class="btn btn-secondary" id="btn-toast-info" data-testid="btn-toast-info">
+            🔵 Info Toast
+          </button>
+          <button class="btn btn-secondary" id="btn-toast-persistent" data-testid="btn-toast-persistent">
+            🟡 Persistent Toast
+          </button>
+        </div>
+        <p style="margin-top:var(--space-4);font-size:var(--font-size-sm);">Toasts appear at bottom-right. Auto-dismiss after 4 seconds (except persistent).</p>
+      </div>
+
+      <!-- ── Section B: Basic Modals ── -->
+      <div class="demo-area" style="margin-bottom:var(--space-6);" data-testid="basic-modal-section">
+        <h3 style="margin-bottom:var(--space-6);">B. Basic Modal Dialogs</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--space-3);">
+          <button class="btn btn-primary" id="btn-open-info-modal" data-modal-open="modal-info"
+            data-testid="btn-open-info-modal">
+            Open Info Modal
+          </button>
+          <button class="btn btn-danger" id="btn-open-confirm-modal" data-modal-open="modal-confirm"
+            data-testid="btn-open-confirm-modal">
+            Open Confirm Modal
+          </button>
+          <button class="btn btn-secondary" id="btn-open-large-modal" data-modal-open="modal-large"
+            data-testid="btn-open-large-modal">
+            Open Large Modal
+          </button>
+        </div>
+        <div id="confirm-result" data-testid="confirm-result" style="display:none;margin-top:var(--space-4);" class="alert"></div>
+      </div>
+
+      <!-- ── Section C: Form Modal ── -->
+      <div class="demo-area" data-testid="form-modal-section">
+        <h3 style="margin-bottom:var(--space-6);">C. Form Inside Modal</h3>
+        <button class="btn btn-primary" id="btn-open-form-modal" data-modal-open="modal-form"
+          data-testid="btn-open-form-modal">
+          Open Form Modal
+        </button>
+        <div id="form-modal-result" data-testid="form-modal-result" style="display:none;margin-top:var(--space-4);" class="alert alert-success"></div>
+      </div>
+
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🔵 Test Objective</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <ul style="padding-left:var(--space-4);">
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Open modal → assert visible</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Close via ✕ button</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Close via backdrop click</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Close via Escape key</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Confirm modal → result message</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Toast appears → auto dismissed</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🔵 Key Selectors</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <pre style="font-size:0.7rem;margin:0;">// Modals
+getByTestId('btn-open-info-modal')
+page.locator('#modal-info')
+page.locator('#modal-confirm')
+getByTestId('btn-modal-confirm-yes')
+getByTestId('btn-modal-confirm-no')
+getByTestId('confirm-result')
+
+// Toasts
+getByTestId('btn-toast-success')
+getByTestId('toast-success') // in container
+getByTestId('toast-close')</pre>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ══════════ MODALS ══════════ -->
+
+  <!-- Info Modal -->
+  <div class="modal-backdrop hidden" id="modal-info" role="dialog" aria-modal="true" aria-labelledby="modal-info-title" aria-hidden="true" data-testid="modal-info">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-info-title">Information</h2>
+        <button class="modal-close" data-modal-close aria-label="Close dialog" data-testid="btn-close-info-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>This is a simple information modal. It contains content that can be asserted by automation tests.</p>
+        <p>You can close this modal by:</p>
+        <ul style="padding-left:var(--space-4);">
+          <li style="list-style:disc;margin-bottom:4px;font-size:var(--font-size-sm);color:var(--color-text-muted);">Clicking the ✕ button</li>
+          <li style="list-style:disc;margin-bottom:4px;font-size:var(--font-size-sm);color:var(--color-text-muted);">Clicking the backdrop overlay</li>
+          <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Pressing the Escape key</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-modal-close data-testid="btn-modal-info-ok">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Modal -->
+  <div class="modal-backdrop hidden" id="modal-confirm" role="dialog" aria-modal="true" aria-labelledby="modal-confirm-title" aria-hidden="true" data-testid="modal-confirm">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-confirm-title">Confirm Action</h2>
+        <button class="modal-close" data-modal-close aria-label="Close dialog" data-testid="btn-close-confirm-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to perform this action? This cannot be undone.</p>
+        <div class="alert alert-warning" style="margin-top:var(--space-4);">
+          <span>🟡</span><p>This will permanently delete the selected records.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-confirm-no"  data-testid="btn-modal-confirm-no">Cancel</button>
+        <button class="btn btn-danger"    id="btn-confirm-yes" data-testid="btn-modal-confirm-yes">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Large scrollable modal -->
+  <div class="modal-backdrop hidden" id="modal-large" role="dialog" aria-modal="true" aria-labelledby="modal-large-title" aria-hidden="true" data-testid="modal-large">
+    <div class="modal" style="max-width:680px;">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-large-title">Terms of Service</h2>
+        <button class="modal-close" data-modal-close aria-label="Close" data-testid="btn-close-large-modal">✕</button>
+      </div>
+      <div class="modal-body" data-testid="modal-large-body">
+        <h3 style="margin-bottom:var(--space-3);">1. Acceptance of Terms</h3>
+        <p>By accessing and using QA Lab, you accept and agree to be bound by these Terms and Conditions.</p>
+        <h3 style="margin-bottom:var(--space-3);">2. Use of the Platform</h3>
+        <p>QA Lab is provided solely for educational and training purposes. You may use this platform to practice automation testing techniques.</p>
+        <h3 style="margin-bottom:var(--space-3);">3. Intellectual Property</h3>
+        <p>All content, design, and code within QA Lab is the intellectual property of the QA Lab project contributors.</p>
+        <h3 style="margin-bottom:var(--space-3);">4. Disclaimer</h3>
+        <p>QA Lab is provided "as is" without any warranty. The platform may contain intentional defects for educational purposes.</p>
+        <h3 style="margin-bottom:var(--space-3);">5. Modifications</h3>
+        <p>We reserve the right to modify these terms at any time. Continued use after modifications constitutes acceptance.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-modal-close data-testid="btn-modal-large-decline">Decline</button>
+        <button class="btn btn-primary"   data-modal-close data-testid="btn-modal-large-accept">Accept</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Modal -->
+  <div class="modal-backdrop hidden" id="modal-form" role="dialog" aria-modal="true" aria-labelledby="modal-form-title" aria-hidden="true" data-testid="modal-form">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-form-title">Create New Task</h2>
+        <button class="modal-close" data-modal-close aria-label="Close" data-testid="btn-close-form-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="modal-task-form" data-testid="modal-task-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="task-title">Task Title <span class="required">*</span></label>
+            <input class="form-input" id="task-title" type="text" placeholder="Enter task title" data-testid="input-task-title" />
+            <div class="form-error" id="task-title-error" data-testid="error-task-title"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="task-priority">Priority</label>
+            <select class="form-select" id="task-priority" data-testid="select-task-priority">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="task-desc">Description</label>
+            <textarea class="form-textarea" id="task-desc" placeholder="Optional description…" data-testid="textarea-task-desc" rows="3"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-modal-close data-testid="btn-task-cancel">Cancel</button>
+        <button class="btn btn-primary" id="btn-task-submit" data-testid="btn-task-submit">Create Task</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info Panel -->
+  <div class="info-panel" style="margin-top:var(--space-8);">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Open &amp; Close Info Modal</h3>
+      <ol class="steps">
+        <li class="step-block">Assert <code>#modal-info</code> has class "hidden"</li>
+        <li class="step-block">Click <code>btn-open-info-modal</code></li>
+        <li class="step-block">Assert <code>#modal-info</code> does NOT have class "hidden"</li>
+        <li class="step-block">Assert <code>modal-info-title</code> text is "Information"</li>
+        <li class="step-block">Click <code>btn-close-info-modal</code> (✕)</li>
+        <li class="step-block">Assert <code>#modal-info</code> has class "hidden"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario B Confirm Modal Yes/No</h3>
+      <ol class="steps">
+        <li class="step-block">Click <code>btn-open-confirm-modal</code></li>
+        <li class="step-block">Assert modal is visible</li>
+        <li class="step-block">Click <code>btn-modal-confirm-yes</code></li>
+        <li class="step-block">Assert modal is now hidden</li>
+        <li class="step-block">Assert <code>confirm-result</code> is visible and contains "confirmed"</li>
+        <li class="step-block">Repeat test clicking "No" assert result contains "cancelled"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario C Toast Auto-dismiss</h3>
+      <ol class="steps">
+        <li class="step-block">Click <code>btn-toast-success</code></li>
+        <li class="step-block">Assert a toast with <code>data-testid="toast-success"</code> appears</li>
+        <li class="step-block">Wait 5 seconds</li>
+        <li class="step-block">Assert toast is no longer in DOM</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟡 Pitfalls</h3>
+      <ul>
+        <li>Modals use <code>class="hidden"</code> not <code>display:none</code> check for class presence.</li>
+        <li>Focus should move to modal on open assert focused element is inside modal.</li>
+        <li>Body scroll is locked when modal is open verify <code>overflow:hidden</code> on body.</li>
+        <li>Persistent toast has no auto dismiss must click close button manually.</li>
+      </ul>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 07 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+(function () {
+  // Toast buttons
+  document.getElementById('btn-toast-success').addEventListener('click', () =>
+    Toast.success('Operation successful', 'Your changes have been saved.'));
+  document.getElementById('btn-toast-error').addEventListener('click', () =>
+    Toast.error('An error occurred', 'Please try again or contact support.'));
+  document.getElementById('btn-toast-warning').addEventListener('click', () =>
+    Toast.warning('Warning', 'This action may have side effects.'));
+  document.getElementById('btn-toast-info').addEventListener('click', () =>
+    Toast.info('Information', 'Here is some useful information.'));
+  document.getElementById('btn-toast-persistent').addEventListener('click', () =>
+    Toast.info('Persistent Notification', 'This will not auto dismiss. Click ✕ to close.', { duration: 0 }));
+
+  // Confirm modal actions
+  const resultEl = document.getElementById('confirm-result');
+  document.getElementById('btn-confirm-yes').addEventListener('click', () => {
+    Modal.close('modal-confirm');
+    resultEl.className = 'alert alert-danger';
+    resultEl.innerHTML = '<span>🔴</span><p data-testid="confirm-result-text">Action <strong>confirmed</strong>. Records were deleted.</p>';
+    resultEl.style.display = 'flex';
+    Toast.error('Deleted', 'Records permanently removed.');
+  });
+  document.getElementById('btn-confirm-no').addEventListener('click', () => {
+    Modal.close('modal-confirm');
+    resultEl.className = 'alert alert-info';
+    resultEl.innerHTML = '<span>🟢</span><p data-testid="confirm-result-text">Action <strong>cancelled</strong>. No changes were made.</p>';
+    resultEl.style.display = 'flex';
+  });
+
+  // Form modal submit
+  document.getElementById('btn-task-submit').addEventListener('click', () => {
+    const title = document.getElementById('task-title').value.trim();
+    const errEl = document.getElementById('task-title-error');
+    if (!title) {
+      errEl.textContent = 'Task title is required.';
+      errEl.classList.add('visible');
+      document.getElementById('task-title').classList.add('is-invalid');
+      return;
+    }
+    errEl.classList.remove('visible');
+    const priority = document.getElementById('task-priority').value;
+    Modal.close('modal-form');
+    const res = document.getElementById('form-modal-result');
+    res.style.display = 'flex';
+    res.innerHTML = `<span>🟢</span><p data-testid="form-modal-result-text">Task "<strong>${title}</strong>" created with priority <strong>${priority}</strong>.</p>`;
+    document.getElementById('modal-task-form').reset();
+    Toast.success('Task created', title);
+  });
+
+  // Mobile nav
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    document.getElementById('site-nav').classList.toggle('open');
+    this.setAttribute('aria-expanded', document.getElementById('site-nav').classList.contains('open') ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
+

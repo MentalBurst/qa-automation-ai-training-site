@@ -1,0 +1,293 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>19 Canvas Interactions | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="19-canvas-interactions.html" class="nav-link active">Canvas</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">19 Canvas Interactions</span></nav>
+    <div class="page-header-meta">
+      <span class="badge badge-expert">Expert</span>
+      <span class="badge badge-tag">Canvas</span>
+      <span class="badge badge-tag">Mouse Events</span>
+      <span class="badge badge-tag">Visual Testing</span>
+    </div>
+    <h1>Canvas Interactions</h1>
+    <p>HTML5 canvas drawing pad, clickable zones, coordinate-based interactions, and visual state validation via pixel reading.</p>
+  </div>
+
+  <div class="page-layout">
+    <div style="display:flex;flex-direction:column;gap:var(--space-6);">
+
+      <!-- A: Drawing Pad -->
+      <div class="demo-area" data-testid="section-drawing">
+        <h3 style="margin-bottom:var(--space-4);">A. Drawing Pad (Mouse Interaction)</h3>
+        <div style="display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-4);flex-wrap:wrap;">
+          <div style="display:flex;gap:var(--space-2);">
+            <button class="btn btn-sm" id="color-black"   data-testid="color-black"   style="background:#1a202c;color:white;width:32px;height:32px;padding:0;border-radius:50%;" aria-label="Black" title="Black"></button>
+            <button class="btn btn-sm" id="color-red"     data-testid="color-red"     style="background:#e53e3e;color:white;width:32px;height:32px;padding:0;border-radius:50%;" aria-label="Red" title="Red"></button>
+            <button class="btn btn-sm" id="color-blue"    data-testid="color-blue"    style="background:#4361ee;color:white;width:32px;height:32px;padding:0;border-radius:50%;" aria-label="Blue" title="Blue"></button>
+            <button class="btn btn-sm" id="color-green"   data-testid="color-green"   style="background:#38a169;color:white;width:32px;height:32px;padding:0;border-radius:50%;" aria-label="Green" title="Green"></button>
+          </div>
+          <div style="display:flex;align-items:center;gap:var(--space-2);">
+            <label style="font-size:var(--font-size-xs);font-weight:600;">Size:</label>
+            <input type="range" id="brush-size" data-testid="brush-size" min="2" max="20" value="4" style="width:80px;" aria-label="Brush size" />
+            <span id="brush-size-label" data-testid="brush-size-label" style="font-size:var(--font-size-xs);width:20px;">4</span>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btn-clear-canvas" data-testid="btn-clear-canvas">Clear</button>
+          <button class="btn btn-secondary btn-sm" id="btn-download-canvas" data-testid="btn-download-canvas">Download PNG</button>
+        </div>
+
+        <canvas
+          id="drawing-canvas"
+          data-testid="drawing-canvas"
+          width="600"
+          height="300"
+          aria-label="Drawing canvas use mouse to draw"
+          style="border:1.5px solid var(--color-border);border-radius:var(--radius-md);cursor:crosshair;display:block;max-width:100%;background:white;"
+        ></canvas>
+
+        <div id="canvas-coords" data-testid="canvas-coords" style="margin-top:4px;font-size:var(--font-size-xs);color:var(--color-text-muted);">x: 0, y: 0</div>
+        <div id="canvas-pixel-info" data-testid="canvas-pixel-info" style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Pixel at cursor:  </div>
+        <div id="canvas-stroke-count" data-testid="canvas-stroke-count" style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Strokes: 0</div>
+      </div>
+
+      <!-- B: Clickable Zones -->
+      <div class="demo-area" data-testid="section-zones">
+        <h3 style="margin-bottom:var(--space-4);">B. Clickable Canvas Zones</h3>
+        <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">Click on the colored zones. Each zone triggers an event readable by automation via <code>data-testid</code> output.</p>
+        <canvas
+          id="zones-canvas"
+          data-testid="zones-canvas"
+          width="600"
+          height="200"
+          aria-label="Clickable zones canvas"
+          style="border:1.5px solid var(--color-border);border-radius:var(--radius-md);cursor:pointer;display:block;max-width:100%;"
+        ></canvas>
+        <div id="zone-result" data-testid="zone-result" style="margin-top:var(--space-3);font-size:var(--font-size-sm);font-weight:600;" aria-live="polite">
+          Click a zone to see result
+        </div>
+        <div id="zone-click-count" data-testid="zone-click-count" style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Total clicks: 0</div>
+      </div>
+
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🔵 Test Objective</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <ul style="padding-left:var(--space-4);">
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Draw on canvas using mouse events</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Read pixel color after drawing</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);margin-bottom:6px;color:var(--color-text-muted);">Click exact canvas coordinates</li>
+            <li style="list-style:disc;font-size:var(--font-size-sm);color:var(--color-text-muted);">Assert zone result text</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:var(--font-size-base);margin:0;">🔵 Playwright Code</h3></div>
+        <div class="card-body" style="padding:var(--space-4) var(--space-6);">
+          <pre style="font-size:0.7rem;margin:0;">const canvas = page.locator('#drawing-canvas');
+const box = await canvas.boundingBox();
+
+// Draw a line
+await page.mouse.move(box.x + 50, box.y + 50);
+await page.mouse.down();
+await page.mouse.move(box.x + 200, box.y + 150);
+await page.mouse.up();
+
+// Click zone at coordinates
+await canvas.click({ position: { x: 75, y: 100 } });
+
+// Read pixel via evaluate
+const pixel = await page.evaluate(() => {
+  const c = document.getElementById('zones-canvas');
+  const ctx = c.getContext('2d');
+  return ctx.getImageData(75, 100, 1, 1).data;
+});</pre>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Draw and Verify Stroke</h3>
+      <ol class="steps">
+        <li class="step-block">Get bounding box of <code>#drawing-canvas</code></li>
+        <li class="step-block">Move mouse to canvas coordinates (50, 50)</li>
+        <li class="step-block">Press mouse button down</li>
+        <li class="step-block">Drag to (200, 150)</li>
+        <li class="step-block">Release mouse button</li>
+        <li class="step-block">Assert <code>canvas-stroke-count</code> incremented</li>
+        <li class="step-block">Optionally: read pixel at drawn coordinates verify non-white</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario B Click Zone</h3>
+      <ol class="steps">
+        <li class="step-block">Click <code>#zones-canvas</code> at position <code>{ x: 75, y: 100 }</code> (Zone A)</li>
+        <li class="step-block">Assert <code>zone-result</code> contains "Zone A"</li>
+        <li class="step-block">Assert <code>zone-click-count</code> incremented to 1</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟡 Pitfalls</h3>
+      <ul>
+        <li>Canvas has NO built-in accessibility all interaction must use mouse coordinates.</li>
+        <li>Canvas bounding box changes if window is resized always re-query before interacting.</li>
+        <li>Screenshot-based visual testing is the most reliable way to assert canvas content.</li>
+        <li>Pixel reading via <code>getImageData</code> requires the canvas to be same-origin (no CORS).</li>
+      </ul>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 19 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+(function () {
+  /* A: Drawing pad */
+  const canvas   = document.getElementById('drawing-canvas');
+  const ctx      = canvas.getContext('2d');
+  let drawing    = false;
+  let color      = '#1a202c';
+  let size       = 4;
+  let strokes    = 0;
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = color;
+  ctx.lineWidth   = size;
+  ctx.lineCap     = 'round';
+  ctx.lineJoin    = 'round';
+
+  function getPos(e) {
+    const r = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / r.width;
+    const scaleY = canvas.height / r.height;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x: (clientX - r.left) * scaleX, y: (clientY - r.top) * scaleY };
+  }
+
+  canvas.addEventListener('mousedown',  (e) => { drawing = true; strokes++; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+  canvas.addEventListener('mousemove',  (e) => {
+    const p = getPos(e);
+    document.getElementById('canvas-coords').textContent = `x: ${Math.round(p.x)}, y: ${Math.round(p.y)}`;
+    const px = ctx.getImageData(Math.round(p.x), Math.round(p.y), 1, 1).data;
+    document.getElementById('canvas-pixel-info').textContent = `Pixel: rgba(${px[0]},${px[1]},${px[2]},${px[3]})`;
+    if (!drawing) return;
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    document.getElementById('canvas-stroke-count').textContent = `Strokes: ${strokes}`;
+  });
+  canvas.addEventListener('mouseup',    () => { drawing = false; });
+  canvas.addEventListener('mouseleave', () => { drawing = false; });
+
+  document.querySelectorAll('[id^="color-"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const map = { 'color-black':'#1a202c','color-red':'#e53e3e','color-blue':'#4361ee','color-green':'#38a169' };
+      color = map[btn.id] || '#1a202c';
+      ctx.strokeStyle = color;
+      Toast.info('Color', btn.id.replace('color-','').toUpperCase());
+    });
+  });
+
+  document.getElementById('brush-size').addEventListener('input', (e) => {
+    size = parseInt(e.target.value);
+    ctx.lineWidth = size;
+    document.getElementById('brush-size-label').textContent = String(size);
+  });
+
+  document.getElementById('btn-clear-canvas').addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    strokes = 0;
+    document.getElementById('canvas-stroke-count').textContent = 'Strokes: 0';
+    Toast.info('Canvas cleared', '');
+  });
+
+  document.getElementById('btn-download-canvas').addEventListener('click', () => {
+    const a = document.createElement('a');
+    a.download = 'drawing.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  });
+
+  /* B: Zones canvas */
+  const zCanvas = document.getElementById('zones-canvas');
+  const zCtx    = zCanvas.getContext('2d');
+  let totalClicks = 0;
+
+  const ZONES = [
+    { label: 'Zone A', x: 0,   y: 0,   w: 150, h: 200, color: '#bee3f8', textColor: '#2b6cb0' },
+    { label: 'Zone B', x: 150, y: 0,   w: 150, h: 200, color: '#c6f6d5', textColor: '#276749' },
+    { label: 'Zone C', x: 300, y: 0,   w: 150, h: 200, color: '#fefcbf', textColor: '#744210' },
+    { label: 'Zone D', x: 450, y: 0,   w: 150, h: 200, color: '#fed7d7', textColor: '#9b2c2c' },
+  ];
+
+  function drawZones() {
+    ZONES.forEach(z => {
+      zCtx.fillStyle = z.color;
+      zCtx.fillRect(z.x, z.y, z.w, z.h);
+      zCtx.fillStyle = z.textColor;
+      zCtx.font = 'bold 16px system-ui, sans-serif';
+      zCtx.textAlign = 'center';
+      zCtx.fillText(z.label, z.x + z.w / 2, z.y + z.h / 2 + 6);
+    });
+  }
+  drawZones();
+
+  zCanvas.addEventListener('click', (e) => {
+    const r  = zCanvas.getBoundingClientRect();
+    const sx = zCanvas.width / r.width;
+    const sy = zCanvas.height / r.height;
+    const cx = (e.clientX - r.left) * sx;
+    const cy = (e.clientY - r.top)  * sy;
+    const hit = ZONES.find(z => cx >= z.x && cx < z.x + z.w && cy >= z.y && cy < z.y + z.h);
+    totalClicks++;
+    const res = document.getElementById('zone-result');
+    if (hit) {
+      res.textContent = `Clicked: ${hit.label} (x:${Math.round(cx)}, y:${Math.round(cy)})`;
+      res.style.color = hit.textColor;
+      document.getElementById('zone-click-count').textContent = `Total clicks: ${totalClicks}`;
+      Toast.info(hit.label, `At (${Math.round(cx)}, ${Math.round(cy)})`);
+    } else {
+      res.textContent = 'Clicked outside zones';
+      res.style.color = 'var(--color-text-muted)';
+    }
+  });
+
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    document.getElementById('site-nav').classList.toggle('open');
+    this.setAttribute('aria-expanded', document.getElementById('site-nav').classList.contains('open') ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
+

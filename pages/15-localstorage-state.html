@@ -1,0 +1,353 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>15 LocalStorage & State | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="15-localstorage-state.html" class="nav-link active">LocalStorage</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">15 LocalStorage &amp; State</span></nav>
+    <div class="page-header-meta">
+      <span class="badge badge-advanced">Advanced</span>
+      <span class="badge badge-tag">LocalStorage</span>
+      <span class="badge badge-tag">sessionStorage</span>
+      <span class="badge badge-tag">State Persist</span>
+      <span class="badge badge-tag">CRUD</span>
+    </div>
+    <h1>LocalStorage &amp; State Management</h1>
+    <p>Shopping cart, user preferences, and note CRUD all persisted to localStorage. Reload the page to verify persistence.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);margin-bottom:var(--space-6);">
+
+    <!-- A: Shopping Cart -->
+    <div class="demo-area" data-testid="section-cart">
+      <h3 style="margin-bottom:var(--space-4);">🔵 Shopping Cart</h3>
+      <div style="display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-4);">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:var(--color-bg);border-radius:var(--radius-md);">
+          <span style="font-size:var(--font-size-sm);">Playwright Course</span>
+          <span style="font-size:var(--font-size-sm);font-weight:700;">$49</span>
+          <button class="btn btn-primary btn-sm" data-testid="btn-add-playwright" onclick="addToCart('Playwright Course', 49)">+ Add</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:var(--color-bg);border-radius:var(--radius-md);">
+          <span style="font-size:var(--font-size-sm);">Selenium Masterclass</span>
+          <span style="font-size:var(--font-size-sm);font-weight:700;">$39</span>
+          <button class="btn btn-primary btn-sm" data-testid="btn-add-selenium" onclick="addToCart('Selenium Masterclass', 39)">+ Add</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:var(--color-bg);border-radius:var(--radius-md);">
+          <span style="font-size:var(--font-size-sm);">Cypress Deep Dive</span>
+          <span style="font-size:var(--font-size-sm);font-weight:700;">$29</span>
+          <button class="btn btn-primary btn-sm" data-testid="btn-add-cypress" onclick="addToCart('Cypress Deep Dive', 29)">+ Add</button>
+        </div>
+      </div>
+
+      <h4 style="margin-bottom:var(--space-3);">Cart Items <span id="cart-count" data-testid="cart-count" style="font-size:var(--font-size-xs);background:var(--color-accent);color:white;border-radius:var(--radius-full);padding:0 8px;">0</span></h4>
+      <div id="cart-items" data-testid="cart-items" style="min-height:60px;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:var(--space-4);padding-top:var(--space-3);border-top:1px solid var(--color-border);">
+        <span style="font-size:var(--font-size-sm);font-weight:700;">Total:</span>
+        <span id="cart-total" data-testid="cart-total" style="font-size:var(--font-size-xl);font-weight:800;color:var(--color-accent);">$0</span>
+      </div>
+      <div style="display:flex;gap:var(--space-3);margin-top:var(--space-4);">
+        <button class="btn btn-primary" id="btn-checkout" data-testid="btn-checkout">Checkout</button>
+        <button class="btn btn-secondary btn-sm" id="btn-clear-cart" data-testid="btn-clear-cart">Clear Cart</button>
+      </div>
+    </div>
+
+    <!-- B: Preferences -->
+    <div class="demo-area" data-testid="section-preferences">
+      <h3 style="margin-bottom:var(--space-4);">🟣 User Preferences</h3>
+      <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">These settings persist across page reloads via localStorage.</p>
+
+      <div class="form-group">
+        <label class="form-label" for="pref-language">Language</label>
+        <select class="form-select" id="pref-language" data-testid="pref-language">
+          <option value="en">English</option>
+          <option value="pt">Português</option>
+          <option value="es">Español</option>
+          <option value="de">Deutsch</option>
+          <option value="fr">Français</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="pref-timezone">Timezone</label>
+        <select class="form-select" id="pref-timezone" data-testid="pref-timezone">
+          <option value="utc">UTC</option>
+          <option value="est">EST (UTC-5)</option>
+          <option value="pst">PST (UTC-8)</option>
+          <option value="cet">CET (UTC+1)</option>
+          <option value="ist">IST (UTC+5:30)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-check">
+          <input type="checkbox" class="form-check-input" id="pref-notifications" data-testid="pref-notifications" />
+          <span class="form-check-label">Enable email notifications</span>
+        </label>
+      </div>
+      <div class="form-group">
+        <label class="form-check">
+          <input type="checkbox" class="form-check-input" id="pref-2fa" data-testid="pref-2fa" />
+          <span class="form-check-label">Two-factor authentication</span>
+        </label>
+      </div>
+      <button class="btn btn-primary btn-sm" id="btn-save-prefs" data-testid="btn-save-prefs">Save Preferences</button>
+      <button class="btn btn-secondary btn-sm" id="btn-reset-prefs" data-testid="btn-reset-prefs" style="margin-left:8px;">Reset</button>
+      <div id="prefs-saved-msg" data-testid="prefs-saved-msg" style="display:none;margin-top:var(--space-3);" class="alert alert-success">
+        <span>🟢</span><p>Preferences saved to localStorage!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- C: Notes CRUD -->
+  <div class="demo-area" data-testid="section-notes">
+    <h3 style="margin-bottom:var(--space-4);">🟣 Notes (CRUD persisted to localStorage)</h3>
+    <div style="display:flex;gap:var(--space-3);margin-bottom:var(--space-4);">
+      <input class="form-input" id="note-input" data-testid="note-input" placeholder="Type a note…" style="flex:1;" maxlength="200" />
+      <button class="btn btn-primary" id="btn-add-note" data-testid="btn-add-note">Add Note</button>
+    </div>
+    <div id="notes-list" data-testid="notes-list" style="display:flex;flex-direction:column;gap:var(--space-2);">
+      <!-- Rendered by JS -->
+    </div>
+    <div id="notes-empty" data-testid="notes-empty" style="display:none;text-align:center;padding:var(--space-6);color:var(--color-text-muted);">
+      <p>No notes yet. Add one above!</p>
+    </div>
+    <button class="btn btn-secondary btn-sm" id="btn-clear-notes" data-testid="btn-clear-notes" style="margin-top:var(--space-4);">Clear All Notes</button>
+  </div>
+
+  <!-- D: Storage Inspector -->
+  <div class="demo-area" style="margin-top:var(--space-6);" data-testid="section-inspector">
+    <h3 style="margin-bottom:var(--space-4);">🔵 Storage Inspector</h3>
+    <div style="display:flex;gap:var(--space-3);margin-bottom:var(--space-4);">
+      <button class="btn btn-secondary btn-sm" id="btn-inspect-storage" data-testid="btn-inspect-storage">Read Storage</button>
+      <button class="btn btn-danger btn-sm"    id="btn-nuke-storage"    data-testid="btn-nuke-storage">Clear ALL Storage</button>
+    </div>
+    <pre id="storage-dump" data-testid="storage-dump" style="font-size:0.72rem;max-height:200px;overflow-y:auto;background:var(--color-bg);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-4);">Click "Read Storage" to inspect…</pre>
+  </div>
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Cart Persistence</h3>
+      <ol class="steps">
+        <li class="step-block">Click <code>btn-add-playwright</code></li>
+        <li class="step-block">Assert <code>cart-count</code> is "1"</li>
+        <li class="step-block">Assert <code>cart-total</code> text is "$49"</li>
+        <li class="step-block">In Playwright: read localStorage <code>page.evaluate(() => localStorage.getItem('qalab_cart'))</code></li>
+        <li class="step-block">Reload the page</li>
+        <li class="step-block">Assert cart is restored <code>cart-count</code> still "1"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario B Preferences Persist</h3>
+      <ol class="steps">
+        <li class="step-block">Select "Português" from <code>pref-language</code></li>
+        <li class="step-block">Check <code>pref-notifications</code></li>
+        <li class="step-block">Click <code>btn-save-prefs</code></li>
+        <li class="step-block">Assert <code>prefs-saved-msg</code> is visible</li>
+        <li class="step-block">Reload the page</li>
+        <li class="step-block">Assert <code>pref-language</code> still shows "Português"</li>
+        <li class="step-block">Assert <code>pref-notifications</code> is still checked</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟡 Pitfalls</h3>
+      <ul>
+        <li>LocalStorage is NOT cleared between test runs by default always set initial state with <code>evaluate</code>.</li>
+        <li>Use <code>page.evaluate(() => localStorage.clear())</code> in test setup.</li>
+        <li>Notes IDs are timestamps don't assert by ID, assert by text content.</li>
+      </ul>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 15 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+  /* ── Cart ───────────────────────────────────────────────── */
+  function loadCart() { return Store.get('qalab_cart', []); }
+  function saveCart(c) { Store.set('qalab_cart', c); }
+
+  function renderCart() {
+    const cart = loadCart();
+    const el = document.getElementById('cart-items');
+    const count = document.getElementById('cart-count');
+    const total = document.getElementById('cart-total');
+    count.textContent = String(cart.length);
+    if (!cart.length) {
+      el.innerHTML = '<p style="font-size:var(--font-size-sm);color:var(--color-text-muted);text-align:center;padding:var(--space-4) 0;">Cart is empty</p>';
+      total.textContent = '$0';
+      return;
+    }
+    el.innerHTML = cart.map((item, i) => `
+      <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) 0;border-bottom:1px solid var(--color-border);" data-testid="cart-item-${i}">
+        <span style="flex:1;font-size:var(--font-size-sm);" data-testid="cart-item-name-${i}">${item.name}</span>
+        <span style="font-weight:700;font-size:var(--font-size-sm);" data-testid="cart-item-price-${i}">$${item.price}</span>
+        <button class="btn btn-ghost btn-sm" onclick="removeFromCart(${i})" data-testid="btn-remove-cart-${i}" style="padding:2px 8px;color:var(--color-danger);">✕</button>
+      </div>
+    `).join('');
+    total.textContent = '$' + cart.reduce((s, i) => s + i.price, 0);
+  }
+
+  function addToCart(name, price) {
+    const cart = loadCart();
+    cart.push({ name, price, id: Date.now() });
+    saveCart(cart);
+    renderCart();
+    Toast.success('Added to cart', name);
+  }
+
+  function removeFromCart(idx) {
+    const cart = loadCart();
+    const removed = cart.splice(idx, 1)[0];
+    saveCart(cart);
+    renderCart();
+    Toast.info('Removed', removed.name);
+  }
+
+  document.getElementById('btn-clear-cart').addEventListener('click', () => {
+    Store.remove('qalab_cart');
+    renderCart();
+    Toast.info('Cart cleared', '');
+  });
+
+  document.getElementById('btn-checkout').addEventListener('click', () => {
+    const cart = loadCart();
+    if (!cart.length) { Toast.warning('Cart empty', 'Add items first.'); return; }
+    Toast.success('Order placed!', `$${cart.reduce((s,i) => s+i.price, 0)} total. Thank you!`);
+    Store.remove('qalab_cart');
+    renderCart();
+  });
+
+  /* ── Preferences ──────────────────────────────────────── */
+  function loadPrefs() { return Store.get('qalab_prefs', {}); }
+
+  function applyPrefs(prefs) {
+    if (prefs.language) document.getElementById('pref-language').value = prefs.language;
+    if (prefs.timezone) document.getElementById('pref-timezone').value = prefs.timezone;
+    document.getElementById('pref-notifications').checked = !!prefs.notifications;
+    document.getElementById('pref-2fa').checked            = !!prefs.twofa;
+  }
+
+  document.getElementById('btn-save-prefs').addEventListener('click', () => {
+    const prefs = {
+      language:      document.getElementById('pref-language').value,
+      timezone:      document.getElementById('pref-timezone').value,
+      notifications: document.getElementById('pref-notifications').checked,
+      twofa:         document.getElementById('pref-2fa').checked,
+    };
+    Store.set('qalab_prefs', prefs);
+    const msg = document.getElementById('prefs-saved-msg');
+    msg.style.display = 'flex';
+    setTimeout(() => msg.style.display = 'none', 3000);
+    Toast.success('Saved', 'Preferences stored in localStorage.');
+  });
+
+  document.getElementById('btn-reset-prefs').addEventListener('click', () => {
+    Store.remove('qalab_prefs');
+    applyPrefs({});
+    Toast.info('Preferences reset', '');
+  });
+
+  /* ── Notes ────────────────────────────────────────────── */
+  function loadNotes() { return Store.get('qalab_notes', []); }
+
+  function renderNotes() {
+    const notes = loadNotes();
+    const list  = document.getElementById('notes-list');
+    const empty = document.getElementById('notes-empty');
+    list.innerHTML = '';
+    empty.style.display = notes.length ? 'none' : 'block';
+    notes.forEach((note, i) => {
+      const div = document.createElement('div');
+      div.style.cssText = 'display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);background:var(--color-bg);border-radius:var(--radius-md);';
+      div.setAttribute('data-testid', `note-item-${i}`);
+      div.innerHTML = `
+        <span style="flex:1;font-size:var(--font-size-sm);" data-testid="note-text-${i}">${note.text}</span>
+        <span style="font-size:var(--font-size-xs);color:var(--color-text-muted);">${new Date(note.ts).toLocaleTimeString()}</span>
+        <button class="btn btn-ghost btn-sm" onclick="deleteNote(${i})" data-testid="btn-delete-note-${i}" style="padding:2px 8px;color:var(--color-danger);">✕</button>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function deleteNote(idx) {
+    const notes = loadNotes();
+    notes.splice(idx, 1);
+    Store.set('qalab_notes', notes);
+    renderNotes();
+  }
+
+  document.getElementById('btn-add-note').addEventListener('click', () => {
+    const input = document.getElementById('note-input');
+    const text  = input.value.trim();
+    if (!text) { Toast.warning('Empty note', 'Type something first.'); return; }
+    const notes = loadNotes();
+    notes.push({ text, ts: Date.now() });
+    Store.set('qalab_notes', notes);
+    input.value = '';
+    renderNotes();
+    Toast.success('Note saved', text.slice(0, 30));
+  });
+
+  document.getElementById('note-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('btn-add-note').click();
+  });
+
+  document.getElementById('btn-clear-notes').addEventListener('click', () => {
+    Store.remove('qalab_notes');
+    renderNotes();
+    Toast.info('Notes cleared', '');
+  });
+
+  /* ── Storage inspector ────────────────────────────────── */
+  document.getElementById('btn-inspect-storage').addEventListener('click', () => {
+    const dump = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      try { dump[k] = JSON.parse(localStorage.getItem(k)); } catch { dump[k] = localStorage.getItem(k); }
+    }
+    document.getElementById('storage-dump').textContent = JSON.stringify(dump, null, 2) || '(empty)';
+  });
+
+  document.getElementById('btn-nuke-storage').addEventListener('click', () => {
+    if (!confirm('Clear ALL localStorage? This includes cart, prefs, and notes.')) return;
+    localStorage.clear();
+    renderCart();
+    applyPrefs({});
+    renderNotes();
+    document.getElementById('storage-dump').textContent = '(cleared)';
+    Toast.warning('Storage cleared', 'All data removed.');
+  });
+
+  /* ── Init ──────────────────────────────────────────────── */
+  renderCart();
+  applyPrefs(loadPrefs());
+  renderNotes();
+
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    document.getElementById('site-nav').classList.toggle('open');
+    this.setAttribute('aria-expanded', document.getElementById('site-nav').classList.contains('open') ? 'true' : 'false');
+  });
+</script>
+</body>
+</html>
+

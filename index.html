@@ -1,0 +1,504 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="QA Lab A complete E2E automation practice platform for Playwright, Selenium, Cypress, and more." />
+  <title>QA Lab E2E Automation Training Platform</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+</head>
+<body>
+
+<!-- ════════════════════ HEADER ════════════════════ -->
+<header class="site-header" id="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="header-logo" aria-label="QA Lab Home" data-testid="logo">
+      <div class="logo-icon" aria-hidden="true">🟣</div>
+      <span>QA Lab</span>
+    </a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" data-testid="nav-toggle">☰</button>
+    <nav class="header-nav" id="site-nav" aria-label="Main navigation" data-testid="main-nav">
+      <a href="landing.html"                       class="nav-link" data-testid="nav-landing">About</a>
+      <a href="index.html"                        class="nav-link active" data-testid="nav-home">Catalog</a>
+      <a href="pages/01-simple-login.html"        class="nav-link" data-testid="nav-beginner">Beginner</a>
+      <a href="pages/06-dynamic-table.html"       class="nav-link" data-testid="nav-intermediate">Intermediate</a>
+      <a href="pages/11-multi-step-form.html"     class="nav-link" data-testid="nav-advanced">Advanced</a>
+      <a href="pages/16-nested-iframes.html"      class="nav-link" data-testid="nav-expert">Expert</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ════════════════════ HERO ════════════════════ -->
+<main class="site-main" id="main-content">
+  <section class="hero" aria-labelledby="hero-heading">
+    <h1 id="hero-heading">E2E Automation<br/>Training Platform</h1>
+    <p>
+      20 progressively complex test scenarios designed for Playwright, Selenium, Cypress,
+      Robot Framework, WebdriverIO, and Appium. From simple forms to Shadow DOM all
+      running locally, zero dependencies.
+    </p>
+    <div class="hero-actions">
+      <a href="pages/01-simple-login.html" class="btn btn-primary btn-lg" data-testid="cta-start">
+        Start Training
+      </a>
+      <a href="landing.html" class="btn btn-secondary btn-lg" data-testid="cta-landing">
+        About QA Lab
+      </a>
+      <a href="docs/README.md" class="btn btn-secondary btn-lg" data-testid="cta-docs">
+        Documentation
+      </a>
+    </div>
+    <div class="hero-stats" data-testid="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num" data-testid="stat-scenarios">20</span>
+        <span class="hero-stat-label">Scenarios</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num" data-testid="stat-levels">4</span>
+        <span class="hero-stat-label">Difficulty Levels</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num" data-testid="stat-frameworks">6+</span>
+        <span class="hero-stat-label">Frameworks Supported</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num" data-testid="stat-zero">0</span>
+        <span class="hero-stat-label">Dependencies</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Filter strip ── -->
+  <div class="category-strip" role="group" aria-label="Filter by difficulty" data-testid="category-filter">
+    <button class="category-btn active" data-filter="all"          data-testid="filter-all">All (20)</button>
+    <button class="category-btn"        data-filter="beginner"     data-testid="filter-beginner">🟢 Beginner</button>
+    <button class="category-btn"        data-filter="intermediate" data-testid="filter-intermediate">🟡 Intermediate</button>
+    <button class="category-btn"        data-filter="advanced"     data-testid="filter-advanced">🔴 Advanced</button>
+    <button class="category-btn"        data-filter="expert"       data-testid="filter-expert">🟣 Expert</button>
+  </div>
+
+  <!-- ══════════════ BEGINNER SECTION ══════════════ -->
+  <section aria-labelledby="section-beginner" data-section="beginner">
+    <div class="section-header">
+      <h2 class="section-title" id="section-beginner">
+        <span class="section-title-icon icon-beginner" aria-hidden="true">🟢</span>
+        Beginner
+      </h2>
+      <span class="text-muted" aria-label="5 scenarios">5 scenarios</span>
+    </div>
+    <div class="grid-3" id="grid-beginner" data-testid="grid-beginner">
+
+      <!-- Card 01 -->
+      <a href="pages/01-simple-login.html" class="card scenario-card" data-difficulty="beginner" data-testid="card-01" aria-label="Scenario 01: Simple Login Form">
+        <div class="card-body">
+          <div class="card-num">Scenario 01</div>
+          <div class="card-title">Simple Login Form</div>
+          <p class="card-desc">Username + password, submit, cancel, basic field validation and error messaging.</p>
+          <div class="card-tags">
+            <span class="badge badge-beginner">Beginner</span>
+            <span class="badge badge-tag">Forms</span>
+            <span class="badge badge-tag">Validation</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">locators · submit · assertions</small>
+        </div>
+      </a>
+
+      <!-- Card 02 -->
+      <a href="pages/02-registration-form.html" class="card scenario-card" data-difficulty="beginner" data-testid="card-02" aria-label="Scenario 02: Registration Form">
+        <div class="card-body">
+          <div class="card-num">Scenario 02</div>
+          <div class="card-title">Registration Form</div>
+          <p class="card-desc">Multi-field signup with password confirmation, email, phone, and terms acceptance.</p>
+          <div class="card-tags">
+            <span class="badge badge-beginner">Beginner</span>
+            <span class="badge badge-tag">Forms</span>
+            <span class="badge badge-tag">Regex Validation</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">form fill · error check · submit</small>
+        </div>
+      </a>
+
+      <!-- Card 03 -->
+      <a href="pages/03-checkboxes-radios.html" class="card scenario-card" data-difficulty="beginner" data-testid="card-03" aria-label="Scenario 03: Checkboxes and Radio Buttons">
+        <div class="card-body">
+          <div class="card-num">Scenario 03</div>
+          <div class="card-title">Checkboxes &amp; Radios</div>
+          <p class="card-desc">Single and grouped checkboxes, radio buttons, toggle switches, and indeterminate states.</p>
+          <div class="card-tags">
+            <span class="badge badge-beginner">Beginner</span>
+            <span class="badge badge-tag">Checkboxes</span>
+            <span class="badge badge-tag">Radios</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">click · state check · group</small>
+        </div>
+      </a>
+
+      <!-- Card 04 -->
+      <a href="pages/04-dropdowns-selects.html" class="card scenario-card" data-difficulty="beginner" data-testid="card-04" aria-label="Scenario 04: Dropdowns and Selects">
+        <div class="card-body">
+          <div class="card-num">Scenario 04</div>
+          <div class="card-title">Dropdowns &amp; Selects</div>
+          <p class="card-desc">Native &lt;select&gt;, multi-select, custom dropdown widget, grouped options.</p>
+          <div class="card-tags">
+            <span class="badge badge-beginner">Beginner</span>
+            <span class="badge badge-tag">Select</span>
+            <span class="badge badge-tag">Custom Dropdown</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">selectOption · verify value</small>
+        </div>
+      </a>
+
+      <!-- Card 05 -->
+      <a href="pages/05-static-content.html" class="card scenario-card" data-difficulty="beginner" data-testid="card-05" aria-label="Scenario 05: Static Content Verification">
+        <div class="card-body">
+          <div class="card-num">Scenario 05</div>
+          <div class="card-title">Static Content Verification</div>
+          <p class="card-desc">Headings, paragraphs, images, links, lists, tables. Pure content assertion practice.</p>
+          <div class="card-tags">
+            <span class="badge badge-beginner">Beginner</span>
+            <span class="badge badge-tag">Assertions</span>
+            <span class="badge badge-tag">Navigation</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">text check · visibility · links</small>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <hr />
+
+  <!-- ══════════════ INTERMEDIATE SECTION ══════════════ -->
+  <section aria-labelledby="section-intermediate" data-section="intermediate">
+    <div class="section-header">
+      <h2 class="section-title" id="section-intermediate">
+        <span class="section-title-icon icon-intermediate" aria-hidden="true">🟡</span>
+        Intermediate
+      </h2>
+      <span class="text-muted" aria-label="5 scenarios">5 scenarios</span>
+    </div>
+    <div class="grid-3" id="grid-intermediate" data-testid="grid-intermediate">
+
+      <!-- Card 06 -->
+      <a href="pages/06-dynamic-table.html" class="card scenario-card" data-difficulty="intermediate" data-testid="card-06">
+        <div class="card-body">
+          <div class="card-num">Scenario 06</div>
+          <div class="card-title">Dynamic Table</div>
+          <p class="card-desc">Sortable columns, client side pagination, row selection, search filtering.</p>
+          <div class="card-tags">
+            <span class="badge badge-intermediate">Intermediate</span>
+            <span class="badge badge-tag">Tables</span>
+            <span class="badge badge-tag">Pagination</span>
+          </div>
+        </div>
+        <div class="card-footer"><small class="text-muted">sort · filter · paginate · select</small></div>
+      </a>
+
+      <!-- Card 07 -->
+      <a href="pages/07-modals-toasts.html" class="card scenario-card" data-difficulty="intermediate" data-testid="card-07">
+        <div class="card-body">
+          <div class="card-num">Scenario 07</div>
+          <div class="card-title">Modals &amp; Toasts</div>
+          <p class="card-desc">Dialog open/close, confirmation modals, form inside modal, auto dismiss notifications.</p>
+          <div class="card-tags">
+            <span class="badge badge-intermediate">Intermediate</span>
+            <span class="badge badge-tag">Modals</span>
+            <span class="badge badge-tag">Toasts</span>
+          </div>
+        </div>
+        <div class="card-footer"><small class="text-muted">overlay · focus trap · dismiss</small></div>
+      </a>
+
+      <!-- Card 08 -->
+      <a href="pages/08-tabs-accordions.html" class="card scenario-card" data-difficulty="intermediate" data-testid="card-08">
+        <div class="card-body">
+          <div class="card-num">Scenario 08</div>
+          <div class="card-title">Tabs &amp; Accordions</div>
+          <p class="card-desc">Keyboard-accessible tabbed interface, exclusive + multi-open accordions.</p>
+          <div class="card-tags">
+            <span class="badge badge-intermediate">Intermediate</span>
+            <span class="badge badge-tag">Tabs</span>
+            <span class="badge badge-tag">Accordion</span>
+          </div>
+        </div>
+        <div class="card-footer"><small class="text-muted">keyboard nav · aria · visibility</small></div>
+      </a>
+
+      <!-- Card 09 -->
+      <a href="pages/09-form-validation.html" class="card scenario-card" data-difficulty="intermediate" data-testid="card-09">
+        <div class="card-body">
+          <div class="card-num">Scenario 09</div>
+          <div class="card-title">Advanced Form Validation</div>
+          <p class="card-desc">Real-time regex rules, password strength, conditional fields, debounced async checks.</p>
+          <div class="card-tags">
+            <span class="badge badge-intermediate">Intermediate</span>
+            <span class="badge badge-tag">Validation</span>
+            <span class="badge badge-tag">Async</span>
+          </div>
+        </div>
+        <div class="card-footer"><small class="text-muted">blur · input · debounce</small></div>
+      </a>
+
+      <!-- Card 10 -->
+      <a href="pages/10-search-filter.html" class="card scenario-card" data-difficulty="intermediate" data-testid="card-10">
+        <div class="card-body">
+          <div class="card-num">Scenario 10</div>
+          <div class="card-title">Search &amp; Filter</div>
+          <p class="card-desc">Live search with debounce, multi-criteria filter, empty state, result count badge.</p>
+          <div class="card-tags">
+            <span class="badge badge-intermediate">Intermediate</span>
+            <span class="badge badge-tag">Search</span>
+            <span class="badge badge-tag">Filtering</span>
+          </div>
+        </div>
+        <div class="card-footer"><small class="text-muted">type · wait debounce · assert count</small></div>
+      </a>
+
+    </div>
+  </section>
+
+  <hr />
+
+  <!-- ══════════════ ADVANCED SECTION ══════════════ -->
+  <section aria-labelledby="section-advanced" data-section="advanced">
+    <div class="section-header">
+      <h2 class="section-title" id="section-advanced">
+        <span class="section-title-icon icon-advanced" aria-hidden="true">🔴</span>
+        Advanced
+      </h2>
+      <span class="text-muted" aria-label="5 scenarios">5 scenarios</span>
+    </div>
+    <div class="grid-3" id="grid-advanced" data-testid="grid-advanced">
+
+      <!-- Card 11 -->
+      <a href="pages/11-multi step-form.html" class="card scenario-card" data-difficulty="advanced" data-testid="card-11">
+        <div class="card-body">
+          <div class="card-num">Scenario 11</div>
+          <div class="card-title">Multi Step Wizard Form</div>
+          <p class="card-desc">4-step form with progress tracking, step validation, back/next, review + submit.</p>
+          <div class="card-tags">
+            <span class="badge badge-advanced">Advanced</span>
+            <span class="badge badge-tag">Wizard</span>
+            <span class="badge badge-tag">State</span>
+          </div>
+        </div>
+        <div class="card-footer"><small class="text-muted">step navigation · persist · submit</small></div>
+      </a>
+
+      <!-- Card 12 -->
+      <a href="pages/12-async-loading.html" class="card scenario-card" data-difficulty="advanced" data-testid="card-12">
+        <div class="card-body">
+          <div class="card-num">Scenario 12</div>
+          <div class="card-title">Async Loading &amp; Spinners</div>
+          <p class="card-desc">Simulated AJAX requests, skeleton loaders, retry mechanism, error state handling.</p>
+          <div class="card-tags">
+            <span class="badge badge-advanced">Advanced</span>
+            <span class="badge badge-tag">Async</span>
+            <span class="badge badge-tag">Retry</span>
+          </div>
+        </div>
+        <div class="card-footer"><small class="text-muted">wait for · spinner · network mock</small></div>
+      </a>
+
+      <!-- Card 13 -->
+      <a href="pages/13-drag and drop.html" class="card scenario-card" data-difficulty="advanced" data-testid="card-13">
+        <div class="card-body">
+          <div class="card-num">Scenario 13</div>
+          <div class="card-title">Drag &amp; Drop</div>
+          <p class="card-desc">HTML5 drag and drop: sortable list, Kanban columns, drop zones with validation.</p>
+          <div class="card-tags">
+            <span class="badge badge-advanced">Advanced</span>
+            <span class="badge badge-tag">DnD</span>
+            <span class="badge badge-tag">Mouse Events</span>
+          </div>
+        </div>
+        <div class="card-footer"><small class="text-muted">dragAndDrop · order assert</small></div>
+      </a>
+
+      <!-- Card 14 -->
+      <a href="pages/14-file-upload.html" class="card scenario-card" data-difficulty="advanced" data-testid="card-14">
+        <div class="card-body">
+          <div class="card-num">Scenario 14</div>
+          <div class="card-title">File Upload</div>
+          <p class="card-desc">Dropzone, multi-file input, type/size validation, upload progress, remove file.</p>
+          <div class="card-tags">
+            <span class="badge badge-advanced">Advanced</span>
+            <span class="badge badge-tag">File Input</span>
+            <span class="badge badge-tag">Validation</span>
+          </div>
+        </div>
+        <div class="card-footer"><small class="text-muted">setInputFiles · progress · remove</small></div>
+      </a>
+
+      <!-- Card 15 -->
+      <a href="pages/15-localstorage-state.html" class="card scenario-card" data-difficulty="advanced" data-testid="card-15">
+        <div class="card-body">
+          <div class="card-num">Scenario 15</div>
+          <div class="card-title">LocalStorage &amp; State</div>
+          <p class="card-desc">Cart, preferences, CRUD with localStorage, session restore, clear storage flows.</p>
+          <div class="card-tags">
+            <span class="badge badge-advanced">Advanced</span>
+            <span class="badge badge-tag">LocalStorage</span>
+            <span class="badge badge-tag">State</span>
+          </div>
+        </div>
+        <div class="card-footer"><small class="text-muted">evaluate · storage · persist</small></div>
+      </a>
+
+    </div>
+  </section>
+
+  <hr />
+
+  <!-- ══════════════ EXPERT SECTION ══════════════ -->
+  <section aria-labelledby="section-expert" data-section="expert">
+    <div class="section-header">
+      <h2 class="section-title" id="section-expert">
+        <span class="section-title-icon icon-expert" aria-hidden="true">🟣</span>
+        Expert
+      </h2>
+      <span class="text-muted" aria-label="5 scenarios">5 scenarios</span>
+    </div>
+    <div class="grid-3" id="grid-expert" data-testid="grid-expert">
+
+      <!-- Card 16 -->
+      <a href="pages/16-nested-iframes.html" class="card scenario-card" data-difficulty="expert" data-testid="card-16">
+        <div class="card-body">
+          <div class="card-num">Scenario 16</div>
+          <div class="card-title">Nested iFrames</div>
+          <p class="card-desc">Two levels of nested same-origin iframes with forms, buttons, and assertions inside each.</p>
+          <div class="card-tags">
+            <span class="badge badge-expert">Expert</span>
+            <span class="badge badge-tag">iFrames</span>
+            <span class="badge badge-tag">Context Switch</span>
+          </div>
+        </div>
+        <div class="card-footer"><small class="text-muted">frameLocator · nested context</small></div>
+      </a>
+
+      <!-- Card 17 -->
+      <a href="pages/17-shadow-dom.html" class="card scenario-card" data-difficulty="expert" data-testid="card-17">
+        <div class="card-body">
+          <div class="card-num">Scenario 17</div>
+          <div class="card-title">Shadow DOM</div>
+          <p class="card-desc">Web Components with closed/open shadow roots, slots, custom events, nested shadows.</p>
+          <div class="card-tags">
+            <span class="badge badge-expert">Expert</span>
+            <span class="badge badge-tag">Shadow DOM</span>
+            <span class="badge badge-tag">Web Components</span>
+          </div>
+        </div>
+        <div class="card-footer"><small class="text-muted">pierce selector · locator chain</small></div>
+      </a>
+
+      <!-- Card 18 -->
+      <a href="pages/18-race-conditions.html" class="card scenario-card" data-difficulty="expert" data-testid="card-18">
+        <div class="card-body">
+          <div class="card-num">Scenario 18</div>
+          <div class="card-title">Race Conditions &amp; Flakiness</div>
+          <p class="card-desc">Deliberate timing problems, element appearing before/after delays, retry-prone states.</p>
+          <div class="card-tags">
+            <span class="badge badge-expert">Expert</span>
+            <span class="badge badge-tag">Timing</span>
+            <span class="badge badge-tag">Retry</span>
+          </div>
+        </div>
+        <div class="card-footer"><small class="text-muted">waitFor · retry · expect timeout</small></div>
+      </a>
+
+      <!-- Card 19 -->
+      <a href="pages/19-canvas-interactions.html" class="card scenario-card" data-difficulty="expert" data-testid="card-19">
+        <div class="card-body">
+          <div class="card-num">Scenario 19</div>
+          <div class="card-title">Canvas Interactions</div>
+          <p class="card-desc">HTML5 canvas drawing, pixel assertions, coordinate-based click simulation.</p>
+          <div class="card-tags">
+            <span class="badge badge-expert">Expert</span>
+            <span class="badge badge-tag">Canvas</span>
+            <span class="badge badge-tag">Visual</span>
+          </div>
+        </div>
+        <div class="card-footer"><small class="text-muted">mouse · screenshot · pixel check</small></div>
+      </a>
+
+      <!-- Card 20 -->
+      <a href="pages/20-accessibility.html" class="card scenario-card" data-difficulty="expert" data-testid="card-20">
+        <div class="card-body">
+          <div class="card-num">Scenario 20</div>
+          <div class="card-title">Accessibility Testing</div>
+          <p class="card-desc">Keyboard navigation, focus management, ARIA live regions, screen reader patterns.</p>
+          <div class="card-tags">
+            <span class="badge badge-expert">Expert</span>
+            <span class="badge badge-tag">A11y</span>
+            <span class="badge badge-tag">ARIA</span>
+          </div>
+        </div>
+        <div class="card-footer"><small class="text-muted">keyboard · focus · axe · roles</small></div>
+      </a>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ════════════════════ FOOTER ════════════════════ -->
+<footer class="site-footer" data-testid="site-footer">
+  <p>
+    QA Lab E2E Automation Training Platform &nbsp;·&nbsp;
+    Plain HTML · Plain CSS · Plain JS &nbsp;·&nbsp;
+    No dependencies &nbsp;·&nbsp; Run locally
+  </p>
+</footer>
+
+<script src="js/utils.js"></script>
+<script>
+  /* ── Category filter logic ─────────────────────────────── */
+  (function () {
+    const filterBtns = document.querySelectorAll('[data-filter]');
+    const cards = document.querySelectorAll('.scenario-card[data-difficulty]');
+    const sections = document.querySelectorAll('[data-section]');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        cards.forEach(card => {
+          const visible = filter === 'all' || card.dataset.difficulty === filter;
+          card.closest('a').style.display = visible ? '' : 'none';
+        });
+
+        sections.forEach(section => {
+          const visible = filter === 'all' || section.dataset.section === filter;
+          section.style.display = visible ? '' : 'none';
+          const hr = section.nextElementSibling;
+          if (hr && hr.tagName === 'HR') hr.style.display = visible ? '' : 'none';
+        });
+      });
+    });
+  })();
+
+  /* ── Mobile nav toggle ─────────────────────────────────── */
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    const nav = document.getElementById('site-nav');
+    nav.classList.toggle('open');
+    this.setAttribute('aria-expanded', nav.classList.contains('open') ? 'true' : 'false');
+  });
+</script>
+</body>
+</html>
+

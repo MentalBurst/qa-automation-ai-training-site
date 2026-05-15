@@ -1,0 +1,324 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>20 Accessibility Testing | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="20-accessibility.html" class="nav-link active">Accessibility</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main" id="main-content">
+  <div class="page-header">
+    <nav class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">20 Accessibility Testing</span></nav>
+    <div class="page-header-meta">
+      <span class="badge badge-expert">Expert</span>
+      <span class="badge badge-tag">A11y</span>
+      <span class="badge badge-tag">ARIA</span>
+      <span class="badge badge-tag">Keyboard Nav</span>
+      <span class="badge badge-tag">Screen Reader</span>
+    </div>
+    <h1>Accessibility Testing</h1>
+    <p>ARIA roles, live regions, focus management, keyboard navigation, skip links, and screen reader patterns all verifiable by automation.</p>
+  </div>
+
+  <!-- Skip link (screen reader pattern) -->
+  <a href="#main-content" class="sr-only" data-testid="skip-link" style="position:absolute;top:68px;left:var(--space-4);z-index:1000;background:var(--color-accent);color:white;padding:8px 16px;border-radius:6px;font-weight:700;text-decoration:none;">
+    Skip to main content
+  </a>
+
+  <div style="display:flex;flex-direction:column;gap:var(--space-6);">
+
+    <!-- A: ARIA Roles & Labels -->
+    <div class="demo-area" data-testid="section-aria">
+      <h3 style="margin-bottom:var(--space-6);">A. ARIA Roles &amp; Labels</h3>
+
+      <!-- Navigation landmark -->
+      <nav aria-label="Secondary navigation" data-testid="secondary-nav" style="margin-bottom:var(--space-4);">
+        <ul style="display:flex;gap:var(--space-2);flex-wrap:wrap;">
+          <li><a href="#" class="btn btn-ghost btn-sm" data-testid="nav-a11y-home" aria-current="page">Home</a></li>
+          <li><a href="#" class="btn btn-ghost btn-sm" data-testid="nav-a11y-about">About</a></li>
+          <li><a href="#" class="btn btn-ghost btn-sm" data-testid="nav-a11y-contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Button roles and states -->
+      <div style="display:flex;flex-wrap:wrap;gap:var(--space-3);margin-bottom:var(--space-4);">
+        <button class="btn btn-secondary" id="btn-expand" data-testid="btn-expand"
+          aria-expanded="false" aria-controls="expandable-region"
+          aria-label="Toggle details section">
+          Toggle Details
+        </button>
+        <button class="btn btn-secondary" id="btn-toggle-aria" data-testid="btn-toggle-aria"
+          aria-pressed="false" aria-label="Favourite this item">
+          🟡 Favourite
+        </button>
+        <button class="btn btn-secondary" id="btn-disabled-aria" data-testid="btn-disabled-aria"
+          aria-disabled="true" style="opacity:0.5;cursor:not-allowed;" tabindex="-1">
+          Disabled (aria-disabled)
+        </button>
+      </div>
+
+      <div id="expandable-region" data-testid="expandable-region" style="display:none;padding:var(--space-4);background:var(--color-bg);border-radius:var(--radius-md);" aria-live="polite">
+        <strong>Expanded content!</strong> This region was revealed by the toggle button.
+        <br/><span data-testid="expanded-text">Automation can assert this text when expanded.</span>
+      </div>
+
+      <!-- Tooltip pattern -->
+      <div style="margin-top:var(--space-4);display:flex;align-items:center;gap:var(--space-4);">
+        <button class="btn btn-secondary btn-sm" id="btn-tooltip" data-testid="btn-tooltip"
+          aria-describedby="tooltip-content"
+          style="position:relative;">
+          Hover for Tooltip 🔵
+        </button>
+        <div id="tooltip-content" role="tooltip" data-testid="tooltip-content" style="display:none;background:#2d3748;color:white;padding:6px 12px;border-radius:6px;font-size:var(--font-size-xs);">
+          This is the tooltip content readable by screen readers via aria-describedby.
+        </div>
+      </div>
+    </div>
+
+    <!-- B: Live Regions -->
+    <div class="demo-area" data-testid="section-live">
+      <h3 style="margin-bottom:var(--space-4);">B. ARIA Live Regions</h3>
+      <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">Live regions announce changes to screen readers. Test with <code>getByRole</code> and live region assertions.</p>
+
+      <div style="display:flex;flex-wrap:wrap;gap:var(--space-3);margin-bottom:var(--space-4);">
+        <button class="btn btn-secondary btn-sm" id="btn-polite-announce" data-testid="btn-polite-announce">
+          Polite Announcement
+        </button>
+        <button class="btn btn-secondary btn-sm" id="btn-assertive-announce" data-testid="btn-assertive-announce">
+          Assertive Announcement
+        </button>
+        <button class="btn btn-secondary btn-sm" id="btn-status-update" data-testid="btn-status-update">
+          Status Update
+        </button>
+      </div>
+
+      <div id="live-polite" role="region" aria-live="polite" aria-label="Polite announcements" data-testid="live-polite"
+        style="padding:var(--space-3) var(--space-4);background:var(--color-bg);border-radius:var(--radius-md);font-size:var(--font-size-sm);min-height:2.5em;">
+        Polite region screen readers wait for the user to finish before announcing.
+      </div>
+
+      <div id="live-assertive" role="alert" aria-live="assertive" data-testid="live-assertive"
+        style="display:none;margin-top:var(--space-3);" class="alert alert-danger"></div>
+
+      <div id="live-status" role="status" aria-live="polite" data-testid="live-status"
+        style="margin-top:var(--space-3);font-size:var(--font-size-sm);color:var(--color-text-muted);min-height:1.5em;">
+      </div>
+    </div>
+
+    <!-- C: Focus Management -->
+    <div class="demo-area" data-testid="section-focus">
+      <h3 style="margin-bottom:var(--space-4);">C. Focus Management</h3>
+      <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">Tab order, focus trap in modal, programmatic focus, and visible focus indicator.</p>
+
+      <!-- Tab order demo -->
+      <div id="tab-order-demo" data-testid="tab-order-demo" style="border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-4);">
+        <p style="font-size:var(--font-size-sm);font-weight:600;margin-bottom:var(--space-3);">Tab through these elements in order:</p>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--space-3);">
+          <input class="form-input" style="width:160px;" tabindex="1" data-testid="tab-input-1" placeholder="Tab index 1" aria-label="First tab stop" />
+          <input class="form-input" style="width:160px;" tabindex="3" data-testid="tab-input-3" placeholder="Tab index 3" aria-label="Third tab stop" />
+          <input class="form-input" style="width:160px;" tabindex="2" data-testid="tab-input-2" placeholder="Tab index 2" aria-label="Second tab stop" />
+          <button class="btn btn-secondary btn-sm" tabindex="4" data-testid="tab-btn-4">Tab index 4</button>
+        </div>
+        <div id="tab-focus-log" data-testid="tab-focus-log" style="margin-top:var(--space-3);font-size:var(--font-size-xs);color:var(--color-text-muted);" aria-live="polite">
+          Focus log: (click an element to track)
+        </div>
+      </div>
+
+      <!-- Focus trap demo -->
+      <button class="btn btn-primary btn-sm" id="btn-open-focus-trap" data-testid="btn-open-focus-trap" style="margin-top:var(--space-4);">
+        Open Focus Trap Dialog
+      </button>
+    </div>
+
+    <!-- D: Semantic HTML / Roles -->
+    <div class="demo-area" data-testid="section-semantic">
+      <h3 style="margin-bottom:var(--space-4);">D. Semantic HTML &amp; Role Queries</h3>
+      <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-6);">Playwright's <code>getByRole()</code> lets you query by semantic role as a screen reader would.</p>
+
+      <article id="article-content" data-testid="article-content" aria-label="Sample article">
+        <header>
+          <h2 id="article-title" data-testid="article-title">The Importance of Accessibility in Testing</h2>
+          <time datetime="2024-01-15" data-testid="article-date">January 15, 2024</time>
+        </header>
+        <p>Accessibility testing ensures that all users, regardless of ability, can use your application. It also improves overall code quality.</p>
+        <aside aria-label="Related links">
+          <h3>Related</h3>
+          <ul>
+            <li><a href="https://www.w3.org/WAI/" target="_blank" rel="noopener" data-testid="link-wai">WAI-ARIA Guidelines ↗</a></li>
+            <li><a href="https://axe-core.org" target="_blank" rel="noopener" data-testid="link-axe">axe-core ↗</a></li>
+          </ul>
+        </aside>
+      </article>
+
+      <div style="margin-top:var(--space-6);background:var(--color-bg);border-radius:var(--radius-md);padding:var(--space-4);">
+        <p style="font-size:var(--font-size-sm);font-weight:600;margin-bottom:var(--space-3);">Playwright role queries:</p>
+        <pre style="font-size:0.72rem;line-height:1.7;">page.getByRole('heading', { name: 'The Importance...' })
+page.getByRole('article')
+page.getByRole('link', { name: 'WAI-ARIA Guidelines' })
+page.getByRole('navigation', { name: 'Secondary navigation' })
+page.getByRole('button', { name: 'Toggle Details' })</pre>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Focus Trap Modal -->
+  <div class="modal-backdrop hidden" id="modal-focus-trap" role="dialog" aria-modal="true" aria-labelledby="focus-trap-title" aria-hidden="true" data-testid="modal-focus-trap">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="focus-trap-title">Focus Trap Demo</h2>
+        <button class="modal-close" id="btn-focus-trap-close" aria-label="Close focus trap dialog" data-testid="btn-focus-trap-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>Focus is trapped inside this dialog. Tab and Shift+Tab cycle only through focusable elements within. Escape closes the dialog.</p>
+        <div style="display:flex;flex-direction:column;gap:var(--space-3);margin-top:var(--space-4);">
+          <input class="form-input" id="trap-input-1" data-testid="trap-input-1" placeholder="Input 1 (inside trap)" aria-label="First trapped input" />
+          <input class="form-input" id="trap-input-2" data-testid="trap-input-2" placeholder="Input 2 (inside trap)" aria-label="Second trapped input" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-trap-cancel" data-testid="btn-trap-cancel">Cancel</button>
+        <button class="btn btn-primary"   id="btn-trap-confirm" data-testid="btn-trap-confirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Role-based Locators</h3>
+      <ol class="steps">
+        <li class="step-block">Use <code>page.getByRole('button', { name: 'Toggle Details' })</code></li>
+        <li class="step-block">Click it</li>
+        <li class="step-block">Assert button now has <code>aria-expanded="true"</code></li>
+        <li class="step-block">Assert <code>expandable-region</code> is visible</li>
+        <li class="step-block">Use <code>page.getByRole('region', { name: 'Polite announcements' })</code></li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario B Focus Trap</h3>
+      <ol class="steps">
+        <li class="step-block">Click <code>btn-open-focus-trap</code></li>
+        <li class="step-block">Assert <code>modal-focus-trap</code> is visible</li>
+        <li class="step-block">Assert focus is on first focusable element (<code>trap-input-1</code>)</li>
+        <li class="step-block">Press Tab 3 times assert focus stays within modal</li>
+        <li class="step-block">Press Escape assert modal is closed</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟡 Key A11y Tips</h3>
+      <ul>
+        <li>Use <code>getByRole()</code> over <code>getByTestId()</code> when testing accessibility specifically.</li>
+        <li>Live regions announce changes asynchronously wait for text content to update.</li>
+        <li>axe-core integration: <code>import { checkA11y } from 'axe-playwright'</code>.</li>
+        <li>Always verify that keyboard navigation matches visual tab order.</li>
+      </ul>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 20 of 20 &nbsp;·&nbsp; Platform Complete 🟢</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+(function () {
+  /* A: expand / favourite */
+  document.getElementById('btn-expand').addEventListener('click', function () {
+    const region = document.getElementById('expandable-region');
+    const expanded = this.getAttribute('aria-expanded') === 'true';
+    this.setAttribute('aria-expanded', String(!expanded));
+    this.textContent = expanded ? 'Show Details' : 'Hide Details';
+    region.style.display = expanded ? 'none' : 'block';
+  });
+
+  document.getElementById('btn-toggle-aria').addEventListener('click', function () {
+    const pressed = this.getAttribute('aria-pressed') === 'true';
+    this.setAttribute('aria-pressed', String(!pressed));
+    this.textContent = pressed ? '🟡 Favourite' : '🟢 Favourited';
+    Toast.info('Favourite', pressed ? 'Removed' : 'Added');
+  });
+
+  /* tooltip */
+  const tooltipBtn = document.getElementById('btn-tooltip');
+  const tooltipEl  = document.getElementById('tooltip-content');
+  tooltipBtn.addEventListener('mouseenter', () => { tooltipEl.style.display = 'block'; });
+  tooltipBtn.addEventListener('mouseleave', () => { tooltipEl.style.display = 'none'; });
+  tooltipBtn.addEventListener('focus',      () => { tooltipEl.style.display = 'block'; });
+  tooltipBtn.addEventListener('blur',       () => { tooltipEl.style.display = 'none'; });
+
+  /* B: Live regions */
+  let announceCount = 0;
+  document.getElementById('btn-polite-announce').addEventListener('click', () => {
+    announceCount++;
+    document.getElementById('live-polite').textContent = `Polite announcement #${announceCount}: The data has been updated at ${new Date().toLocaleTimeString()}.`;
+  });
+
+  document.getElementById('btn-assertive-announce').addEventListener('click', () => {
+    const el = document.getElementById('live-assertive');
+    el.style.display = 'flex';
+    el.innerHTML = '<span>🔴</span><p>Assertive alert: Critical error occurred! (interrupts screen reader)</p>';
+    setTimeout(() => { el.style.display = 'none'; }, 5000);
+  });
+
+  document.getElementById('btn-status-update').addEventListener('click', () => {
+    document.getElementById('live-status').textContent = `Status: 3 items processed successfully at ${new Date().toLocaleTimeString()}.`;
+  });
+
+  /* C: Focus log */
+  document.querySelectorAll('#tab-order-demo [tabindex]').forEach(el => {
+    el.addEventListener('focus', () => {
+      document.getElementById('tab-focus-log').textContent =
+        `Focus on: "${el.placeholder || el.textContent.trim()}" (tabindex=${el.tabIndex})`;
+    });
+  });
+
+  /* Focus trap */
+  document.getElementById('btn-open-focus-trap').addEventListener('click', () => {
+    Modal.open('modal-focus-trap');
+    setTimeout(() => document.getElementById('trap-input-1').focus(), 50);
+  });
+
+  const focusTrapModal = document.getElementById('modal-focus-trap');
+  const focusableSelectors = 'button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])';
+
+  focusTrapModal.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { Modal.close('modal-focus-trap'); return; }
+    if (e.key !== 'Tab') return;
+    const focusable = [...focusTrapModal.querySelectorAll(focusableSelectors)].filter(el => !el.closest('.modal-backdrop') || true);
+    const modalFocusable = [...focusTrapModal.querySelector('.modal').querySelectorAll(focusableSelectors)];
+    if (!modalFocusable.length) return;
+    const first = modalFocusable[0];
+    const last  = modalFocusable[modalFocusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
+  ['btn-focus-trap-close','btn-trap-cancel','btn-trap-confirm'].forEach(id => {
+    document.getElementById(id).addEventListener('click', () => Modal.close('modal-focus-trap'));
+  });
+
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    document.getElementById('site-nav').classList.toggle('open');
+    this.setAttribute('aria-expanded', document.getElementById('site-nav').classList.contains('open') ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
+

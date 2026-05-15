@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>16 Nested iFrames | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="16-nested-iframes.html" class="nav-link active">Nested iFrames</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">16 Nested iFrames</span></nav>
+    <div class="page-header-meta">
+      <span class="badge badge-expert">Expert</span>
+      <span class="badge badge-tag">iFrames</span>
+      <span class="badge badge-tag">Context Switch</span>
+      <span class="badge badge-tag">Nested Frames</span>
+    </div>
+    <h1>Nested iFrames</h1>
+    <p>Two levels of same-origin iframes, each with interactive forms and buttons. Practice <code>frameLocator()</code> chaining.</p>
+  </div>
+
+  <div class="demo-area">
+    <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-6);">
+      The outer page contains <strong>Frame A</strong>. Frame A contains <strong>Frame B</strong> (nested). Each frame has its own form and interactive elements.
+    </p>
+
+    <!-- Outer page element -->
+    <div style="background:var(--color-bg);border:2px solid var(--color-accent);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-4);">
+      <p style="font-size:var(--font-size-xs);font-weight:700;color:var(--color-accent);text-transform:uppercase;letter-spacing:.05em;margin-bottom:var(--space-3);">🔵 Outer Page</p>
+      <div class="form-group">
+        <label class="form-label" for="outer-input">Outer Input Field</label>
+        <input class="form-input" id="outer-input" data-testid="outer-input" type="text" placeholder="This is in the outer page" />
+      </div>
+      <button class="btn btn-secondary btn-sm" id="btn-outer-submit" data-testid="btn-outer-submit">Outer Submit</button>
+      <div id="outer-result" data-testid="outer-result" style="display:none;margin-top:var(--space-3);" class="alert alert-success">
+        <span>🟢</span><p data-testid="outer-result-text"></p>
+      </div>
+    </div>
+
+    <!-- iFrame A -->
+    <iframe
+      id="iframe-a"
+      data-testid="iframe-a"
+      name="frame-a"
+      title="Frame A level 1"
+      srcdoc=""
+      style="width:100%;border:2px dashed var(--color-warning);border-radius:var(--radius-lg);min-height:420px;background:white;"
+    ></iframe>
+
+  </div>
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Outer Page Interaction</h3>
+      <ol class="steps">
+        <li class="step-block">Navigate to <code>pages/16-nested-iframes.html</code></li>
+        <li class="step-block">Fill <code>outer-input</code> with "Hello outer"</li>
+        <li class="step-block">Click <code>btn-outer-submit</code></li>
+        <li class="step-block">Assert <code>outer-result-text</code> contains "Hello outer"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario B Frame A Interaction (Playwright)</h3>
+      <ol class="steps">
+        <li class="step-block">Get <code>frameLocator('#iframe-a')</code></li>
+        <li class="step-block">Fill <code>#frame-a-input</code> with "Frame A data"</li>
+        <li class="step-block">Click <code>#btn-frame-a-submit</code></li>
+        <li class="step-block">Assert <code>#frame-a-result</code> contains "Frame A data"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario C Nested Frame B (Playwright)</h3>
+      <ol class="steps">
+        <li class="step-block">Chain: <code>frameLocator('#iframe-a').frameLocator('#iframe-b')</code></li>
+        <li class="step-block">Fill <code>#frame-b-input</code> with "Deeply nested!"</li>
+        <li class="step-block">Click <code>#btn-frame-b-submit</code></li>
+        <li class="step-block">Assert <code>#frame-b-result</code> is visible with the correct text</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟡 Pitfalls</h3>
+      <ul>
+        <li>iFrames require <code>frameLocator()</code> in Playwright regular locators will NOT find elements inside frames.</li>
+        <li>In Selenium: use <code>driver.switchTo().frame('frame-a')</code> then switchTo again for frame-b.</li>
+        <li>Always switch BACK to default content after working inside a frame.</li>
+        <li>Cross-origin iframes would require additional configuration these are same-origin.</li>
+      </ul>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 16 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+(function () {
+  /* Outer page */
+  document.getElementById('btn-outer-submit').addEventListener('click', () => {
+    const val = document.getElementById('outer-input').value.trim();
+    const res = document.getElementById('outer-result');
+    res.style.display = 'flex';
+    res.querySelector('[data-testid="outer-result-text"]').textContent = val ? `Outer submitted: "${val}"` : 'Empty outer submission';
+  });
+
+  /* Build iFrame A content (same origin via srcdoc) */
+  const frameAContent = `<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { font-family: system-ui, sans-serif; padding: 16px; background: #fffbeb; margin: 0; font-size: 14px; }
+  input { display:block;width:100%;padding:8px 12px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:14px;box-sizing:border-box;margin-bottom:8px; }
+  input:focus { outline:none;border-color:#d69e2e;box-shadow:0 0 0 3px rgba(214,158,46,.2); }
+  button { padding:8px 16px;background:#d69e2e;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:13px; }
+  button:hover { background:#b7791f; }
+  .label { margin:0 0 6px;font-weight:600;font-size:13px; }
+  .header { font-size:12px;font-weight:700;color:#d69e2e;text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px; }
+  .result { display:none;padding:8px 12px;background:#fffbeb;border:1px solid #d69e2e;border-radius:6px;margin-top:8px;font-size:13px; }
+  .result.show { display:block; }
+  .nested { margin-top:16px;padding:12px;border:2px dashed #ccc;border-radius:8px;background:#f5f6fa; }
+</style>
+</head>
+<body>
+  <div class="header">🟡 Frame A Level 1</div>
+  <p class="label">Frame A Input</p>
+  <input type="text" id="frame-a-input" data-testid="frame-a-input" placeholder="Type in Frame A…" />
+  <button id="btn-frame-a-submit" data-testid="btn-frame-a-submit">Submit Frame A</button>
+  <div class="result" id="frame-a-result" data-testid="frame-a-result"></div>
+  <div class="nested">
+    <div class="header" style="color:#805ad5;">🟣 Frame B Nested (Level 2)</div>
+    <iframe id="iframe-b" data-testid="iframe-b" name="frame-b" title="Frame B level 2"
+      srcdoc="" style="width:100%;border:2px dashed #d6bcfa;border-radius:8px;min-height:200px;background:white;"></iframe>
+  </div>
+  <script>
+    document.getElementById('btn-frame-a-submit').addEventListener('click', function() {
+      var val = document.getElementById('frame-a-input').value.trim();
+      var res = document.getElementById('frame-a-result');
+      res.className = 'result show';
+      res.textContent = 'Frame A submitted: "' + (val || '(empty)') + '"';
+    });
+
+    // Build Frame B
+    var frameBContent = \`<!DOCTYPE html>
+<html><head><style>
+  body{font-family:system-ui,sans-serif;padding:16px;background:#faf5ff;margin:0;font-size:13px;}
+  input{display:block;width:100%;padding:7px 10px;border:1.5px solid #d6bcfa;border-radius:6px;font-size:13px;box-sizing:border-box;margin-bottom:8px;}
+  input:focus{outline:none;border-color:#805ad5;box-shadow:0 0 0 3px rgba(128,90,213,.2);}
+  button{padding:7px 14px;background:#805ad5;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:12px;}
+  button:hover{background:#6b46c1;}
+  .header{font-size:11px;font-weight:700;color:#805ad5;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;}
+  .result{display:none;padding:8px 12px;background:#f3e8ff;border:1px solid #805ad5;border-radius:6px;margin-top:8px;font-size:12px;}
+  .result.show{display:block;}
+</style></head><body>
+  <div class="header">🟣 Frame B Level 2 (Deeply Nested)</div>
+  <label style="font-weight:600;font-size:12px;display:block;margin-bottom:4px;">Frame B Input</label>
+  <input type="text" id="frame-b-input" data-testid="frame-b-input" placeholder="Deep nested input…" />
+  <button id="btn-frame-b-submit" data-testid="btn-frame-b-submit">Submit Frame B</button>
+  <div class="result" id="frame-b-result" data-testid="frame-b-result"></div>
+  <script>
+    document.getElementById('btn-frame-b-submit').addEventListener('click', function(){
+      var val = document.getElementById('frame-b-input').value.trim();
+      var res = document.getElementById('frame-b-result');
+      res.className='result show';
+      res.textContent='Frame B submitted: "' + (val||'(empty)') + '"';
+    });
+  <\\/script>
+</body></html>\`;
+    document.getElementById('iframe-b').srcdoc = frameBContent;
+  <\/script>
+</body>
+</html>`;
+
+  document.getElementById('iframe-a').srcdoc = frameAContent;
+
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    document.getElementById('site-nav').classList.toggle('open');
+    this.setAttribute('aria-expanded', document.getElementById('site-nav').classList.contains('open') ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
+

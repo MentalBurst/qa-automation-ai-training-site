@@ -1,0 +1,325 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>12 Async Loading | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <style>
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: var(--radius-md);
+    }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+    .skeleton-line { height: 14px; margin-bottom: 8px; }
+    .skeleton-title { height: 20px; margin-bottom: 12px; width: 70%; }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="12-async-loading.html" class="nav-link active">Async Loading</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">12 Async Loading</span></nav>
+    <div class="page-header-meta">
+      <span class="badge badge-advanced">Advanced</span>
+      <span class="badge badge-tag">Async</span>
+      <span class="badge badge-tag">Skeleton</span>
+      <span class="badge badge-tag">Retry</span>
+      <span class="badge badge-tag">Error State</span>
+    </div>
+    <h1>Async Loading &amp; Spinners</h1>
+    <p>Simulated network delays, skeleton loaders, retry mechanism, and error state handling the core of async automation.</p>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:var(--space-6);">
+
+    <!-- Section A: Spinner + delayed content -->
+    <div class="demo-area" data-testid="section-spinner">
+      <h3 style="margin-bottom:var(--space-4);">A. Basic Spinner → Content</h3>
+      <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">Click the button to simulate a 2-second API call.</p>
+      <button class="btn btn-primary" id="btn-load-data" data-testid="btn-load-data">Load Data</button>
+
+      <div id="loading-spinner-area" data-testid="loading-spinner-area" style="display:none;margin-top:var(--space-6);text-align:center;padding:var(--space-8);">
+        <div class="spinner spinner-lg" aria-label="Loading data"></div>
+        <p style="margin-top:var(--space-4);">Loading data, please wait…</p>
+      </div>
+
+      <div id="loaded-content" data-testid="loaded-content" style="display:none;margin-top:var(--space-6);">
+        <h4 style="margin-bottom:var(--space-4);">Loaded Users</h4>
+        <div class="table-wrapper">
+          <table class="table" id="async-table" data-testid="async-table">
+            <thead><tr>
+              <th data-testid="async-th-name">Name</th>
+              <th>Email</th>
+              <th>Role</th>
+            </tr></thead>
+            <tbody id="async-table-body" data-testid="async-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section B: Skeleton loader -->
+    <div class="demo-area" data-testid="section-skeleton">
+      <h3 style="margin-bottom:var(--space-4);">B. Skeleton Loader</h3>
+      <button class="btn btn-secondary" id="btn-skeleton-load" data-testid="btn-skeleton-load">Reload Cards</button>
+
+      <div id="skeleton-container" data-testid="skeleton-container" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--space-4);margin-top:var(--space-6);">
+        <!-- Pre-rendered skeleton cards -->
+      </div>
+
+      <div id="skeleton-content" data-testid="skeleton-content" style="display:none;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--space-4);margin-top:var(--space-6);">
+        <!-- Real cards rendered by JS -->
+      </div>
+    </div>
+
+    <!-- Section C: Retry mechanism -->
+    <div class="demo-area" data-testid="section-retry">
+      <h3 style="margin-bottom:var(--space-4);">C. Retry Mechanism (simulated failure)</h3>
+      <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">Simulates a flaky API: first 2 attempts fail, 3rd succeeds.</p>
+
+      <button class="btn btn-primary" id="btn-retry-start" data-testid="btn-retry-start">Start Request</button>
+
+      <div id="retry-status" data-testid="retry-status" style="margin-top:var(--space-4);font-size:var(--font-size-sm);color:var(--color-text-muted);min-height:1.5em;" aria-live="polite"></div>
+
+      <div id="retry-attempts" data-testid="retry-attempts" style="display:flex;flex-direction:column;gap:var(--space-2);margin-top:var(--space-3);">
+        <!-- Attempt logs added by JS -->
+      </div>
+
+      <div id="retry-success" data-testid="retry-success" style="display:none;margin-top:var(--space-4);" class="alert alert-success">
+        <span>🟢</span><p data-testid="retry-success-message"></p>
+      </div>
+
+      <div id="retry-error" data-testid="retry-error" style="display:none;margin-top:var(--space-4);" class="alert alert-danger">
+        <span>🔴</span><p>Maximum retries exceeded. Request failed.</p>
+      </div>
+    </div>
+
+    <!-- Section D: Delayed element appearance -->
+    <div class="demo-area" data-testid="section-delayed">
+      <h3 style="margin-bottom:var(--space-4);">D. Delayed Element Appearance</h3>
+      <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">Elements appear at different intervals. Practice <code>waitFor</code> strategies.</p>
+
+      <button class="btn btn-secondary" id="btn-start-delayed" data-testid="btn-start-delayed">Start Sequence</button>
+
+      <div style="margin-top:var(--space-6);display:flex;flex-direction:column;gap:var(--space-3);">
+        <div id="delayed-el-1" data-testid="delayed-el-1" style="display:none;" class="alert alert-info">
+          <span>1️⃣</span><p>Appeared after 500ms</p>
+        </div>
+        <div id="delayed-el-2" data-testid="delayed-el-2" style="display:none;" class="alert alert-warning">
+          <span>2️⃣</span><p>Appeared after 1500ms</p>
+        </div>
+        <div id="delayed-el-3" data-testid="delayed-el-3" style="display:none;" class="alert alert-success">
+          <span>3️⃣</span><p>Appeared after 3000ms this is the "ready" element</p>
+        </div>
+        <div id="delayed-final-btn-container" data-testid="delayed-final-btn-container" style="display:none;">
+          <button class="btn btn-primary btn-sm" id="delayed-final-btn" data-testid="delayed-final-btn">
+            I am ready! Click me after element 3 appears
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Wait for Spinner to Disappear</h3>
+      <ol class="steps">
+        <li class="step-block">Assert <code>loading-spinner-area</code> is not visible</li>
+        <li class="step-block">Click <code>btn-load-data</code></li>
+        <li class="step-block">Assert <code>loading-spinner-area</code> is visible</li>
+        <li class="step-block">Wait for <code>loading-spinner-area</code> to be hidden (timeout: 5000ms)</li>
+        <li class="step-block">Assert <code>loaded-content</code> is visible</li>
+        <li class="step-block">Assert <code>async-table-body</code> contains at least 3 rows</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario B Retry Test</h3>
+      <ol class="steps">
+        <li class="step-block">Click <code>btn-retry-start</code></li>
+        <li class="step-block">Wait for retry attempt logs to appear</li>
+        <li class="step-block">Assert attempt 1 and 2 show failure status</li>
+        <li class="step-block">Assert attempt 3 shows success status</li>
+        <li class="step-block">Assert <code>retry-success</code> is visible</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario C Sequential Element Wait</h3>
+      <ol class="steps">
+        <li class="step-block">Click <code>btn-start-delayed</code></li>
+        <li class="step-block">Wait for <code>delayed-el-1</code> to be visible (500ms)</li>
+        <li class="step-block">Wait for <code>delayed-el-2</code> to be visible (1500ms)</li>
+        <li class="step-block">Wait for <code>delayed-el-3</code> to be visible (3000ms)</li>
+        <li class="step-block">Assert <code>delayed-final-btn</code> is visible</li>
+        <li class="step-block">Click <code>delayed-final-btn</code></li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟡 Pitfalls</h3>
+      <ul>
+        <li>Never use fixed sleep always use <code>waitForSelector</code> or <code>waitFor</code>.</li>
+        <li>Spinner and content share the same container assert both states explicitly.</li>
+        <li>Retry logs are added dynamically use <code>waitFor</code> on the attempt element.</li>
+      </ul>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 12 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+(function () {
+  const FAKE_USERS = [
+    { name:'Alice Johnson', email:'alice@qalab.io', role:'QA Lead' },
+    { name:'Bob Martinez',  email:'bob@qalab.io',   role:'Developer' },
+    { name:'Carol Williams',email:'carol@qalab.io', role:'Scrum Master' },
+    { name:'David Chen',    email:'david@qalab.io', role:'QA Engineer' },
+    { name:'Eva Fischer',   email:'eva@qalab.io',   role:'Admin' },
+  ];
+
+  /* A: Basic load */
+  let dataLoaded = false;
+  document.getElementById('btn-load-data').addEventListener('click', async () => {
+    if (dataLoaded) {
+      document.getElementById('loaded-content').style.display = 'none';
+      dataLoaded = false;
+    }
+    const spinner = document.getElementById('loading-spinner-area');
+    spinner.style.display = 'block';
+    document.getElementById('btn-load-data').disabled = true;
+    await delay(2000);
+    spinner.style.display = 'none';
+    const tbody = document.getElementById('async-table-body');
+    tbody.innerHTML = FAKE_USERS.map((u, i) =>
+      `<tr data-testid="async-row-${i+1}"><td data-testid="async-name-${i+1}">${u.name}</td><td>${u.email}</td><td>${u.role}</td></tr>`
+    ).join('');
+    document.getElementById('loaded-content').style.display = 'block';
+    document.getElementById('btn-load-data').disabled = false;
+    dataLoaded = true;
+    Toast.success('Data loaded', `${FAKE_USERS.length} users fetched.`);
+  });
+
+  /* B: Skeleton */
+  function showSkeletons() {
+    const container = document.getElementById('skeleton-container');
+    container.style.display = 'grid';
+    document.getElementById('skeleton-content').style.display = 'none';
+    container.innerHTML = Array.from({length: 4}, () => `
+      <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4);">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-line"></div>
+        <div class="skeleton skeleton-line" style="width:60%;"></div>
+        <div class="skeleton skeleton-line" style="width:80%;"></div>
+      </div>
+    `).join('');
+  }
+
+  async function loadCards() {
+    showSkeletons();
+    document.getElementById('btn-skeleton-load').disabled = true;
+    await delay(2000);
+    document.getElementById('skeleton-container').style.display = 'none';
+    const content = document.getElementById('skeleton-content');
+    content.style.display = 'grid';
+    content.innerHTML = FAKE_USERS.slice(0, 4).map((u, i) => `
+      <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4);" data-testid="skeleton-card-${i+1}">
+        <div style="font-weight:700;margin-bottom:4px;" data-testid="skeleton-card-name-${i+1}">${u.name}</div>
+        <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-bottom:2px;">${u.email}</div>
+        <div><span class="badge badge-tag">${u.role}</span></div>
+      </div>
+    `).join('');
+    document.getElementById('btn-skeleton-load').disabled = false;
+  }
+
+  document.getElementById('btn-skeleton-load').addEventListener('click', loadCards);
+  loadCards();
+
+  /* C: Retry */
+  let retryAttempt = 0;
+  document.getElementById('btn-retry-start').addEventListener('click', async () => {
+    retryAttempt = 0;
+    document.getElementById('retry-attempts').innerHTML = '';
+    document.getElementById('retry-success').style.display = 'none';
+    document.getElementById('retry-error').style.display = 'none';
+    document.getElementById('btn-retry-start').disabled = true;
+
+    const MAX = 3;
+    let success = false;
+
+    while (retryAttempt < MAX && !success) {
+      retryAttempt++;
+      document.getElementById('retry-status').textContent = `Attempt ${retryAttempt} of ${MAX}…`;
+      await delay(1000);
+
+      const isSuccess = retryAttempt >= 3;
+      const log = document.createElement('div');
+      log.setAttribute('data-testid', `retry-attempt-${retryAttempt}`);
+      log.style.cssText = `font-size:var(--font-size-sm);padding:6px 10px;border-radius:var(--radius-sm);background:${isSuccess ? 'var(--color-success-bg)' : 'var(--color-danger-bg)'};color:${isSuccess ? 'var(--color-success)' : 'var(--color-danger)'};`;
+      log.setAttribute('data-status', isSuccess ? 'success' : 'failure');
+      log.textContent = `Attempt ${retryAttempt}: ${isSuccess ? '🟢 Success' : '🔴 Failed (HTTP 503)'}`;
+      document.getElementById('retry-attempts').appendChild(log);
+
+      if (isSuccess) success = true;
+    }
+
+    document.getElementById('retry-status').textContent = '';
+    document.getElementById('btn-retry-start').disabled = false;
+
+    if (success) {
+      const s = document.getElementById('retry-success');
+      s.style.display = 'flex';
+      s.querySelector('[data-testid="retry-success-message"]').textContent = `Request succeeded on attempt ${retryAttempt}.`;
+      Toast.success('Request succeeded', `After ${retryAttempt} attempt(s)`);
+    } else {
+      document.getElementById('retry-error').style.display = 'flex';
+    }
+  });
+
+  /* D: Delayed elements */
+  document.getElementById('btn-start-delayed').addEventListener('click', async () => {
+    document.getElementById('btn-start-delayed').disabled = true;
+    ['delayed-el-1','delayed-el-2','delayed-el-3','delayed-final-btn-container'].forEach(id => {
+      document.getElementById(id).style.display = 'none';
+    });
+    await delay(500);
+    document.getElementById('delayed-el-1').style.display = 'flex';
+    await delay(1000);
+    document.getElementById('delayed-el-2').style.display = 'flex';
+    await delay(1500);
+    document.getElementById('delayed-el-3').style.display = 'flex';
+    document.getElementById('delayed-final-btn-container').style.display = 'block';
+    document.getElementById('btn-start-delayed').disabled = false;
+  });
+
+  document.getElementById('delayed-final-btn').addEventListener('click', () => {
+    Toast.success('Clicked!', 'You waited correctly for the element to appear.');
+  });
+
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    document.getElementById('site-nav').classList.toggle('open');
+    this.setAttribute('aria-expanded', document.getElementById('site-nav').classList.contains('open') ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
+

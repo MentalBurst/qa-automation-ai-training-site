@@ -1,0 +1,351 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>13 Drag & Drop | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <style>
+    .drag-item {
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      transition: box-shadow var(--transition-fast), border-color var(--transition-fast), opacity var(--transition-fast);
+      user-select: none;
+    }
+    .drag-item:active { cursor: grabbing; }
+    .drag-item.dragging { opacity: 0.4; border-style: dashed; }
+    .drag-item.drag-over { border-color: var(--color-accent); box-shadow: 0 0 0 2px var(--color-accent-light); }
+    .drag-handle { color: var(--color-text-muted); cursor: grab; flex-shrink: 0; }
+
+    .kanban-col {
+      background: var(--color-bg);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      min-height: 220px;
+      transition: background var(--transition-fast), border-color var(--transition-fast);
+    }
+    .kanban-col.drag-target { background: var(--color-accent-light); border-color: var(--color-accent); border-style: dashed; }
+    .kanban-col-header {
+      font-weight: 700;
+      font-size: var(--font-size-sm);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: var(--space-3);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .kanban-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-4);
+      margin-bottom: var(--space-2);
+      cursor: grab;
+      font-size: var(--font-size-sm);
+      box-shadow: var(--shadow-sm);
+    }
+    .kanban-card:active { cursor: grabbing; }
+    .kanban-card.dragging { opacity: 0.4; }
+    .drop-zone { min-height: 48px; border-radius: var(--radius-md); }
+    .drop-zone.active { background: var(--color-accent-light); border: 2px dashed var(--color-accent); }
+
+    #drop-target-1, #drop-target-2 {
+      min-height:80px;border:2px dashed var(--color-border);border-radius:var(--radius-lg);
+      display:flex;align-items:center;justify-content:center;padding:var(--space-4);
+      transition:all var(--transition-fast);font-size:var(--font-size-sm);color:var(--color-text-muted);
+    }
+    #drop-target-1.over, #drop-target-2.over { background:var(--color-accent-light);border-color:var(--color-accent);color:var(--color-accent); }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="13-drag and drop.html" class="nav-link active">Drag &amp; Drop</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">13 Drag &amp; Drop</span></nav>
+    <div class="page-header-meta">
+      <span class="badge badge-advanced">Advanced</span>
+      <span class="badge badge-tag">DnD</span>
+      <span class="badge badge-tag">Mouse Events</span>
+      <span class="badge badge-tag">Kanban</span>
+    </div>
+    <h1>Drag &amp; Drop</h1>
+    <p>HTML5 native drag and drop: sortable list reordering, Kanban board with column transfer, and validated drop zones.</p>
+  </div>
+
+  <!-- A: Sortable list -->
+  <div class="demo-area" style="margin-bottom:var(--space-6);" data-testid="section-sortable">
+    <h3 style="margin-bottom:var(--space-4);">A. Sortable List (Reorder by Dragging)</h3>
+    <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">Drag items up or down to reorder them.</p>
+    <div id="sortable-list" data-testid="sortable-list" style="display:flex;flex-direction:column;gap:var(--space-2);max-width:400px;">
+      <div class="drag-item" draggable="true" id="sort-item-1" data-testid="sort-item-1" data-order="1">
+        <span class="drag-handle" aria-hidden="true">⠿</span> <span>1. Set up project structure</span>
+      </div>
+      <div class="drag-item" draggable="true" id="sort-item-2" data-testid="sort-item-2" data-order="2">
+        <span class="drag-handle" aria-hidden="true">⠿</span> <span>2. Write failing tests</span>
+      </div>
+      <div class="drag-item" draggable="true" id="sort-item-3" data-testid="sort-item-3" data-order="3">
+        <span class="drag-handle" aria-hidden="true">⠿</span> <span>3. Implement features</span>
+      </div>
+      <div class="drag-item" draggable="true" id="sort-item-4" data-testid="sort-item-4" data-order="4">
+        <span class="drag-handle" aria-hidden="true">⠿</span> <span>4. Refactor code</span>
+      </div>
+      <div class="drag-item" draggable="true" id="sort-item-5" data-testid="sort-item-5" data-order="5">
+        <span class="drag-handle" aria-hidden="true">⠿</span> <span>5. Review and merge</span>
+      </div>
+    </div>
+    <button class="btn btn-secondary btn-sm" id="btn-read-order" data-testid="btn-read-order" style="margin-top:var(--space-4);">Read Order</button>
+    <div id="sort-order-output" data-testid="sort-order-output" style="display:none;margin-top:var(--space-3);" class="alert alert-info"></div>
+  </div>
+
+  <!-- B: Kanban -->
+  <div class="demo-area" style="margin-bottom:var(--space-6);" data-testid="section-kanban">
+    <h3 style="margin-bottom:var(--space-4);">B. Kanban Board</h3>
+    <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">Drag cards between columns.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);" data-testid="kanban-board">
+
+      <div class="kanban-col" id="col-todo" data-testid="col-todo" data-col="todo">
+        <div class="kanban-col-header">🟣 To Do <span id="count-todo" data-testid="count-todo" style="background:var(--color-border);border-radius:var(--radius-full);padding:0 8px;font-size:var(--font-size-xs);">3</span></div>
+        <div class="drop-zone" id="zone-todo" data-zone="todo">
+          <div class="kanban-card" draggable="true" id="card-1" data-testid="kanban-card-1" data-card-id="1">Write test plan</div>
+          <div class="kanban-card" draggable="true" id="card-2" data-testid="kanban-card-2" data-card-id="2">Setup CI pipeline</div>
+          <div class="kanban-card" draggable="true" id="card-3" data-testid="kanban-card-3" data-card-id="3">Review requirements</div>
+        </div>
+      </div>
+
+      <div class="kanban-col" id="col-doing" data-testid="col-doing" data-col="doing">
+        <div class="kanban-col-header">🟡 In Progress <span id="count-doing" data-testid="count-doing" style="background:var(--color-border);border-radius:var(--radius-full);padding:0 8px;font-size:var(--font-size-xs);">2</span></div>
+        <div class="drop-zone" id="zone-doing" data-zone="doing">
+          <div class="kanban-card" draggable="true" id="card-4" data-testid="kanban-card-4" data-card-id="4">Implement login page</div>
+          <div class="kanban-card" draggable="true" id="card-5" data-testid="kanban-card-5" data-card-id="5">API integration</div>
+        </div>
+      </div>
+
+      <div class="kanban-col" id="col-done" data-testid="col-done" data-col="done">
+        <div class="kanban-col-header" style="color:var(--color-success);">🟢 Done <span id="count-done" data-testid="count-done" style="background:#dcfce7;color:#166534;border-radius:var(--radius-full);padding:0 8px;font-size:var(--font-size-xs);">1</span></div>
+        <div class="drop-zone" id="zone-done" data-zone="done">
+          <div class="kanban-card" draggable="true" id="card-6" data-testid="kanban-card-6" data-card-id="6" style="border-left:3px solid var(--color-success);">Project kickoff</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Kanban log -->
+    <div id="kanban-log" data-testid="kanban-log" style="margin-top:var(--space-4);font-size:var(--font-size-xs);color:var(--color-text-muted);min-height:1.5em;" aria-live="polite"></div>
+  </div>
+
+  <!-- C: Drop zones -->
+  <div class="demo-area" data-testid="section-dropzones">
+    <h3 style="margin-bottom:var(--space-4);">C. Validated Drop Zones</h3>
+    <p style="font-size:var(--font-size-sm);margin-bottom:var(--space-4);">Drag the file chips below into the correct drop target. Only images go to Zone 1; only documents go to Zone 2.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:var(--space-2);margin-bottom:var(--space-6);" id="file-chips" data-testid="file-chips">
+      <div class="drag-item" draggable="true" data-type="image" data-name="photo.jpg" data-testid="chip-photo" style="padding:6px 12px;font-size:var(--font-size-xs);">🟡 photo.jpg</div>
+      <div class="drag-item" draggable="true" data-type="doc"   data-name="report.pdf" data-testid="chip-report" style="padding:6px 12px;font-size:var(--font-size-xs);">🔵 report.pdf</div>
+      <div class="drag-item" draggable="true" data-type="image" data-name="logo.png" data-testid="chip-logo" style="padding:6px 12px;font-size:var(--font-size-xs);">🟡 logo.png</div>
+      <div class="drag-item" draggable="true" data-type="doc"   data-name="spec.docx" data-testid="chip-spec" style="padding:6px 12px;font-size:var(--font-size-xs);">🔵 spec.docx</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);">
+      <div>
+        <div style="font-weight:600;font-size:var(--font-size-sm);margin-bottom:var(--space-2);">🟡 Zone 1 Images only</div>
+        <div id="drop-target-1" data-testid="drop-target-1" data-accepts="image">Drop images here</div>
+        <div id="zone-1-contents" data-testid="zone-1-contents" style="margin-top:var(--space-2);display:flex;flex-wrap:wrap;gap:4px;"></div>
+      </div>
+      <div>
+        <div style="font-weight:600;font-size:var(--font-size-sm);margin-bottom:var(--space-2);">🔵 Zone 2 Documents only</div>
+        <div id="drop-target-2" data-testid="drop-target-2" data-accepts="doc">Drop documents here</div>
+        <div id="zone-2-contents" data-testid="zone-2-contents" style="margin-top:var(--space-2);display:flex;flex-wrap:wrap;gap:4px;"></div>
+      </div>
+    </div>
+    <div id="dropzone-msg" data-testid="dropzone-msg" style="margin-top:var(--space-3);font-size:var(--font-size-xs);min-height:1.5em;" aria-live="polite"></div>
+  </div>
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Sortable List Reorder</h3>
+      <ol class="steps">
+        <li class="step-block">In Playwright: use <code>drag(source, target)</code> or <code>dragAndDrop(from, to)</code></li>
+        <li class="step-block">Drag <code>sort-item-3</code> to position above <code>sort-item-1</code></li>
+        <li class="step-block">Click <code>btn-read-order</code></li>
+        <li class="step-block">Assert <code>sort-order-output</code> shows item 3 in position 1</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario B Kanban Card Transfer</h3>
+      <ol class="steps">
+        <li class="step-block">Assert <code>count-todo</code> is "3"</li>
+        <li class="step-block">Drag <code>kanban-card-1</code> to <code>zone-done</code></li>
+        <li class="step-block">Assert <code>kanban-card-1</code> is now inside <code>zone-done</code></li>
+        <li class="step-block">Assert <code>count-done</code> is "2"</li>
+        <li class="step-block">Assert <code>count-todo</code> is "2"</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟡 Pitfalls</h3>
+      <ul>
+        <li>HTML5 drag events use <code>dataTransfer</code> Playwright's <code>dragAndDrop()</code> handles this correctly but custom libraries may not.</li>
+        <li>In Selenium, drag and drop with Actions class may differ from native HTML5 DnD.</li>
+        <li>Assert the destination container's children, not element position.</li>
+      </ul>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 13 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+(function () {
+  /* A: Sortable list */
+  let dragSrc = null;
+  const list = document.getElementById('sortable-list');
+
+  list.querySelectorAll('.drag-item').forEach(item => {
+    item.addEventListener('dragstart', (e) => {
+      dragSrc = item;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', item.id);
+    });
+    item.addEventListener('dragend', () => item.classList.remove('dragging'));
+    item.addEventListener('dragover', (e) => { e.preventDefault(); item.classList.add('drag-over'); });
+    item.addEventListener('dragleave', () => item.classList.remove('drag-over'));
+    item.addEventListener('drop', (e) => {
+      e.preventDefault();
+      item.classList.remove('drag-over');
+      if (dragSrc && dragSrc !== item) {
+        const items = [...list.children];
+        const srcIdx = items.indexOf(dragSrc);
+        const tgtIdx = items.indexOf(item);
+        if (srcIdx < tgtIdx) item.after(dragSrc);
+        else item.before(dragSrc);
+        Toast.info('Order changed', 'List reordered.');
+      }
+    });
+  });
+
+  document.getElementById('btn-read-order').addEventListener('click', () => {
+    const order = [...list.children].map((el, i) => `${i+1}. ${el.querySelector('span:last-child').textContent.trim()}`).join(' → ');
+    const out = document.getElementById('sort-order-output');
+    out.style.display = 'flex';
+    out.textContent = order;
+  });
+
+  /* B: Kanban */
+  let dragCard = null;
+
+  document.querySelectorAll('.kanban-card').forEach(card => {
+    card.addEventListener('dragstart', (e) => {
+      dragCard = card;
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', card.id);
+    });
+    card.addEventListener('dragend', () => card.classList.remove('dragging'));
+  });
+
+  document.querySelectorAll('.drop-zone').forEach(zone => {
+    zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('active'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('active'));
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('active');
+      if (dragCard) {
+        const srcZone = dragCard.closest('.drop-zone');
+        zone.appendChild(dragCard);
+        updateCounts();
+        const log = document.getElementById('kanban-log');
+        log.textContent = `"${dragCard.textContent}" moved to ${zone.dataset.zone}.`;
+        Toast.success('Card moved', `→ ${zone.dataset.zone}`);
+      }
+    });
+  });
+
+  function updateCounts() {
+    ['todo','doing','done'].forEach(col => {
+      const count = document.getElementById(`zone-${col}`).querySelectorAll('.kanban-card').length;
+      document.getElementById(`count-${col}`).textContent = String(count);
+    });
+  }
+
+  /* C: Drop zones */
+  let dragChip = null;
+  document.querySelectorAll('#file-chips .drag-item, .kanban-card').forEach(chip => {
+    if (chip.dataset.type) {
+      chip.addEventListener('dragstart', (e) => {
+        dragChip = chip;
+        e.dataTransfer.setData('fileType', chip.dataset.type);
+        e.dataTransfer.setData('fileName', chip.dataset.name);
+      });
+    }
+  });
+  document.querySelectorAll('#file-chips .drag-item').forEach(chip => {
+    chip.addEventListener('dragstart', (e) => {
+      dragChip = chip;
+      e.dataTransfer.setData('fileType', chip.dataset.type);
+    });
+  });
+
+  ['drop-target-1','drop-target-2'].forEach(id => {
+    const zone = document.getElementById(id);
+    zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('over');
+      const chip = document.querySelector('#file-chips .drag-item.dragging') || dragChip;
+      if (!chip || !chip.dataset.type) return;
+      const accepts = zone.dataset.accepts;
+      const msg = document.getElementById('dropzone-msg');
+      if (chip.dataset.type !== accepts) {
+        msg.textContent = `🔴 Wrong zone! ${chip.dataset.name} is a ${chip.dataset.type}, not a ${accepts}.`;
+        msg.style.color = 'var(--color-danger)';
+        chip.classList.add('animate-shake');
+        setTimeout(() => chip.classList.remove('animate-shake'), 500);
+      } else {
+        const contents = document.getElementById(id === 'drop-target-1' ? 'zone-1-contents' : 'zone-2-contents');
+        const tag = document.createElement('span');
+        tag.className = 'badge badge-tag';
+        tag.setAttribute('data-testid', `dropped-${chip.dataset.name}`);
+        tag.textContent = chip.dataset.name;
+        contents.appendChild(tag);
+        chip.remove();
+        msg.textContent = `🟢 ${chip.dataset.name} dropped into ${accepts} zone.`;
+        msg.style.color = 'var(--color-success)';
+        Toast.success('File dropped', chip.dataset.name);
+      }
+    });
+  });
+
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    document.getElementById('site-nav').classList.toggle('open');
+    this.setAttribute('aria-expanded', document.getElementById('site-nav').classList.contains('open') ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
+

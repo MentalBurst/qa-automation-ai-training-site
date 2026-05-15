@@ -1,0 +1,417 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>06 Dynamic Table | QA Lab</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo" data-testid="logo"><div class="logo-icon">🟣</div><span>QA Lab</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="header-nav" id="site-nav">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="06-dynamic-table.html" class="nav-link active">Dynamic Table</a>
+    </nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <div class="page-header">
+    <nav class="breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">06 Dynamic Table</span></nav>
+    <div class="page-header-meta">
+      <span class="badge badge-intermediate">Intermediate</span>
+      <span class="badge badge-tag">Tables</span>
+      <span class="badge badge-tag">Pagination</span>
+      <span class="badge badge-tag">Sorting</span>
+      <span class="badge badge-tag">Search</span>
+    </div>
+    <h1>Dynamic Table</h1>
+    <p>Sortable columns, paginated rows, row selection, live search filter, and batch delete. All driven by client side JavaScript.</p>
+  </div>
+
+  <div class="demo-area">
+
+    <!-- Toolbar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--space-3);margin-bottom:var(--space-4);">
+      <div style="display:flex;align-items:center;gap:var(--space-3);">
+        <input
+          type="search"
+          class="form-input"
+          id="table-search"
+          data-testid="table-search"
+          placeholder="Search by name or role…"
+          aria-label="Search table"
+          style="width:260px;"
+        />
+        <select class="form-select" id="table-page-size" data-testid="table-page-size" style="width:auto;" aria-label="Rows per page">
+          <option value="5">5 / page</option>
+          <option value="10" selected>10 / page</option>
+          <option value="25">25 / page</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:center;gap:var(--space-3);">
+        <span id="table-info" data-testid="table-info" style="font-size:var(--font-size-sm);color:var(--color-text-muted);"></span>
+        <button class="btn btn-danger btn-sm" id="btn-delete-selected" data-testid="btn-delete-selected" disabled>
+          Delete Selected
+        </button>
+        <button class="btn btn-secondary btn-sm" id="btn-add-row" data-testid="btn-add-row">
+          + Add Row
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper" id="table-wrapper" data-testid="table-wrapper">
+      <table class="table" id="data-table" data-testid="data-table" aria-label="Users table">
+        <thead>
+          <tr>
+            <th style="width:40px;">
+              <input type="checkbox" id="select-all-rows" data-testid="select-all-rows" aria-label="Select all rows" />
+            </th>
+            <th data-col="id"       class="sortable" data-testid="th-id"       aria-sort="none" tabindex="0">#<span class="sort-icon"></span></th>
+            <th data-col="name"     class="sortable" data-testid="th-name"     aria-sort="none" tabindex="0">Name<span class="sort-icon"></span></th>
+            <th data-col="email"    class="sortable" data-testid="th-email"    aria-sort="none" tabindex="0">Email<span class="sort-icon"></span></th>
+            <th data-col="role"     class="sortable" data-testid="th-role"     aria-sort="none" tabindex="0">Role<span class="sort-icon"></span></th>
+            <th data-col="status"   class="sortable" data-testid="th-status"   aria-sort="none" tabindex="0">Status<span class="sort-icon"></span></th>
+            <th data-col="date"     class="sortable" data-testid="th-date"     aria-sort="none" tabindex="0">Joined<span class="sort-icon"></span></th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="data-table-body" data-testid="data-table-body" aria-live="polite">
+          <!-- Rows inserted by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty state -->
+    <div id="table-empty" data-testid="table-empty" style="display:none;text-align:center;padding:var(--space-12) 0;">
+      <div style="font-size:2.5rem;margin-bottom:var(--space-3);">🔵</div>
+      <h3 style="margin-bottom:var(--space-2);">No results found</h3>
+      <p>Try a different search term.</p>
+    </div>
+
+    <!-- Pagination -->
+    <div id="pagination-container" data-testid="pagination-container" class="pagination" role="navigation" aria-label="Table pagination"></div>
+
+  </div><!-- /demo-area -->
+
+  <div class="info-panel">
+    <h2>🟣 Atomic Reproduction Steps</h2>
+    <div class="info-section">
+      <h3>🟢 Scenario A Sort by Name Ascending</h3>
+      <ol class="steps">
+        <li class="step-block">Navigate to <code>pages/06-dynamic-table.html</code></li>
+        <li class="step-block">Assert table has 10 rows visible (default page size)</li>
+        <li class="step-block">Click <code>th-name</code> column header once</li>
+        <li class="step-block">Assert <code>th-name</code> has <code>aria-sort="ascending"</code></li>
+        <li class="step-block">Assert first visible row name comes before last row name alphabetically</li>
+        <li class="step-block">Click <code>th-name</code> again</li>
+        <li class="step-block">Assert <code>th-name</code> has <code>aria-sort="descending"</code></li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario B Search Filter</h3>
+      <ol class="steps">
+        <li class="step-block">Type "admin" into <code>table-search</code></li>
+        <li class="step-block">Assert only rows where name or role contains "admin" are shown</li>
+        <li class="step-block">Assert <code>table-info</code> reflects filtered count</li>
+        <li class="step-block">Clear the search input</li>
+        <li class="step-block">Assert all rows reappear</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟢 Scenario C Row Selection &amp; Delete</h3>
+      <ol class="steps">
+        <li class="step-block">Click checkbox on row 1</li>
+        <li class="step-block">Assert <code>btn-delete-selected</code> becomes enabled</li>
+        <li class="step-block">Click checkbox on row 2</li>
+        <li class="step-block">Click <code>btn-delete-selected</code></li>
+        <li class="step-block">Assert those 2 rows no longer appear in the table</li>
+        <li class="step-block">Assert <code>table-info</code> count decreased by 2</li>
+      </ol>
+    </div>
+    <div class="info-section">
+      <h3>🟡 Pitfalls</h3>
+      <ul>
+        <li>Row indices change after sorting/filtering use <code>data-row-id</code> not position.</li>
+        <li>Pagination re-renders rows stable IDs are on cells, not <code>tr</code> index.</li>
+        <li>Delete confirmation modal must be accepted before rows disappear.</li>
+      </ul>
+    </div>
+  </div>
+<div id="copilot-prompt-mount"></div>
+<script src="../js/copilot-prompts.js"></script>
+<script src="../js/copilot-render.js"></script>
+</main>
+
+<footer class="site-footer"><p>QA Lab Scenario 06 of 20</p></footer>
+<script src="../js/utils.js"></script>
+<script>
+(function () {
+  /* ── Data ─────────────────────────────────────────────── */
+  const ALL_USERS = [
+    { id: 1,  name: 'Alice Johnson',    email: 'alice@qalab.io',    role: 'QA Lead',       status: 'active',   date: '2022-03-14' },
+    { id: 2,  name: 'Bob Martinez',     email: 'bob@qalab.io',      role: 'Developer',     status: 'active',   date: '2021-11-02' },
+    { id: 3,  name: 'Carol Williams',   email: 'carol@qalab.io',    role: 'Scrum Master',  status: 'inactive', date: '2020-07-19' },
+    { id: 4,  name: 'David Chen',       email: 'david@qalab.io',    role: 'QA Engineer',   status: 'active',   date: '2023-01-08' },
+    { id: 5,  name: 'Eva Fischer',      email: 'eva@qalab.io',      role: 'Admin',         status: 'active',   date: '2022-09-30' },
+    { id: 6,  name: 'Frank Lee',        email: 'frank@qalab.io',    role: 'Developer',     status: 'pending',  date: '2023-06-01' },
+    { id: 7,  name: 'Grace Kim',        email: 'grace@qalab.io',    role: 'QA Engineer',   status: 'active',   date: '2021-04-17' },
+    { id: 8,  name: 'Henry Brown',      email: 'henry@qalab.io',    role: 'Admin',         status: 'inactive', date: '2020-12-05' },
+    { id: 9,  name: 'Irene Santos',     email: 'irene@qalab.io',    role: 'QA Lead',       status: 'active',   date: '2022-02-14' },
+    { id: 10, name: 'Jack Wilson',      email: 'jack@qalab.io',     role: 'Developer',     status: 'active',   date: '2023-08-22' },
+    { id: 11, name: 'Karen Davis',      email: 'karen@qalab.io',    role: 'QA Engineer',   status: 'active',   date: '2022-05-11' },
+    { id: 12, name: 'Leo Garcia',       email: 'leo@qalab.io',      role: 'Scrum Master',  status: 'active',   date: '2021-07-03' },
+    { id: 13, name: 'Mia Taylor',       email: 'mia@qalab.io',      role: 'Developer',     status: 'pending',  date: '2023-10-19' },
+    { id: 14, name: 'Nathan Moore',     email: 'nathan@qalab.io',   role: 'Admin',         status: 'active',   date: '2020-03-28' },
+    { id: 15, name: 'Olivia Anderson',  email: 'olivia@qalab.io',   role: 'QA Lead',       status: 'inactive', date: '2021-09-14' },
+    { id: 16, name: 'Paul Thomas',      email: 'paul@qalab.io',     role: 'Developer',     status: 'active',   date: '2022-11-01' },
+    { id: 17, name: 'Quinn Jackson',    email: 'quinn@qalab.io',    role: 'QA Engineer',   status: 'active',   date: '2023-03-07' },
+    { id: 18, name: 'Rachel White',     email: 'rachel@qalab.io',   role: 'Scrum Master',  status: 'active',   date: '2021-12-21' },
+    { id: 19, name: 'Sam Harris',       email: 'sam@qalab.io',      role: 'Developer',     status: 'inactive', date: '2020-08-09' },
+    { id: 20, name: 'Tina Martin',      email: 'tina@qalab.io',     role: 'QA Lead',       status: 'active',   date: '2022-07-25' },
+  ];
+
+  let data       = [...ALL_USERS];
+  let sortCol    = 'id';
+  let sortDir    = 'asc';
+  let currentPage= 1;
+  let pageSize   = 10;
+  let selected   = new Set();
+  let nextId     = 21;
+
+  const STATUS_BADGE = {
+    active:   '<span class="badge badge-beginner">Active</span>',
+    inactive: '<span class="badge badge-advanced">Inactive</span>',
+    pending:  '<span class="badge badge-intermediate">Pending</span>',
+  };
+
+  function getFiltered() {
+    const q = document.getElementById('table-search').value.trim().toLowerCase();
+    return q
+      ? data.filter(u => u.name.toLowerCase().includes(q) || u.role.toLowerCase().includes(q) || u.email.toLowerCase().includes(q))
+      : [...data];
+  }
+
+  function getSorted(rows) {
+    return [...rows].sort((a, b) => {
+      let av = a[sortCol], bv = b[sortCol];
+      if (typeof av === 'string') av = av.toLowerCase();
+      if (typeof bv === 'string') bv = bv.toLowerCase();
+      if (av < bv) return sortDir === 'asc' ? -1 : 1;
+      if (av > bv) return sortDir === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }
+
+  function render() {
+    const filtered = getSorted(getFiltered());
+    const total    = filtered.length;
+    const pages    = Math.max(1, Math.ceil(total / pageSize));
+    if (currentPage > pages) currentPage = pages;
+    const start    = (currentPage - 1) * pageSize;
+    const slice    = filtered.slice(start, start + pageSize);
+
+    const tbody = document.getElementById('data-table-body');
+    tbody.innerHTML = '';
+    const empty = document.getElementById('table-empty');
+
+    if (slice.length === 0) {
+      empty.style.display = 'block';
+      document.getElementById('table-wrapper').style.display = 'none';
+    } else {
+      empty.style.display = 'none';
+      document.getElementById('table-wrapper').style.display = 'block';
+      slice.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.setAttribute('data-row-id', u.id);
+        tr.setAttribute('data-testid', `row-${u.id}`);
+        if (selected.has(u.id)) tr.classList.add('selected');
+        tr.innerHTML = `
+          <td><input type="checkbox" class="form-check-input row-cb" data-testid="cb-row-${u.id}" data-id="${u.id}" ${selected.has(u.id) ? 'checked' : ''} aria-label="Select row ${u.id}" /></td>
+          <td data-testid="cell-${u.id}-id">${u.id}</td>
+          <td data-testid="cell-${u.id}-name"><strong>${u.name}</strong></td>
+          <td data-testid="cell-${u.id}-email"><a href="mailto:${u.email}">${u.email}</a></td>
+          <td data-testid="cell-${u.id}-role">${u.role}</td>
+          <td data-testid="cell-${u.id}-status">${STATUS_BADGE[u.status] || u.status}</td>
+          <td data-testid="cell-${u.id}-date">${u.date}</td>
+          <td>
+            <button class="btn btn-ghost btn-sm btn-edit" data-id="${u.id}" data-testid="btn-edit-${u.id}" style="padding:2px 8px;">Edit</button>
+            <button class="btn btn-danger btn-sm btn-delete-row" data-id="${u.id}" data-testid="btn-delete-row-${u.id}" style="padding:2px 8px;margin-left:4px;">✕</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Info text
+    document.getElementById('table-info').textContent =
+      `Showing ${slice.length} of ${total} users`;
+
+    // Select-all state
+    const allCbs = tbody.querySelectorAll('.row-cb');
+    const allChecked = allCbs.length > 0 && Array.from(allCbs).every(cb => selected.has(parseInt(cb.dataset.id)));
+    const anyChecked = Array.from(allCbs).some(cb => selected.has(parseInt(cb.dataset.id)));
+    const masterCb = document.getElementById('select-all-rows');
+    masterCb.checked       = allChecked;
+    masterCb.indeterminate = !allChecked && anyChecked;
+
+    // Delete button
+    document.getElementById('btn-delete-selected').disabled = selected.size === 0;
+
+    // Pagination
+    renderPagination(pages);
+
+    // Sort headers
+    document.querySelectorAll('.sortable').forEach(th => {
+      const col = th.dataset.col;
+      th.classList.remove('sort-asc', 'sort-desc');
+      th.setAttribute('aria-sort', 'none');
+      if (col === sortCol) {
+        th.classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+        th.setAttribute('aria-sort', sortDir === 'asc' ? 'ascending' : 'descending');
+      }
+    });
+  }
+
+  function renderPagination(pages) {
+    const container = document.getElementById('pagination-container');
+    container.innerHTML = '';
+
+    const prev = document.createElement('button');
+    prev.className = 'page-btn';
+    prev.textContent = '←';
+    prev.disabled = currentPage === 1;
+    prev.setAttribute('data-testid', 'page-prev');
+    prev.setAttribute('aria-label', 'Previous page');
+    prev.addEventListener('click', () => { currentPage--; render(); });
+    container.appendChild(prev);
+
+    for (let i = 1; i <= pages; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+      btn.textContent = i;
+      btn.setAttribute('data-testid', `page-btn-${i}`);
+      btn.setAttribute('aria-label', `Page ${i}`);
+      btn.setAttribute('aria-current', i === currentPage ? 'page' : 'false');
+      btn.addEventListener('click', () => { currentPage = i; render(); });
+      container.appendChild(btn);
+    }
+
+    const next = document.createElement('button');
+    next.className = 'page-btn';
+    next.textContent = '→';
+    next.disabled = currentPage === pages;
+    next.setAttribute('data-testid', 'page-next');
+    next.setAttribute('aria-label', 'Next page');
+    next.addEventListener('click', () => { currentPage++; render(); });
+    container.appendChild(next);
+  }
+
+  /* Event: sort */
+  document.querySelectorAll('.sortable').forEach(th => {
+    const activate = () => {
+      const col = th.dataset.col;
+      if (sortCol === col) {
+        sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortCol = col;
+        sortDir = 'asc';
+      }
+      currentPage = 1;
+      render();
+    };
+    th.addEventListener('click', activate);
+    th.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } });
+  });
+
+  /* Event: search */
+  let searchTimer;
+  document.getElementById('table-search').addEventListener('input', () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => { currentPage = 1; render(); }, 200);
+  });
+
+  /* Event: page size */
+  document.getElementById('table-page-size').addEventListener('change', (e) => {
+    pageSize = parseInt(e.target.value);
+    currentPage = 1;
+    render();
+  });
+
+  /* Event: select-all */
+  document.getElementById('select-all-rows').addEventListener('change', (e) => {
+    const filtered = getSorted(getFiltered());
+    const start = (currentPage - 1) * pageSize;
+    const slice = filtered.slice(start, start + pageSize);
+    slice.forEach(u => e.target.checked ? selected.add(u.id) : selected.delete(u.id));
+    render();
+  });
+
+  /* Event: row checkbox (delegated) */
+  document.getElementById('data-table-body').addEventListener('change', (e) => {
+    if (e.target.classList.contains('row-cb')) {
+      const id = parseInt(e.target.dataset.id);
+      e.target.checked ? selected.add(id) : selected.delete(id);
+      render();
+    }
+  });
+
+  /* Event: delete selected */
+  document.getElementById('btn-delete-selected').addEventListener('click', () => {
+    if (!confirm(`Delete ${selected.size} selected row(s)?`)) return;
+    data = data.filter(u => !selected.has(u.id));
+    selected.clear();
+    render();
+    Toast.success('Deleted', `${selected.size || 'Selected'} rows removed.`);
+  });
+
+  /* Event: delete single row (delegated) */
+  document.getElementById('data-table-body').addEventListener('click', (e) => {
+    if (e.target.classList.contains('btn-delete-row')) {
+      const id = parseInt(e.target.dataset.id);
+      const user = data.find(u => u.id === id);
+      if (!confirm(`Delete "${user?.name}"?`)) return;
+      data = data.filter(u => u.id !== id);
+      selected.delete(id);
+      render();
+      Toast.success('Row deleted', user?.name);
+    }
+    if (e.target.classList.contains('btn-edit')) {
+      const id = parseInt(e.target.dataset.id);
+      const user = data.find(u => u.id === id);
+      Toast.info('Edit clicked', `Editing: ${user?.name}`);
+    }
+  });
+
+  /* Event: add row */
+  document.getElementById('btn-add-row').addEventListener('click', () => {
+    data.push({
+      id: nextId++, name: `New User ${nextId - 1}`,
+      email: `user${nextId - 1}@qalab.io`, role: 'QA Engineer',
+      status: 'pending', date: new Date().toISOString().slice(0, 10),
+    });
+    currentPage = Math.ceil(data.length / pageSize);
+    render();
+    Toast.success('Row added', `New User ${nextId - 1}`);
+  });
+
+  // Mobile nav
+  document.getElementById('nav-toggle').addEventListener('click', function () {
+    const nav = document.getElementById('site-nav');
+    nav.classList.toggle('open');
+    this.setAttribute('aria-expanded', nav.classList.contains('open') ? 'true' : 'false');
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
+
