@@ -17,6 +17,15 @@ QA Lab is an open source training platform designed for:
 
 ---
 
+## 📸 Screenshots
+
+![Screenshot 11](../readme-images/Screenshot_11.png)
+![Screenshot 12](../readme-images/Screenshot_12.png)
+![Screenshot 13](../readme-images/Screenshot_13.png)
+![Screenshot 14](../readme-images/Screenshot_14.png)
+
+---
+
 ## 🟡 Folder Structure
 
 ```
