@@ -1,14 +1,19 @@
-﻿# If you like this project please give it a "Start" or "fork it" at your will
- 
-This will push me with more projects and endeavours
+﻿### If you like this project please give it a "Start" or "fork it"
 
- # QA Lab E2E Automation Training Platform
+This will push me with more projects and endeavors
 
-> A complete, dependency-free E2E automation training website with 20 progressive test scenarios, from beginner form interactions to expert-level Shadow DOM, iFrames, race conditions, and accessibility challenges.
+# QA Lab E2E Automation Training Platform
+
+### No server required. Just unzip and open in your browser.
+
+> A complete, dependency-free E2E automation training website with 20 progressive test scenarios, from beginner form
+> interactions to expert-level Shadow DOM, iFrames, race conditions, and accessibility challenges.
 >
-> Plain HTML · Plain CSS · Plain Vanilla JavaScript · Zero dependencies · Runs locally · No build step · No npm install.
+> Plain HTML · Plain CSS · Plain Vanilla JavaScript · Zero dependencies · No build step · No npm install · No server
+> required. Just unzip and open in your browser.
 >
-> Built-in **AI Copilot Panels** on every page let you generate, heal, and expand test suites using GitHub Copilot, Claude, ChatGPT, or any LLM, making it the ideal playground for AI-assisted test automation and framework training.
+> Built-in **AI Copilot Panels** on every page let you generate, heal, and expand test suites using GitHub Copilot,
+> Claude, ChatGPT, or any LLM, making it the ideal playground for AI-assisted test automation and framework training.
 
 ---
 
@@ -21,8 +26,11 @@ QA Lab is an open source training platform designed for:
 - **Interview preparation** demonstrate automation skills on real scenarios
 - **Framework comparison** test the same scenarios in different frameworks
 - **Automation workshops** structured, progressive lab exercises
-- **AI-assisted test generation** every scenario includes proper step-by-step resolution with clear, developer-friendly structure and built-in AI-friendly prompt panels. Use GitHub Copilot, Claude, or ChatGPT to generate, heal, and expand tests instantly
-- **AI framework training** every scenario is designed with predictable, well-structured steps that make it easy to teach your own AI agent or LLM the patterns and conventions of your test framework using real, reproducible cases
+- **AI-assisted test generation** every scenario includes proper step-by-step resolution with clear, developer-friendly
+  structure and built-in AI-friendly prompt panels. Use GitHub Copilot, Claude, or ChatGPT to generate, heal, and expand
+  tests instantly
+- **AI framework training** every scenario is designed with predictable, well-structured steps that make it easy to
+  teach your own AI agent or LLM the patterns and conventions of your test framework using real, reproducible cases
 
 ---
 
@@ -85,12 +93,15 @@ qa-training-site/
 ## 🟢 Running Locally
 
 ### Method 1 Double-click (simplest)
+
 ```
 Open qa-training-site/index.html in any modern browser.
 ```
+
 No build step. No npm install. No server required.
 
 ### Method 2 Local server (recommended for iframe support)
+
 ```bash
 # Python
 python -m http.server 8080
@@ -101,34 +112,35 @@ npx serve .
 # VS Code Live Server extension
 # Right-click index.html → Open with Live Server
 ```
+
 Then navigate to: `http://localhost:8080`
 
 ---
 
 ## 🔴 Scenario Difficulty Map
 
-| # | Scenario | Difficulty | Key Concepts |
-|---|----------|------------|--------------|
-| 01 | Simple Login | 🟢 Beginner | Form, submit, error messages |
-| 02 | Registration | 🟢 Beginner | Multi-field, password confirm |
-| 03 | Checkboxes & Radios | 🟢 Beginner | Check state, indeterminate |
-| 04 | Dropdowns | 🟢 Beginner | Native select, custom widget |
-| 05 | Static Content | 🟢 Beginner | Text assertions, attributes |
-| 06 | Dynamic Table | 🟡 Intermediate | Sort, paginate, filter, delete |
-| 07 | Modals & Toasts | 🟡 Intermediate | Overlay, focus, dismiss |
-| 08 | Tabs & Accordions | 🟡 Intermediate | ARIA, keyboard nav |
-| 09 | Form Validation | 🟡 Intermediate | Debounce, async check |
-| 10 | Search & Filter | 🟡 Intermediate | Debounce search, empty state |
-| 11 | Multi Step Wizard | 🔴 Advanced | State, step validation |
-| 12 | Async Loading | 🔴 Advanced | Spinner, retry, waitFor |
-| 13 | Drag & Drop | 🔴 Advanced | HTML5 DnD, Kanban |
-| 14 | File Upload | 🔴 Advanced | setInputFiles, progress |
-| 15 | LocalStorage | 🔴 Advanced | Storage, evaluate() |
-| 16 | Nested iFrames | 🟣 Expert | frameLocator chaining |
-| 17 | Shadow DOM | 🟣 Expert | Web Components, pierce |
-| 18 | Race Conditions | 🟣 Expert | Timing, flakiness, stale |
-| 19 | Canvas | 🟣 Expert | Coordinates, mouse events |
-| 20 | Accessibility | 🟣 Expert | ARIA, roles, focus trap |
+| #  | Scenario            | Difficulty      | Key Concepts                   |
+|----|---------------------|-----------------|--------------------------------|
+| 01 | Simple Login        | 🟢 Beginner     | Form, submit, error messages   |
+| 02 | Registration        | 🟢 Beginner     | Multi-field, password confirm  |
+| 03 | Checkboxes & Radios | 🟢 Beginner     | Check state, indeterminate     |
+| 04 | Dropdowns           | 🟢 Beginner     | Native select, custom widget   |
+| 05 | Static Content      | 🟢 Beginner     | Text assertions, attributes    |
+| 06 | Dynamic Table       | 🟡 Intermediate | Sort, paginate, filter, delete |
+| 07 | Modals & Toasts     | 🟡 Intermediate | Overlay, focus, dismiss        |
+| 08 | Tabs & Accordions   | 🟡 Intermediate | ARIA, keyboard nav             |
+| 09 | Form Validation     | 🟡 Intermediate | Debounce, async check          |
+| 10 | Search & Filter     | 🟡 Intermediate | Debounce search, empty state   |
+| 11 | Multi Step Wizard   | 🔴 Advanced     | State, step validation         |
+| 12 | Async Loading       | 🔴 Advanced     | Spinner, retry, waitFor        |
+| 13 | Drag & Drop         | 🔴 Advanced     | HTML5 DnD, Kanban              |
+| 14 | File Upload         | 🔴 Advanced     | setInputFiles, progress        |
+| 15 | LocalStorage        | 🔴 Advanced     | Storage, evaluate()            |
+| 16 | Nested iFrames      | 🟣 Expert       | frameLocator chaining          |
+| 17 | Shadow DOM          | 🟣 Expert       | Web Components, pierce         |
+| 18 | Race Conditions     | 🟣 Expert       | Timing, flakiness, stale       |
+| 19 | Canvas              | 🟣 Expert       | Coordinates, mouse events      |
+| 20 | Accessibility       | 🟣 Expert       | ARIA, roles, focus trap        |
 
 ---
 
@@ -136,35 +148,39 @@ Then navigate to: `http://localhost:8080`
 
 All scenarios are tested to work with:
 
-| Framework | Language | Notes |
-|-----------|----------|-------|
-| **Playwright** | TS / JS / Python / Java | Recommended best Shadow DOM + iFrame support |
-| **Selenium WebDriver** | Python / Java / C# / Ruby | Classic choice all scenarios supported |
-| **Cypress** | JS / TS | File upload & iframes need plugins |
-| **WebdriverIO** | JS / TS | Full W3C, supports shadow via pierce |
-| **Robot Framework** | Python | Use SeleniumLibrary or PlaywrightLibrary |
-| **Appium WebView** | JS / Java | Load in WebView for mobile testing |
+| Framework              | Language                  | Notes                                        |
+|------------------------|---------------------------|----------------------------------------------|
+| **Playwright**         | TS / JS / Python / Java   | Recommended best Shadow DOM + iFrame support |
+| **Selenium WebDriver** | Python / Java / C# / Ruby | Classic choice all scenarios supported       |
+| **Cypress**            | JS / TS                   | File upload & iframes need plugins           |
+| **WebdriverIO**        | JS / TS                   | Full W3C, supports shadow via pierce         |
+| **Robot Framework**    | Python                    | Use SeleniumLibrary or PlaywrightLibrary     |
+| **Appium WebView**     | JS / Java                 | Load in WebView for mobile testing           |
 
 ---
 
 ## 🔵 Learning Roadmap
 
 ### Phase 1 Foundations (Scenarios 01 to 05)
+
 - Master form interactions
 - Learn reliable locator strategies
 - Practice text and attribute assertions
 
 ### Phase 2 Dynamic UI (Scenarios 06 to 10)
+
 - Handle dynamic DOM changes
 - Work with tables, modals, tabs
 - Understand debounce and async timing
 
 ### Phase 3 Complex Interactions (Scenarios 11 to 15)
+
 - Build multi step test flows
 - Handle file uploads and local storage
 - Work with async patterns and waitFor
 
 ### Phase 4 Expert Challenges (Scenarios 16 to 20)
+
 - Master iFrame context switching
 - Pierce Shadow DOM
 - Diagnose and fix flaky tests
@@ -174,23 +190,28 @@ All scenarios are tested to work with:
 
 ## 🤖 AI-Friendly Copilot Panel
 
-Every scenario page includes a dedicated **AI Copilot Panel**, a structured section designed to help developers use AI assistants (GitHub Copilot, Claude, ChatGPT, or any LLM) to:
+Every scenario page includes a dedicated **AI Copilot Panel**, a structured section designed to help developers use AI
+assistants (GitHub Copilot, Claude, ChatGPT, or any LLM) to:
 
-- **Generate tests from scratch**: the panel describes the page behaviour, available `data-testid` attributes, and expected outcomes in plain language, giving the AI everything it needs to write a first-pass test suite
-- **Heal broken tests**: when a selector or flow changes, paste the panel content into your AI chat to get updated, corrected tests instantly
-- **Learn a new framework**: ask the AI to rewrite the generated tests in Playwright, Cypress, Selenium, or Robot Framework using the panel as context
-- **Expand coverage**: prompt the AI with edge cases listed in the panel to generate negative, boundary, and accessibility tests automatically
+- **Generate tests from scratch**: the panel describes the page behaviour, available `data-testid` attributes, and
+  expected outcomes in plain language, giving the AI everything it needs to write a first-pass test suite
+- **Heal broken tests**: when a selector or flow changes, paste the panel content into your AI chat to get updated,
+  corrected tests instantly
+- **Learn a new framework**: ask the AI to rewrite the generated tests in Playwright, Cypress, Selenium, or Robot
+  Framework using the panel as context
+- **Expand coverage**: prompt the AI with edge cases listed in the panel to generate negative, boundary, and
+  accessibility tests automatically
 
 ### How it works
 
 Each page exposes a collapsible **"🤖 AI / Copilot Prompts"** section containing:
 
-| Element | Purpose |
-|---------|---------|
-| **Page summary** | One-paragraph description of what the page does |
-| **Available selectors** | Full list of `data-testid` values and their roles |
-| **Suggested test scenarios** | Happy path, error paths, edge cases in plain English |
-| **Copy-ready prompt** | A pre-written prompt you can paste directly into Copilot Chat, Claude, or any AI tool |
+| Element                      | Purpose                                                                               |
+|------------------------------|---------------------------------------------------------------------------------------|
+| **Page summary**             | One-paragraph description of what the page does                                       |
+| **Available selectors**      | Full list of `data-testid` values and their roles                                     |
+| **Suggested test scenarios** | Happy path, error paths, edge cases in plain English                                  |
+| **Copy-ready prompt**        | A pre-written prompt you can paste directly into Copilot Chat, Claude, or any AI tool |
 
 ### Example workflow
 
@@ -203,7 +224,8 @@ Each page exposes a collapsible **"🤖 AI / Copilot Prompts"** section containi
 6. Iterate: ask the AI to add edge cases, change framework, or fix a selector
 ```
 
-> 💡 **Tip:** The panels are also machine-readable. Point an AI agent directly at the page HTML and it can extract all test context without any manual copying.
+> 💡 **Tip:** The panels are also machine-readable. Point an AI agent directly at the page HTML and it can extract all
+> test context without any manual copying.
 
 ---
 

@@ -2,7 +2,7 @@
 
 > A complete, dependency-free E2E automation training website with 20 progressive test scenarios, from beginner form interactions to expert-level Shadow DOM, iFrames, race conditions, and accessibility challenges.
 >
-> Plain HTML · Plain CSS · Plain Vanilla JavaScript · Zero dependencies · Runs locally · No build step · No npm install.
+> Plain HTML · Plain CSS · Plain Vanilla JavaScript · Zero dependencies · No build step · No npm install · No server required. Just unzip and open in your browser.
 >
 > Built-in **AI Copilot Panels** on every page let you generate, heal, and expand test suites using GitHub Copilot, Claude, ChatGPT, or any LLM, making it the ideal playground for AI-assisted test automation and framework training.
 
