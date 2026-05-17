@@ -22,14 +22,9 @@ QA Lab is an open source training platform designed for:
 
 ---
 
-## 📸 Screenshots
+## 📸 Screenshot
 
 ![Screenshot 11](../readme-images/Screenshot_11.png)
-![Screenshot 12](../readme-images/Screenshot_12.png)
-![Screenshot 13](../readme-images/Screenshot_13.png)
-![Screenshot 14](../readme-images/Screenshot_14.png)
-![Screenshot 15](../readme-images/Screenshot_15.png)
-![Screenshot 16](../readme-images/Screenshot_16.png)
 
 ---
 
@@ -98,6 +93,153 @@ npx serve .
 # Right-click index.html → Open with Live Server
 ```
 Then navigate to: `http://localhost:8080`
+
+---
+
+## 🚀 Quick Guide for Developers and QA Automation Engineers
+
+### 1. Get the project running
+
+```
+1. Download or clone the repository
+2. Unzip if needed
+3. Open index.html in any modern browser
+4. Done. No installs, no setup, no config files.
+```
+
+For scenarios that use iFrames (page 16) or require reliable same-origin behaviour, spin up a local server:
+
+```bash
+python -m http.server 8080
+# or
+npx serve .
+```
+
+Then open: `http://localhost:8080`
+
+---
+
+### 2. Understand the project layout
+
+| Path | What it is |
+|------|-----------|
+| `index.html` | Landing page listing all 20 scenarios with difficulty badges and links |
+| `landing.html` | Alternative entry point with a visual overview of the platform |
+| `pages/01-*.html` to `pages/20-*.html` | The 20 individual scenario pages your tests will target |
+| `css/base.css` | Global reset, CSS variables, typography and utility classes |
+| `css/components.css` | All reusable UI components: buttons, forms, cards, modals, tables |
+| `css/layout.css` | Header, nav, grid system, page structure and responsive breakpoints |
+| `js/utils.js` | Shared helpers: Toast, Modal, Tabs, form validation, localStorage store, delay() |
+| `js/nav.js` | Navigation state and routing between pages |
+| `js/copilot-prompts.js` | Data driving the AI Copilot Panels on each scenario page |
+| `js/copilot-render.js` | Renders the collapsible AI Copilot Panel UI on each page |
+| `metadata/scenarios.json` | Machine-readable metadata for all 20 scenarios (id, title, difficulty, tags) |
+| `docs/` | Full documentation: contributing guide, testing guide, project history |
+
+---
+
+### 3. Anatomy of a scenario page
+
+Every page in `pages/` follows the same structure:
+
+```
+Header / Nav
+  Scenario title and difficulty badge
+  Short description of what the page does and what makes it interesting to test
+
+Main content area
+  The actual UI under test (forms, tables, modals, drag-and-drop, etc.)
+  Every interactive element has a data-testid attribute
+
+Step-by-step resolution panel (developer-friendly)
+  Clear numbered steps describing what a passing test should do
+  Expected outcomes for each step
+  Notes on timing, async behaviour and edge cases
+
+AI Copilot Panel (collapsible)
+  Page summary in plain English
+  Full list of available data-testid selectors and their roles
+  Suggested test scenarios (happy path, error paths, edge cases)
+  Copy-ready prompt to paste into GitHub Copilot, Claude or ChatGPT
+```
+
+---
+
+### 4. Using data-testid selectors in your tests
+
+Every interactive element across all 20 pages has a `data-testid` attribute. This is the recommended locator strategy:
+
+```js
+// Playwright
+await page.getByTestId('login-username').fill('admin');
+await page.getByTestId('login-submit').click();
+
+// Selenium (Python)
+driver.find_element(By.CSS_SELECTOR, '[data-testid="login-username"]').send_keys('admin')
+
+// Cypress
+cy.get('[data-testid="login-username"]').type('admin')
+
+// WebdriverIO
+$('[data-testid="login-submit"]').click()
+```
+
+Selector priority recommended by this project:
+
+```
+data-testid  >  ARIA role  >  visible text  >  CSS class  >  XPath
+```
+
+---
+
+### 5. Using the AI Copilot Panel
+
+Every scenario page has a collapsible **"🤖 AI / Copilot Prompts"** section at the bottom:
+
+```
+1. Open a scenario page (e.g. pages/01-simple-login.html)
+2. Scroll to the AI Copilot Panel and expand it
+3. Read the page summary and available selectors
+4. Click "Copy Prompt"
+5. Paste into GitHub Copilot Chat, Claude, ChatGPT or your preferred LLM
+6. Get back a complete, runnable test file for your framework
+7. Iterate: ask the AI to add edge cases, switch framework, or heal a broken selector
+```
+
+The panel content is also available programmatically via `js/copilot-prompts.js`, so AI agents and scripts can read all scenario context directly without opening a browser.
+
+---
+
+### 6. Pointing your framework at the site
+
+| Framework | Recommended base URL config |
+|-----------|---------------------------|
+| Playwright | `baseURL: 'http://localhost:8080'` in `playwright.config.ts` |
+| Cypress | `baseUrl: 'http://localhost:8080'` in `cypress.config.js` |
+| Selenium | Set `driver.get('http://localhost:8080/pages/01-simple-login.html')` |
+| WebdriverIO | `baseUrl: 'http://localhost:8080'` in `wdio.conf.js` |
+| Robot Framework | `${BASE_URL}` variable set to `http://localhost:8080` |
+
+For file-based access (no server), use the full file path:
+
+```
+file:///C:/path-to-project/pages/01-simple-login.html
+```
+
+Note: iFrame scenarios (page 16) require a local server for same-origin policy to work correctly.
+
+---
+
+### 7. Key conventions to know before writing tests
+
+| Convention | Detail |
+|-----------|--------|
+| `data-testid` on every element | All inputs, buttons, links, rows and interactive widgets are tagged |
+| ARIA roles and labels | All components use correct ARIA so `getByRole()` works in Playwright |
+| Deterministic test data | Fixed usernames, passwords and values so assertions are reproducible |
+| Intentional imperfections | Some pages have intentionally bad selectors, timing delays or flaky behaviour by design for training purposes |
+| LocalStorage usage | Pages 15 and others persist state in localStorage. Clear it between test runs to avoid bleed |
+| Async patterns | Spinners, retries and delayed responses are real. Always use framework auto-wait, never hardcode `sleep()` |
 
 ---
 
@@ -226,4 +368,14 @@ Each page exposes a collapsible **"🤖 AI / Copilot Prompts"** section containi
 ---
 
 *Generated: 2026-05-15 | Version: 1.0.0*
+
+---
+
+## 📸 More Screenshots
+
+![Screenshot 12](../readme-images/Screenshot_12.png)
+![Screenshot 13](../readme-images/Screenshot_13.png)
+![Screenshot 14](../readme-images/Screenshot_14.png)
+![Screenshot 15](../readme-images/Screenshot_15.png)
+![Screenshot 16](../readme-images/Screenshot_16.png)
 
