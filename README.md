@@ -1,4 +1,8 @@
-﻿# QA Lab E2E Automation Training Platform
+﻿# If you like this project please give it a "Start" or "fork it" at your will
+ 
+This will push me with more projects and endeavours
+
+ # QA Lab E2E Automation Training Platform
 
 > A complete, dependency-free E2E automation training website with 20 progressive test scenarios — from beginner form interactions to expert-level Shadow DOM, iFrames, race conditions, and accessibility challenges.
 >
