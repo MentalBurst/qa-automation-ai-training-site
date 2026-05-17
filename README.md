@@ -1,4 +1,4 @@
-﻿# If you like this project please "start it" or "fork it" at your will
+﻿# If you like this project please give it a "Start" or "fork it" at your will, this will push me with more projects and endeavours
 
  # QA Lab E2E Automation Training Platform
 
