@@ -1,7 +1,10 @@
 ﻿# QA Lab E2E Automation Training Platform
 
-> A complete, dependency-free E2E automation training website with 20 progressive test scenarios.
-> Plain HTML · Plain CSS · Plain Vanilla JavaScript · Zero dependencies · Runs locally.
+> A complete, dependency-free E2E automation training website with 20 progressive test scenarios — from beginner form interactions to expert-level Shadow DOM, iFrames, race conditions, and accessibility challenges.
+>
+> Plain HTML · Plain CSS · Plain Vanilla JavaScript · Zero dependencies · Runs locally · No build step · No npm install.
+>
+> Built-in **AI Copilot Panels** on every page let you generate, heal, and expand test suites using GitHub Copilot, Claude, ChatGPT, or any LLM — making it the ideal playground for AI-assisted test automation and framework training.
 
 ---
 
@@ -14,6 +17,8 @@ QA Lab is an open source training platform designed for:
 - **Interview preparation** demonstrate automation skills on real scenarios
 - **Framework comparison** test the same scenarios in different frameworks
 - **Automation workshops** structured, progressive lab exercises
+- **AI-assisted test generation** use GitHub Copilot, Claude, or ChatGPT to generate, heal, and expand tests from built-in AI-friendly prompt panels
+- **AI framework training** teach your own AI agent or LLM the structure and patterns of your test framework using real, predictable scenarios
 
 ---
 
@@ -23,6 +28,8 @@ QA Lab is an open source training platform designed for:
 ![Screenshot 12](readme-images/Screenshot_12.png)
 ![Screenshot 13](readme-images/Screenshot_13.png)
 ![Screenshot 14](readme-images/Screenshot_14.png)
+![Screenshot 15](readme-images/Screenshot_15.png)
+![Screenshot 16](readme-images/Screenshot_16.png)
 
 ---
 
@@ -158,6 +165,41 @@ All scenarios are tested to work with:
 - Pierce Shadow DOM
 - Diagnose and fix flaky tests
 - Test canvas and accessibility
+
+---
+
+## 🤖 AI-Friendly Copilot Panel
+
+Every scenario page includes a dedicated **AI Copilot Panel** — a structured section designed to help developers use AI assistants (GitHub Copilot, Claude, ChatGPT, or any LLM) to:
+
+- **Generate tests from scratch** — the panel describes the page behaviour, available `data-testid` attributes, and expected outcomes in plain language, giving the AI everything it needs to write a first-pass test suite
+- **Heal broken tests** — when a selector or flow changes, paste the panel content into your AI chat to get updated, corrected tests instantly
+- **Learn a new framework** — ask the AI to rewrite the generated tests in Playwright, Cypress, Selenium, or Robot Framework using the panel as context
+- **Expand coverage** — prompt the AI with edge cases listed in the panel to generate negative, boundary, and accessibility tests automatically
+
+### How it works
+
+Each page exposes a collapsible **"🤖 AI / Copilot Prompts"** section containing:
+
+| Element | Purpose |
+|---------|---------|
+| **Page summary** | One-paragraph description of what the page does |
+| **Available selectors** | Full list of `data-testid` values and their roles |
+| **Suggested test scenarios** | Happy path, error paths, edge cases in plain English |
+| **Copy-ready prompt** | A pre-written prompt you can paste directly into Copilot Chat, Claude, or any AI tool |
+
+### Example workflow
+
+```
+1. Open any scenario page (e.g. 01-simple-login.html)
+2. Expand the "🤖 AI / Copilot Prompts" panel
+3. Click "Copy Prompt"
+4. Paste into GitHub Copilot Chat / Claude / ChatGPT
+5. Receive a complete, runnable test file for your framework of choice
+6. Iterate: ask the AI to add edge cases, change framework, or fix a selector
+```
+
+> 💡 **Tip:** The panels are also machine-readable — point an AI agent directly at the page HTML and it can extract all test context without any manual copying.
 
 ---
 
