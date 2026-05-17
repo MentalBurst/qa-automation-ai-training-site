@@ -1,4 +1,6 @@
-﻿# QA Lab E2E Automation Training Platform
+﻿# If you like this project please "start it" or "fork it" at your will
+
+ # QA Lab E2E Automation Training Platform
 
 > A complete, dependency-free E2E automation training website with 20 progressive test scenarios.
 > Plain HTML · Plain CSS · Plain Vanilla JavaScript · Zero dependencies · Runs locally.
